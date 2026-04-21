@@ -1,0 +1,69 @@
+{
+  "name": "trakky_pos",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@mui/icons-material": "^5.15.15",
+    "@mui/styled-engine": "^7.1.1",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@mui/x-date-pickers": "^7.3.2",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.6.8",
+    "chart.js": "^4.4.4",
+    "dayjs": "^1.11.11",
+    "faker": "^6.6.6",
+    "framer-motion": "^11.5.4",
+    "jwt-decode": "^4.0.0",
+    "lucide-react": "^0.562.0",
+    "material-ui-confirm": "^3.0.16",
+    "moment": "^2.30.1",
+    "quill": "^2.0.2",
+    "react": "^18.2.0",
+    "react-apexcharts": "^1.4.1",
+    "react-chartjs-2": "^5.2.0",
+    "react-date-range": "^2.0.1",
+    "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.1",
+    "react-icons": "^5.3.0",
+    "react-router-dom": "^6.22.3",
+    "react-scripts": "5.0.1",
+    "react-select": "^5.10.1",
+    "react-toastify": "^10.0.5",
+    "styled-components": "^6.1.9",
+    "swiper": "^11.1.14",
+    "toast": "^0.5.4",
+    "trakky_pos": "file:",
+    "validator": "^13.11.0",
+    "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.3"
+  }
+}

@@ -1,0 +1,125 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,800);
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  /* gap: 0.7rem; */
+  margin: 2.5rem auto 1rem;
+  /* padding: 1.2rem 0.8rem; */
+  width: 92%;
+  /* background-color: red; */
+}
+
+.layout {
+  /* width: 1200px; */
+  margin: auto;
+  /* background-color: blueviolet; */
+}
+
+.faqHeading {
+  color: #2d3134;
+  /* font-size: 30px; */
+  font-size: 1.8rem;
+  font-weight: 600;
+  text-align: center;
+}
+.accordion {
+  /* padding: 10px; */
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: initial;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+.ansText {
+  width: 90%;
+  padding: 0px 18px 22px;
+}
+.question {
+  display: flex;
+  justify-content: space-between; /* Align items to the left and right */
+  align-items: center; /* Align items vertically */
+  /* margin: 5px; */
+  padding: 18px 22px;
+  font-family: Verdana;
+  /* font-size: 20px; */
+  font-size: 1.3rem;
+}
+.questions {
+  display: flex;
+  justify-content: space-between; /* Align items to the left and right */
+  align-items: center; /* Align items vertically */
+  margin: 5px;
+  padding: 0;
+  font-family: Verdana;
+  font-size: 1.543209877vw;
+}
+.question p {
+  padding-left: 1.543209877vw;
+}
+.arrowImages {
+  width: 1.8rem;
+  height: 1.8rem;
+  transition: transform 0.7s ease; /* Smooth transition for the transform property */
+}
+
+.rotate {
+  transform: rotate(180deg); /* Rotate the arrow 180 degrees */
+}
+
+.centerplease {
+  text-align: center;
+  margin: 0 auto;
+  font-size: 3.086419753vw;
+}
+
+.answers {
+  display: flex;
+  justify-content: space-between;
+  /* border-top: 1px solid #2a4163; */
+  /* background: #8f99bc; */
+  /* font-size: 17px; */
+  font-size: 1.1rem;
+  font-weight: 300;
+  /* background: #8703ed; */
+  /* color: white; */
+  padding: 0px 1.1574vw;
+  margin: 0 0 0.540123456vw 0;
+  height: 0;
+  overflow: hidden;
+  z-index: -1;
+  position: relative;
+  opacity: 1;
+  -webkit-transition: 0.7s ease;
+  -moz-transition: 0.7s ease;
+  -o-transition: 0.7s ease;
+  transition: 1s ease;
+  padding: 0 15px;
+
+}
+
+.questions:checked ~ .answers {
+  height: auto;
+  opacity: 1;
+}
+
+.questions {
+  display: none;
+}
+
+@media screen and (max-width: 540px) {
+  .faqHeading {
+    font-size: 1.4rem;
+  }
+
+  .question {
+    font-size: 0.9rem;
+  }
+  
+.answers {
+  font-size: 0.8rem;
+  padding: 0 10px;
+
+}
+
+}

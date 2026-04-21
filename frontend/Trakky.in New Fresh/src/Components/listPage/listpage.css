@@ -1,0 +1,197 @@
+.lp-card-listing-container {
+    padding: 30px 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    max-width: 1210px;
+    margin: 0 auto;
+    grid-gap: 30px;
+    justify-content: center;
+}
+
+
+.lp-load-more {
+    /* height: 40px; */
+    width: max-content;
+    border: 1px solid #171717;
+    border-radius: 25px;
+    /* padding: 5px 0px; */
+    display: flex;
+    margin: 15px auto;
+    justify-content: center;
+    align-items: center;
+
+}
+.lp-load-more button{
+    padding: 5px 40px;
+}
+
+.listpage-nav-links{
+    max-width: 1200px;
+    margin: auto;
+    display: block;
+    overflow: scroll;
+    padding-left: 15px;
+}
+
+.listpage-nav-links ul{
+    display: flex;
+    gap: 10px;
+    /* flex-wrap: wrap; */
+}
+
+.listpage-nav-links ul li {
+    padding: 3px 18px;
+    border: 1px solid #00000070;
+    color: #00000070;
+    border-radius: 25px;
+    width: max-content;
+    & a{
+        font-size: 16px;
+        display: inline-block;
+        width: max-content;
+    }
+}
+.listpage-nav-links ul li:hover {
+    border-color: #000000;
+    color: #000;
+}
+.listpage-nav-links ul li.active {
+    background-color: #000000;
+   & a{
+       color: #fff;
+   }
+}
+
+.listpage-heading,
+.listpage-sub-heading {
+    max-width: 1200px;
+    margin: auto;
+    padding-left: 15px;
+    padding-top: 30px;
+}
+
+.listpage-heading h1 {
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.listpage-sub-heading h2 {
+    font-size: 26px;
+    font-weight: 500;
+}
+
+.listpage-offer-container {
+    max-width: 1200px;
+    margin: auto;
+    padding-left: 15px;
+}
+
+.lp-offer-header {
+    font-size: 26px !important;
+    font-weight: 500 !important;
+    padding: 0 !important
+}
+
+.lp-loader {
+    border: 2px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 2px solid #000;
+    width: 20px;
+    height: 20px;
+    -webkit-animation: spin 1s linear infinite; /* Safari */
+    animation: spin 1s linear infinite;
+  }
+  
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+@media screen and (min-width: 650px) and (max-width: 990px) {
+    
+.listpage-nav-links{
+    max-width: 820px;
+}
+
+.listpage-nav-links ul li {
+    padding: 3px 15px;
+    border: 1px solid #00000070;
+    color: #00000070;
+    border-radius: 25px;
+    & a{
+        font-size: 14px;
+    }
+}
+    .lp-card-listing-container {
+        max-width: 820px;
+        grid-gap: 15px;
+    }
+    .listpage-offer-container {
+        max-width: 820px;
+    }
+
+    .listpage-heading,
+    .listpage-sub-heading {
+        max-width: 820px;
+    }
+
+    .listpage-heading h1 {
+        font-size: 24px;
+    }
+
+    .listpage-sub-heading h2 {
+        font-size: 20px;
+    }
+    .lp-offer-header {
+        font-size: 20px !important;
+    }
+
+}
+
+@media screen and (max-width: 650px) {
+    .listpage-nav-links{
+    max-width: 500px;
+}
+.listpage-nav-links ul li {
+    padding: 3px 12px;
+    border: 1px solid #00000070;
+    color: #00000070;
+    border-radius: 25px;
+    & a{
+        font-size: 13px;
+    }
+}
+    .lp-card-listing-container {
+        max-width: 500px;
+        grid-gap: 15px;
+
+    }
+    .listpage-offer-container {
+        max-width: 500px;
+    }
+
+    .listpage-heading,
+    .listpage-sub-heading {
+        max-width: 500px;
+    }
+
+    .listpage-heading h1 {
+        font-size: 18px;
+    }
+
+    .listpage-sub-heading h2 {
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .lp-offer-header {
+        font-size: 16px !important;
+        font-weight: 600 !important;
+    }
+
+}

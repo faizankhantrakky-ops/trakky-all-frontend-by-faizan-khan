@@ -1,0 +1,136 @@
+body {
+  margin: 0;
+  height: 100vh;
+  background-color: whitesmoke;
+}
+
+#root,
+.App {
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.logo {
+  line-height: 3rem;
+  width: 110px;
+  margin: auto;
+}
+
+.sidebar-container {
+  position: relative;
+  min-height: 100%;
+  /* width: 25%; */
+  /* min-width: 250px; */
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.15rem;
+  box-shadow: 1px 5px 10px #b0a8a8;
+  transition: filter 0.3s ease-in-out;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+
+.sidebar-item {
+  width: 100%;
+  cursor: pointer;
+  line-height: 2rem;
+  padding: 10px 0px;
+  border-bottom: 1px solid #5d5d5d59;
+  transition: all 270ms ease-in-out;
+  font-size: 16px;
+}
+
+.sidebar-item:hover {
+  background-color: #e1e1e126;
+}
+
+.dropdown-item.link:hover {
+  background-color: #e1e1e126;
+}
+
+.dropdown-title {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdown-description {
+  font-size: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 0px;
+}
+
+.dropdown-item-title {
+  padding-left: 13px;
+  display: flex;
+  font-size: 15px;
+}
+
+.dropdown-icon {
+  padding-right: 10px;
+  display: flex;
+}
+
+.dropdown-item {
+  display: flex;
+  gap: 5px;
+  line-height: 3rem;
+  transition: all 270ms ease-in-out;
+}
+
+.dropdown-item-icon {
+  padding-left: 20px;
+  margin-left: 10px;
+}
+
+.single{
+  padding-left: 10px;
+}
+
+.link{
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  border-radius: 10px;
+  width: 100%;
+}
+
+@keyframes inAnimation {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes outAnimation {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0.5;
+    transform: translateY(-20px);
+  }
+}
+
+.sidebar-close-btn {
+  position: absolute;
+  top: 2%;
+  right: 20px;
+  z-index: 1;
+  cursor: pointer;
+}

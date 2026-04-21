@@ -1,0 +1,44 @@
+.newscardPOS{
+    background-color: white;
+    margin-bottom: 25px;
+    padding: 18px;
+    border-radius: 10px;
+    width: 360px;
+    height: auto;
+    border: 1px solid #D3D3D3;
+}
+.NewscontentPOS{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+}
+.newscardPOS h3{
+    margin: 0;
+}
+.newscardPOS h5{
+    color: #757676;
+    padding-top: 10px;
+    margin: 0;
+}
+.redirectbtnPOS{
+    cursor: pointer;
+    border-radius: 9.14px;
+    width: max-content;
+    color: white;
+    background-color: black;
+    padding:10px 15px;
+}
+.redirectbtnPOS p{
+    margin: 0;
+}
+/* .css-1160xiw-MuiPaper-root-MuiDrawer-paper{
+    overflow-y: hidden !important;
+    overflow-x: hidden;
+} */
+.contentNewsPOS{
+    overflow-x: auto;
+}
+.NewscontentPOS:last-child{
+    margin-bottom: 50px;
+}

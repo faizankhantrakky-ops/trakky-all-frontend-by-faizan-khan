@@ -1,0 +1,480 @@
+.Card-main-alter-code-container {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.Card-main-alter-code-card-hero-title {
+  width: 100%;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.booking-summary h2,
+.Card-main-alter-code-booking h2 {
+  background: linear-gradient(
+    to right,
+    rgba(81, 45, 200, 0.24) 0%,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(81, 45, 200, 0.24) 100%
+  );
+  border-radius: 5px;
+  font-size: 18px;
+  padding: 10px 20px;
+  font-weight: 500;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  width: 300px;
+  margin-bottom: 20px;
+}
+
+.Card-main-alter-code-card-hero-title h2 {
+  font-weight: 500;
+  background: linear-gradient(
+    to right,
+    rgba(81, 45, 200, 0.24) 0%,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(81, 45, 200, 0.24) 100%
+  );
+  border-radius: 5px;
+  margin: 0;
+  margin-bottom: 20px;
+  padding: 10px 60px;
+}
+
+.Card-main-alter-code-hero-cad-bottom-border {
+  border: 1px solid gray;
+}
+
+.Card-main-alter-code-main-container {
+  display: flex;
+  gap: 20px;
+  border-top: 1px solid gray;
+  margin-top: 10px;
+}
+
+.Card-main-alter-code-card-services-container {
+  width: 60%;
+}
+
+.Card-main-alter-code-table-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-height: 800px; /* Adjust the height as needed */
+  overflow-y: auto;
+}
+
+.Card-main-alter-code-header {
+  display: flex;
+  justify-content: space-around;
+  font-weight: 400;
+  padding: 10px;
+  /* background-color: #f0f0f0; */
+  border-bottom: 1px solid #ddd;
+}
+
+.Card-main-alter-code-service-item-container {
+  display: flex;
+  justify-content: space-around;
+}
+.Card-main-horizanl-row {
+  border: 1px solid #ddd;
+}
+.Card-main-alter-code-service-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+}
+
+.Card-main-alter-code-service-item img {
+  width: 112px;
+  height: 112px;
+  border-radius: 8px;
+}
+
+.Card-main-alter-code-service-price {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+}
+
+.Card-main-alter-code-quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 5px;
+  background-color: rgba(81, 45, 200, 0.09);
+}
+.Card-main-alter-code-quantity-control button {
+  color: rgba(81, 45, 200, 0.5);
+  background-color: transparent;
+  border: none;
+  padding: 5px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.Card-main-alter-code-quantity-control button:hover {
+  background-color: rgba(81, 45, 200, 0.2);
+}
+
+.Card-main-alter-code-quantity-control span {
+  font-size: 16px;
+  min-width: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.Card-main-alter-code-booking {
+  padding: 12px;
+  background-color: #fff;
+  border-left: 1px solid gray;
+}
+
+.Card-main-alter-code-booking-name-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.Card-main-alter-code-date-picker {
+  border: 1px solid rgba(81, 45, 200, 0.5);
+  background-color: #f9f9f9;
+  font-size: 16px;
+  outline: none;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 4px 8px;
+  color: #333;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  width: calc(100% - 40px);
+  margin: 0 auto;
+}
+.react-datepicker-wrapper {
+  width: 100%;
+  background-color: #f9f9f9;
+}
+
+.date-picker-input {
+  width: auto;
+  background-color: #f9f9f9;
+  outline: none;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.date-picker-input::placeholder {
+  font-size: 18px;
+  color: #999;
+}
+.react-datepicker {
+  margin-top: 14px !important;
+}
+.react-datepicker__header {
+  background-color: #fff !important;
+  border: none !important;
+}
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background-color: none !important;
+}
+.react-datepicker__day--keyboard-selected {
+  color: #000 !important;
+  border: 1px solid #6c63ff;
+  background-color: none !important;
+}
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__month-text--keyboard-selected,
+.react-datepicker__quarter-text--keyboard-selected,
+.react-datepicker__year-text--keyboard-selected {
+  background-color: none !important;
+}
+.react-datepicker__triangle {
+  bottom: 96% !important;
+}
+.react-datepicker__current-month {
+  font-size: 18px;
+  color: #333;
+}
+
+.react-datepicker__day-name,
+.react-datepicker__day {
+  width: 2.5rem;
+  line-height: 2.5rem;
+  margin: 0.166rem;
+  color: #333;
+  font-weight: 400;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background-color: #6c63ff; /* Update to match the primary color in your design */
+  color: white;
+  border-radius: 50%;
+}
+
+.react-datepicker__day:hover {
+  background-color: #eaeaea; /* Update to match hover effect in your design */
+  border-radius: 50%;
+}
+.Card-main-alter-code-gired-table-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 15px 20px;
+  align-items: center;
+}
+.Card-main-alter-code-containe {
+  padding: 8px;
+  /* background-color: #5751e8; */
+  color: rgba(81, 45, 200, 1);
+  border: 0.57px solid rgba(81, 45, 200, 1);
+  border-radius: 5px;
+  font-size: 12px;
+  font-family: inter;
+  font-weight: 300;
+}
+.Card-main-alter-code-payment {
+  margin-top: 30px;
+  padding: 10px 30px;
+  font-family: inter;
+}
+
+.Card-main-alter-code-payment h3 {
+  margin-bottom: 15px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  font-family: inter;
+}
+
+.Card-main-alter-code-payment p {
+  margin: 5px 0;
+  display: flex;
+  justify-content: center;
+  color: rgba(99, 99, 99, 1);
+}
+
+.Card-main-alter-code-card-Total {
+  display: flex;
+  justify-content: space-between;
+}
+.Card-main-alter-code-card-Total-first {
+  display: flex;
+  justify-content: space-between;
+  color: #0000;
+}
+.Card-main-alter-code-card-Total-first p {
+  display: flex;
+  justify-content: space-between;
+  color: #000;
+}
+
+.Card-main-alter-code-card-Total p {
+  display: flex;
+  justify-content: start;
+}
+.Card-main-alter-code-card-Total-last {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid gray;
+}
+.Card-main-alter-code-card-Total-last .Card-main-alter-code-text-black {
+  color: #000;
+}
+.Card-main-alter-code-promo-button {
+  background: rgba(49, 170, 61, 1);
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  position: relative;
+  overflow: hidden;
+  outline: auto;
+  border: none;
+}
+
+.Card-main-alter-code-promo-button::before,
+.Card-main-alter-code-promo-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 20px;
+  height: 100%;
+  background: white;
+  border-radius: 50%;
+}
+
+.Card-main-alter-code-promo-button::before {
+  left: -10px;
+  box-shadow: -1px 0 0 rgba(49, 170, 61, 1);
+}
+
+.Card-main-alter-code-promo-button::after {
+  right: -10px;
+  box-shadow: 1px 0 0 rgba(49, 170, 61, 1);
+}
+
+.Card-main-alter-code-payment-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.Card-main-alter-code-payment-h3 {
+  margin-bottom: 15px;
+}
+
+.Card-main-alter-code-payment-options label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 16px;
+  font-family: inter;
+  border-top: 1px solid gray;
+  padding: 10px 0px;
+}
+
+.Card-main-alter-code-payment-label-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.Card-main-alter-code-payment-options input {
+  margin-left: 10px;
+}
+.Card-main-alter-code-payment-options input[type="radio"] {
+  width: 15px;
+  height: 20px;
+  border: 2px solid #6c63ff;
+  border-radius: 50%;
+  position: relative;
+  background-color: white;
+  cursor: pointer;
+  border-color: #6c63ff;
+}
+
+.Card-main-alter-code-confirm-button {
+  background: linear-gradient(90deg, #9e70ff 0%, #9e70ff 0.01%, #512dc8 100%);
+  color: white;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+}
+
+.Card-main-alter-code-confirm-button:hover {
+  background-color: #5751e8;
+}
+
+.Card-main-alter-code-payment-h3 {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.Card-main-alter-code-payment-h3 h1 {
+  font-size: 22px;
+  font-family: inter;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .Card-main-alter-code-tbody tr {
+    justify-content: space-around;
+  }
+  .Card-main-alter-code-main-container {
+    flex-direction: column;
+  }
+
+  .Card-main-alter-code-card-services-container {
+    width: 100%;
+    padding: 0px 0px;
+    border-right: none;
+    border-bottom: 2px solid gray;
+  }
+
+  .Card-main-alter-code-service-item {
+    flex-direction: column;
+    width: 120px;
+    align-items: center;
+    border-right: 1px solid gray;
+    flex-shrink: 0;
+  }
+
+  .Card-main-alter-code-service-item img {
+    width: 80px;
+    height: auto;
+    aspect-ratio: 1/1;
+    margin-right: 0;
+  }
+
+  .Card-main-alter-code-service-price {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 0;
+    gap: 5px;
+    width: auto;
+    align-items: center;
+    padding: 5px;
+    width: calc(100% - 120px);
+  }
+
+  .Card-main-alter-code-payment {
+    padding: 10px;
+  }
+
+  .Card-main-alter-code-payment h3 {
+    font-size: 18px;
+  }
+
+  .Card-main-alter-code-payment-options input {
+    margin-left: 0;
+  }
+  .Card-main-alter-code-booking {
+    border: none;
+  }
+  .Card-main-alter-code-promo-button {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .Card-main-alter-code-confirm-button {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+/* @media (max-width: 480px) {
+  .Card-main-alter-code-service-item {
+    flex-direction: column;
+    width: 30%;
+  }
+  .Card-main-alter-code-service-item img {
+    width: 80px;
+    height: auto;
+    margin-right: 0;
+  }
+} */

@@ -1,0 +1,122 @@
+.navbar__container {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 5.9375rem !important;
+    top: 0 !important;
+    left: 0;
+    padding: 2rem 4%;
+    color: white;
+}
+.register-div
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+} 
+
+@media screen and (min-width: 820px) {
+    .register-div {
+        gap: 1rem;
+    }
+    
+}
+
+.navbar_search-top {
+    display: none;
+}
+
+/* hidden properties starts */
+.OH-hidden {
+    position: fixed;
+    top: -80px;
+    transition: var(--transition);
+    background-color: #f0f0f0;
+    z-index: 100;
+}
+
+.OH-hidden .nav-links__container {
+    display: none;
+}
+
+.OH-hidden .navbar_search-top {
+    display: flex;
+}
+
+.OH-hidden .search__container {
+    width: 40%;
+    margin: 0 auto;
+}
+
+/* hidden properties ends */
+
+
+.logo__container img {
+    width: 69px;
+    height: 22px;
+    cursor: pointer;
+}
+
+.nav-links__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-links__container li {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    cursor: pointer;
+}
+
+.register-spa button {
+    padding: 10px 20px;
+    border: 1px solid #fff;
+    border-radius: 30px;
+    color: #fff;
+    background: transparent;
+    cursor: pointer;
+}
+
+.none-other {
+    display: flex;
+    width: 28rem;
+}
+
+@media screen and (max-width: 920px) {
+    .none-other {
+        width: 24rem;
+    }
+    
+}
+
+@media screen and (max-width:820px) {
+    .nav-links__container {
+        display: none;
+    }
+
+    .OH-hidden .nav-links__container {
+        display: none;
+    }
+
+    .OH-hidden .navbar_search-top {
+        display: none;
+    }
+
+    .none-other {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 631px){
+    .account{
+        color: black !important;
+    }
+}

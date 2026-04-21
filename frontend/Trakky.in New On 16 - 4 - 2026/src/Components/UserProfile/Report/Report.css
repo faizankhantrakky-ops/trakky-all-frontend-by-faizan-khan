@@ -1,0 +1,139 @@
+
+.report-btn{
+    margin: 20px auto;
+    width: 148px;
+}
+/* .select-city{
+    background-color: white;
+} */
+
+.report-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* width:50vw; */
+    padding: 20px;
+    margin: 14px;
+    margin-left: auto;
+    margin-right: auto;
+    
+  }
+  
+  .report-heading {
+    text-align: center;
+   
+  }
+  
+  .report-form {
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    gap: 3vh;
+    padding-top: 1rem;
+    max-width: 100%;
+    /* padding-right: 8rem;
+    padding-left: 8rem; */
+    width:100%;
+    
+    /* box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; */
+    /* margin-left: 5rem; */
+    /* margin-right: 5rem; */
+  }
+.report-form select{
+    /* box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; */
+    /* border-radius: 6px; 
+    color: #9B9B9B; */
+}
+  
+  /* .select-city,
+  .select-salon {
+    height: 5vh;
+  } */
+
+
+
+  
+  .experience-textarea {
+    height: 35vh !important;
+    background: #FFFFFF;
+    border: 1.29335px solid #9B9B9B;
+    border-radius: 10.3468px;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    /* border: 1px solid green; */
+    outline: none;
+    padding: 0 15px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-radius: 6px;
+    color: #7c7c7c;
+    position: relative;
+    background-color: white !important;
+    background-origin: content-box;
+  }
+  .report-textarea{
+    width: 100%;
+    position: relative;
+  }
+  .report-textarea label{
+    position: absolute;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #7c7c7c;
+    left: 15px;
+    top: 13px;
+    transition: all 0.3s ease;
+    background-color: #fff;
+  }
+  .report-textarea label{
+    top: -15px;
+    left: 15px;
+    color: #7c7c7c;
+    font-size: 1rem;
+    font-weight: 500;
+    background-color: #fff;
+    padding: 0 5px;
+    border-radius: 5px;
+  }
+.report-textarea textarea{
+  padding-top: 5px;
+  font-weight: 400;
+  color: black;
+}
+  .experience-textarea{
+    overflow: hidden;
+    outline:none;
+  }
+  
+  .report-btn {
+    background-color: #6B45BC;
+    color: white;
+    height: 38px;
+    width: 148px;
+    border-radius: 10px;
+  }
+  
+  @media (max-width: 779px) {
+    
+    .report-form{
+        /* padding-left: 1rem;
+        padding-right: 1rem; */
+        /* margin-left:0;
+        margin-right:0; */
+        width:100%
+    }
+    .report-container{
+      width:100%;
+    }
+  }
+  @media screen and (max-width: 350px){
+    .report-btn{
+      background: linear-gradient(90deg, #9E70FF 0%, #9E70FF 0.01%, #512DC8 100%);
+
+    }
+  }
+
+
+ 

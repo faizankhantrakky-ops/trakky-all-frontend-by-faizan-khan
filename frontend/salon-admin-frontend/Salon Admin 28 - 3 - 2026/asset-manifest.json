@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/static/css/main.8ae1b0ce.css",
+    "main.js": "/static/js/main.e2e1f374.js",
+    "static/js/787.f16c1f56.chunk.js": "/static/js/787.f16c1f56.chunk.js",
+    "static/media/trakky_logo.png": "/static/media/trakky_logo.2174bd669b26b678f109.png",
+    "static/media/logo_white.png": "/static/media/logo_white.8e4c8a2f385338214ec9.png",
+    "static/media/profile_icon.svg": "/static/media/profile_icon.fab4e117ab13139b839e1d6987db699d.svg",
+    "static/media/hamburger.svg": "/static/media/hamburger.88883f668f686703005fa3d0b5dc1e45.svg",
+    "index.html": "/index.html",
+    "static/media/down_arrow.svg": "/static/media/down_arrow.088b038d18e8b36574ec4db7ef8ffd0a.svg",
+    "static/media/search.svg": "/static/media/search.52f972f5b53c87677291a1b015079062.svg",
+    "main.8ae1b0ce.css.map": "/static/css/main.8ae1b0ce.css.map",
+    "main.e2e1f374.js.map": "/static/js/main.e2e1f374.js.map",
+    "787.f16c1f56.chunk.js.map": "/static/js/787.f16c1f56.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8ae1b0ce.css",
+    "static/js/main.e2e1f374.js"
+  ]
+}

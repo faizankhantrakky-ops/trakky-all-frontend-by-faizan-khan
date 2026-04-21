@@ -1,0 +1,375 @@
+.homebtnAppointmentsPOS1,
+.homebtnAppointmentsPOS2 {
+    /* background-color: rgb(231, 231, 231); */
+    transition: 0.2s;
+    cursor: pointer;
+    /* padding: 0 20px; */
+    font-size: 16px;
+    border: none;
+    height: 40px;
+}
+
+.btngrpAppointmentMainPOS {
+    display: flex;
+    background-color: #C5CAFF;
+    width: fit-content;
+    border-radius: 10px;
+}
+
+.homebtnAppointmentsPOS1 {
+    padding: 0 20px
+}
+
+.homebtnAppointmentsPOS2 {
+    padding: 0 20px;
+}
+
+.POSactiveAppointmentpage {
+    /* background-color: black;
+    color: white; */
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+    padding: 0 20px;
+    box-shadow: 0px 0px 5px 0px #615b5b45;
+}
+
+.chairouterboxPOS {
+    justify-content: space-around;
+    display: flex;
+    border-radius: 10px;
+    width: 100%;
+    height: 100px;
+    background-color: white;
+}
+
+.chairinnerBox {
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-flow: column;
+}
+
+.FormPOSaddappointment {
+
+    width: 70%;
+    background-color: white;
+}
+
+.POSmembershipandotherdetails {
+    width: 30%;
+    height: max-content;
+    background-color: white;
+}
+
+.outerBoxFormAddAptPOS {
+    width: 100%;
+    gap: 20px;
+    display: flex;
+    flex-flow: column;
+}
+
+.OOBoxFormPOS {
+    justify-content: center;
+    display: flex;
+}
+
+.IIBoxFormPOS {
+    align-items: center;
+    justify-content: space-around;
+    display: flex;
+    gap: 10px;
+}
+
+.SubmitbtnAppointment {
+    border-radius: 5px;
+    background: black;
+    color: white;
+    /* height: 20px; */
+    padding: 10px 20px;
+}
+
+/* .IIBoxFormPOS .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input , .IIBoxFormPOS .css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root{
+    width: 225px;
+} */
+.IIBoxFormPOS .css-q8hpuo-MuiFormControl-root {
+    width: 400px;
+}
+
+.IIBoxFormPOS .css-10o2lyd-MuiStack-root {
+    width: 400px;
+}
+
+.IIBoxFormPOS .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
+
+    width: 372px;
+}
+
+.IIBoxFormPOS .css-10o2lyd-MuiStack-root {
+    padding-top: 10px;
+}
+
+.IIBoxFormPOS .css-z3c6am-MuiFormControl-root-MuiTextField-root {
+    min-width: 0px !important;
+    width: 100%;
+}
+
+.available_staff {
+    transition: 1.2s;
+    flex-flow: column;
+    padding: 10px;
+    display: flex;
+
+}
+
+.available_staff h3 {
+    padding-bottom: 25px;
+}
+
+.available_staff div {
+    display: flex;
+    justify-content: space-between;
+}
+
+.daterangPickerPOS {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.listAppointmentPOS {
+    gap: 20px;
+    flex-flow: column;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-around;
+    width: fit-content;
+    height: fit-content;
+    overflow-x: auto;
+    /* Enable horizontal scrolling */
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scrolling on iOS */
+}
+
+.listAppointmentPOS table th,
+.listAppointmentPOS table td {
+    height: 50px;
+    width: 250px;
+}
+
+.listAppointmentPOS table td {
+    text-align: center;
+}
+
+.listAppointmentPOS table th,
+.listAppointmentPOS table td {
+    border-left: 1px solid rgb(163, 161, 161);
+}
+
+.listAppointmentPOS table th:first-child,
+.listAppointmentPOS table td:first-child {
+    border-left: none;
+}
+
+.listAppointmentPOS table th {
+    border-bottom: 1px solid rgb(163, 161, 161);
+}
+
+.listAppointmentPOS table {
+    box-shadow: 0px 10px 11px 0px #615b5b45;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.IIBoxFormPOS .css-i44wyl{
+    width: 50% !important;
+}
+.IIBoxFormPOS .css-sx5hge {
+    width: 50% !important;
+}
+
+.IIBoxFormPOS .css-sx5hge .css-165mck1{
+    width: 100% !important; 
+    min-width: 0px !important; 
+}
+
+.IIBoxFormPOS .css-tzsjye {
+    width: 50% !important; 
+}
+
+
+.cardAppointmentCard {
+    border-radius: 8px;
+    display: flex;
+    flex-flow: column;
+    gap: 20px;
+    background-color: white;
+    padding: 20px;
+    width: 350px;
+    height: auto;
+}
+
+.BtngrpPOSAppointmentCard button {
+    color: white;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    width: max-content;
+    padding: 0 15px;
+    height: 30px;
+}
+
+.cardListAppointmentCard {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 25px;
+}
+
+.PendingAppointment_card {
+    animation: glowAnimation 1s ease-in-out infinite;
+    border: 1px solid red;
+    /* Initial border */
+}
+
+@keyframes glowAnimation {
+    0% {
+        box-shadow: 0 0 10px red;
+        /* Start with a subtle glow */
+    }
+
+    50% {
+        box-shadow: 0 0 20px red;
+        /* Increase glow */
+    }
+
+    100% {
+        box-shadow: 0 0 10px red;
+        /* Return to subtle glow */
+    }
+}
+
+.listAppointmentPOS a {
+    color: black;
+    text-decoration: none;
+}
+
+@media (max-width: 769px) {
+    .mainAppointmentoutermostsect_POS {
+        padding: 10px !important;
+    }
+
+    .btngrpAppointmentMainPOS {
+        display: flex;
+        background-color: #C5CAFF;
+        justify-content: center;
+        margin: auto;
+        border-radius: 10px;
+
+    }
+
+    .btnSeemore_POSappointment {
+        width: max-content;
+        background-color: red;
+        color: white;
+        border: none;
+        padding: 7px 7px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .listAppointmentPOS {
+        scrollbar-width: none;
+        width: max-content;
+        overflow: auto;
+        font-size: 10px;
+    }
+
+    .listAppointmentPOS table th:first-child,
+    .listAppointmentPOS table td:first-child {
+        padding: none;
+    }
+
+    .modalPOSappointmentDaterangepicker {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modalPOSappointmentDaterangepicker .css-himxjj {
+        transform: scale(0.6) !important;
+        position: relative;
+        height: max-content;
+        top: auto;
+        left: auto;
+    }
+
+    .homebtnAppointmentsPOS1,
+    .homebtnAppointmentsPOS2 {
+        font-size: 14px;
+        height: 40px;
+        padding: 0 10px;
+    }
+
+    .TitleDaterangepickerPOSappointment .css-ahj2mt-MuiTypography-root {
+        font-size: 14px;
+    }
+
+    .listAppointmentPOS {
+        width: 100%;
+        font-size: 16px;
+        /* Adjust font size for readability */
+    }
+
+    .listAppointmentPOS table {
+        width: 100%;
+        /* Ensure table fits within the container */
+    }
+
+    /* .listAppointmentPOS table th,
+    .listAppointmentPOS table td {
+        white-space: nowrap;
+        width: auto;
+        padding: 8px;
+    } */
+
+
+    .btngrpAppointmentMainPOS {
+        display: flex;
+        justify-content: center;
+    }
+
+    .addappointmentFormNDmembershipdetails {
+        flex-flow: column-reverse;
+    }
+
+    .POSmembershipandotherdetails {
+        border-radius: 10px;
+        width: 100%;
+    }
+
+    .FormPOSaddappointment {
+        width: 100%;
+    }
+
+    .cardappointment_POSouterBox {
+        padding: 10px !important;
+    }
+
+    .cardAppointmentCard {
+        gap: 12px;
+        width: 320px;
+        padding: 15px;
+    }
+    .daterangPickerPOS{
+        justify-content: center;
+    }
+}
+@media (max-width: 800px) {
+    .listAppointmentPOS table th, .listAppointmentPOS table td {
+        white-space: nowrap;
+        width: auto;
+        padding: 8px;
+    }
+}

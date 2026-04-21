@@ -1,0 +1,130 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+/* * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}*/
+.body {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  width: 100%;
+  /* margin: 0px; */
+  box-sizing: border-box;
+  /* position: relative; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #22232e;
+  font-family: "Poppins", sans-serif;
+}
+.link {
+  text-decoration: none;
+}
+
+.menu {
+  list-style: disc;
+  color: #e0ffff;
+}
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+.container img {
+  width: 32.4vw;
+  height: 32.4vw;
+}
+.text {
+  display: block;
+  padding: 0px 3vw;
+  margin-bottom: 0px;
+  width: 34.7222222vw;
+  height: fit-content;
+}
+.text h1 {
+  color: #00c2cb;
+  font-size: 2.9vw;
+  font-weight: 700;
+  margin-bottom: 1.157vw;
+}
+.text p {
+  font-size: 1.357vw;
+  color: #e0ffff;
+  margin-bottom: 1.157vw;
+  /* line-height: 1.5rem; */
+  margin-bottom: 1.157vw;
+  line-height: normal;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.157vw;
+  margin-left: 2.3148vw;
+  /* margin-bottom: 100px; */
+}
+.menu li {
+  font-size: 1.91vw;
+  margin-bottom: 0.5vw;
+}
+.menu li a {
+  display: flex;
+  font-size: 1.91vw;
+  color: #00c2cb;
+  transition: 0.1s;
+}
+@media screen and (max-width: 600px) {
+  .body {
+    min-height: 100vh;
+    height: fit-content;
+  }
+  .container {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  .text,
+  .image {
+    width: 100%;
+  }
+  .container {
+    min-width: 33.333vw;
+  }
+  .text {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    width: 0px auto;
+  }
+  .text p {
+    font-size: 1.157vw;
+  }
+  .image {
+    display: flex;
+    width: 33.333vw;
+    align-self: center;
+    justify-content: center;
+    margin: auto;
+  }
+  .text h1 {
+    color: #00c2cb;
+    font-size: 4.7vw;
+  }
+  .text p {
+    font-size: 2.57vw;
+    width: 100%;
+    line-height: normal;
+  }
+  .menu li {
+    font-size: 3.23vw; 
+  }
+
+  .menu li a {
+    display: flex;
+    font-size: 3.23vw;
+  }
+}

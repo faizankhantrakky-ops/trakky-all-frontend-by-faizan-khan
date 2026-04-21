@@ -1,0 +1,59 @@
+.spa_list_main__container {
+    display: flex;
+}
+.spa_list__container {
+    width: 68%;
+    margin: 0 2% 0 5%;
+}
+
+.spa_list__header {
+    margin: 1rem 5%;
+    font-size: 30px;
+    font-weight: 600;
+}
+.spa_list
+{
+    width: 100%;
+}
+
+@media screen and (max-width: 1030px) {
+    .popular_location__container {
+        display: none;
+    }
+    .spa_list__container {
+        width: 90%;
+        margin: 0 5%;
+    }
+}
+@media screen and (max-width: 450px) {
+    .spa_list__container {
+        width: 96%;
+        margin: 0 2%;
+    }
+     .salon_list__header {
+        font-size: 24px;
+    }
+}
+
+/* Popular location css starts */
+.popular_location__container {
+    width: 23%;
+    margin: 1rem 2% 1rem 0;
+    border: 2px solid #DFDFDF;
+    border-radius: 15px;
+    padding: 1rem;
+    height: fit-content;
+}
+
+.popular_location__header h3 {
+    font-weight: 400;
+    padding-bottom: 1rem;
+}
+
+.popular_location_list ul li {
+    line-height: 30px;
+}
+.popular_location_list ul li a {
+    color: #3D3D3D;
+}
+/* Popular location css ends */

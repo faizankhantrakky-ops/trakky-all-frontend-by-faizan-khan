@@ -1,0 +1,459 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap') */
+
+* {
+  font-family: "Inter", sans-serif;
+}
+
+.profilebanner {
+  width: 100%;
+  padding: 90px 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.PP-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 80px;
+}
+
+.PP-userDetails {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.PP-detail {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #ffffff;
+}
+
+.PP-detail h3 {
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.PP-detail p {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #d2d2d2;
+}
+
+.PP-trakkycoins {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 20px;
+  align-items: center;
+  height: 180px;
+}
+
+.PP-coins,
+.PP-refers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  background-color: #ffffff;
+  height: 150px;
+  width: 180px;
+  border-radius: 13px;
+  cursor: pointer;
+}
+
+.coinCount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 2.5rem;
+  padding-inline: 60px;
+}
+
+.PP-navigation {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  height: auto;
+  max-width: 330px;
+  /* border: 2px solid red; */
+}
+
+.PP-navigation h1 {
+  margin-bottom: 13px;
+  font-size: large;
+  color: gray;
+}
+
+.PP-navigation h3 {
+  font-size: large;
+}
+
+.PP-navigation a {
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  align-items: center;
+  /* margin-bottom:.5rem; */
+  font-size: small;
+  font-weight: 400;
+  padding: 0.5rem 0 0.5rem 5px;
+  border-bottom: 1px solid rgb(222, 221, 221);
+}
+
+.PP-navigation .active {
+  background: linear-gradient(to right, #ffffff 0%, #6b45bc 95%);
+  border-left: 2px solid #6b45bc;
+}
+
+.profileoptions,
+.PP-support,
+.PP-contact {
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 2rem;
+}
+
+.PP-content {
+  width: 100%;
+  height: 100%;
+  width: 70%;
+  flex-grow: 1;
+}
+
+.nothing {
+  line-height: 1.5;
+  margin: 1.5rem 0px 0px;
+  color: rgb(54, 54, 54);
+  text-align: center;
+  font-size: 2rem;
+}
+
+.mobile-content {
+  width: 100%;
+}
+
+/* MY - INFO - CSS */
+
+.edit-Profile-container {
+  padding: 10px 30px 30px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.edit-P-C-heading {
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #000;
+}
+
+.PP-edit-submit-btn {
+  padding: 7px 30px;
+  background-color: #512dc8;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-block: 5px;
+}
+
+.PP-form-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 2rem;
+  column-gap: 1.5rem;
+  width: 100%;
+  /* border: 1px solid red; */
+  padding: 10px;
+  max-width: 750px;
+  margin-bottom: 10px;
+}
+
+.PP-form-item,
+.PP-item-phone {
+  height: 56px;
+  width: 100%;
+  position: relative;
+}
+
+.PP-form-item input,
+.PP-item-phone input {
+  width: 100%;
+  height: 100%;
+  /* border: 1px solid green; */
+  outline: none;
+  padding: 0 15px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  border-radius: 6px;
+  position: relative;
+  background-color: white !important;
+  border: 1px solid #7c7c7c60;
+}
+
+.PP-form-item input::placeholder,
+.PP-item-phone input::placeholder {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #7c7c7c;
+}
+
+.PP-form-item select {
+  width: 100%;
+  height: 100%;
+  /* border: 1px solid green; */
+  outline: none;
+  padding: 0 15px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  border-radius: 6px;
+  color: #7c7c7c;
+  position: relative;
+  background-color: white !important;
+
+  background-origin: content-box;
+}
+
+.PP-form-item select option:not(:first-child) {
+  color: black;
+}
+
+.PP-form-item label,
+.PP-item-phone label {
+  position: absolute;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #7c7c7c;
+  left: 15px;
+  top: 13px;
+  transition: all 0.3s ease;
+  background-color: #fff;
+}
+
+.PP-form-item input:focus + label,
+.PP-form-item input:valid + label,
+.PP-item-phone input:focus + label,
+.PP-item-phone input:valid + label,
+.PP-form-item select + label {
+  top: -10px;
+  left: 15px;
+  color: #7c7c7c;
+  font-size: 1rem;
+  font-weight: 500;
+  background-color: #fff;
+  padding: 0 5px;
+  border-radius: 5px;
+}
+
+.PP-item-phone input {
+  padding: 0 15px 0 74px;
+}
+.PP-item-phone label {
+  left: 74px;
+}
+.PP-item-phone input:focus + label,
+.PP-item-phone input:valid + label {
+  top: -10px;
+  left: 74px;
+  color: #7c7c7c;
+  font-size: 1rem;
+  font-weight: 500;
+  background-color: #fff;
+  border-radius: 5px;
+}
+.PP-item-phone .img-div {
+  position: absolute;
+  height: 46px;
+  width: 64px;
+  top: 0;
+  left: 0;
+  border-right: 1px solid #7c7c7c60;
+  display: flex;
+  padding: 5px;
+  align-items: center;
+  justify-content: center;
+  margin-block: 5px;
+}
+.PP-item-phone .img-div img {
+  height: 40px;
+  width: auto;
+}
+
+@media screen and (min-width: 1024px) {
+  .PP-userDetails img {
+    width: 180px;
+    height: 180px;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .main-container {
+    width: 100%;
+    padding-inline: 25px;
+  }
+
+  .PP-userDetails {
+    margin-left: 20px;
+    gap: 1rem;
+  }
+
+  .PP-userDetails img {
+    width: 110px;
+    height: 110px;
+  }
+
+  .PP-userDetails h3 {
+    font-size: 1.2rem;
+  }
+
+  .PP-userDetails p {
+    font-size: 1rem;
+  }
+
+  .PP-trakkycoins {
+    margin-right: 0px;
+  }
+
+  .PP-coins,
+  .PP-refers {
+    height: 110px;
+    padding: 15px 0;
+    width: 140px;
+    justify-content: space-evenly;
+    border-radius: 10px;
+    gap: 0;
+    border: 1px solid gray;
+  }
+
+  .booking-card {
+    width: 100% !important;
+  }
+
+  .PP-hero {
+    padding-inline: 30px 40px;
+  }
+  .PP-form-container {
+    grid-template-columns: 1fr;
+  }
+  .edit-Profile-container {
+    padding: 10px 50px 30px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .main-container {
+    width: 100%;
+    margin: 0;
+    padding-inline: 10px;
+  }
+
+  .mobile-content {
+    margin-right: 14px;
+  }
+
+  .profilebanner {
+    padding-block: 10px 20px;
+    background-image: none !important;
+  }
+
+  .PP-userDetails img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .PP-detail p {
+    color: #7c7c7c;
+  }
+
+  .PP-userDetails {
+    gap: 0.6rem;
+    justify-content: flex-start;
+    margin-left: 0px;
+    flex-direction: column;
+  }
+
+  .PP-coins,
+  .PP-refers {
+    height: 90px;
+    width: 140px;
+    justify-content: space-evenly;
+    border-radius: 10px;
+    gap: 0;
+    border: 1px solid gray;
+  }
+
+  .PP-trakkycoins {
+    height: 120px;
+    width: 330px;
+    margin-right: 0px;
+    gap: 0;
+  }
+
+  .PP-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding-inline: 0;
+  }
+
+  .main-container {
+    margin-top: 0;
+  }
+
+  .PP-navigation {
+    width: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
+    justify-content: center;
+    gap: 0rem;
+    height: auto;
+    margin-top: 0;
+    padding-top: 0;
+    max-width: 100%;
+  }
+
+  .profileoptions {
+    margin-top: 0;
+    border: none;
+  }
+
+  .PP-detail {
+    color: black;
+    align-items: center;
+  }
+
+  .PP-content {
+    display: none;
+  }
+  .PP-form-container {
+    grid-template-columns: 1fr;
+  }
+  .edit-Profile-container {
+    padding: 10px 50px 30px;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .PP-form-container {
+    grid-template-columns: 1fr;
+  }
+  .edit-Profile-container {
+    padding: 10px 0px 30px;
+  }
+}

@@ -1,0 +1,182 @@
+.Contactus_Hero_main {
+    padding: 32px 140px;
+    display: flex;
+    justify-content: space-evenly;
+    padding-bottom: 40px;
+}
+
+.Contactus_Hero_form_container {
+
+    display: flex;
+    height: 500px;
+    width: 1000px;
+    /* border:2px solid black ; */
+}
+
+.Contactus_Hero_form {
+    background-color: white;
+}
+.Contactus_Hero_checkbox {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.Contactus_Hero_form,
+.Contactus_Hero_photo {
+    height: 100%;
+    width: 50%;
+}
+
+.Contactus_Hero_img {
+    height: 100%;
+    width: 100%;
+}
+
+.Contactus_Hero_heading {
+    font-family: "Mulish", sans-serif;
+    display: flex;
+    justify-content: center;
+}
+
+.Contactus_Hero_form_content {
+    font-family: Okra, Helvetica, sans-serif;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
+    /* display: flex; */
+    flex-direction: column;
+}
+
+.Contactus_Hero_form_content input {
+    border: 1px solid #ebebeb;
+    padding-left: 8px;
+    font-size: 20px;
+    position: relative;
+    border-width: 2px;
+    width: 100%;
+    height: 50px;
+    border-radius: 8px;
+}
+
+.Contactus_Hero_label_input {
+    display: flex !important;
+    justify-content: flex-start;
+    color: #c2c2c2;
+    padding: 5px;
+    background-color: white;
+    width: max-content;
+    position: relative;
+    top: -43px;
+    left: 14px;
+    transition: 0.2s ease-in-out;
+}
+
+input:focus+.Contactus_Hero_label_input,
+input:not(:placeholder-shown)+.Contactus_Hero_label_input {
+    transform: translate(0, -26px);
+    color: black;
+}
+
+.Contactus_Hero_textarea {
+    border: 1px solid #ebebeb;
+    font-family: Okra, Helvetica, sans-serif;
+    padding-left: 8px;
+    font-size: 20px;
+    border-radius: 8px;
+    width: 100%;
+    border-width: 2px;
+    padding-top: 15px;
+    resize: none !important;
+}
+
+.Contactus_Hero_textarea+.Contactus_Hero_label_input {
+    top: -165px;
+   
+}
+.Contactus_Hero_textarea+.Contactus_Hero_label_input .Contactus_Hero_textarea {
+    padding-top: 15px;
+}
+
+.Contactus_Hero_textarea:focus+.Contactus_Hero_label_input,
+.Contactus_Hero_textarea:not(:placeholder-shown)+.Contactus_Hero_label_input {
+    transform: translate(0, -26px);
+    color: black;
+}
+
+.Contactus_Hero_button {
+    border-radius: 8px;
+    border: none;
+    padding: 15px 20px;
+    color: white;
+    font-size: 22px;
+    font-family: Okra, Helvetica, sans-serif;
+    background-color: #512DC8;
+    transition: 0.2s;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.Contactus_Hero_button:hover {
+    background-color: white;
+    border: 1px solid black;
+    color: #512DC8;
+}
+
+@media only screen and (min-width: 1024px) and (max-width:1140px) {
+    .Contactus_Hero_textarea {
+        width: 90%;
+    }
+
+    .Contactus_Hero_form_content input {
+        width: 90%;
+    }
+}
+
+@media only screen and (min-width:500px) and (max-width:1024px) {
+    .Contactus_Hero_main {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+
+    .Contactus_Hero_textarea {
+        width: 80%;
+    }
+
+    .Contactus_Hero_form_content input {
+        width: 80%;
+    }
+    .Contactus_Hero_button {
+        font-size: 18px;
+        padding: 10px 20px;
+    }
+
+}
+
+@media only screen and (max-width:640px) {
+    .Contactus_Hero_main {
+        gap: 10px;
+        padding-left: 40px;
+        padding-right: 40px;
+        flex-flow: column-reverse;
+    }
+
+    .Contactus_Hero_textarea {
+        width: 100%;
+    }
+
+    .Contactus_Hero_form_content input {
+        width: 100%;
+    }
+
+    .Contactus_Hero_form {
+        width: 100%;
+    }
+    .Contactus_Hero_button {
+        font-size: 16px;
+        padding: 10px 16px;
+    }
+    .Contactus_Hero_checkbox {
+        font-size: 14px;
+    }
+}

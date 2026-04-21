@@ -1,0 +1,5 @@
+
+http://20.193.149.47:2242/salonvendor/stockorder/118/
+
+{"status":"on-going","payment_method":"Distributor  - 1","payment_status":"paid"}
+

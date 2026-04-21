@@ -1,0 +1,49 @@
+.Contactus_nav_nav {
+    background-color: black;
+  padding: 35px 30px;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  width: auto;
+  height: 50px;
+}
+.Contactus_nav_icon{
+  visibility: hidden;
+}
+.Contactus_nav_img {
+  width: 100px;
+  height: auto;
+}
+.headers {
+  font-size: 18px;
+  font-family:Okra, Helvetica, sans-serif;
+  color: white;
+  gap: 18.5px;
+  display: flex;
+}
+.headers p{
+    color: white !important;
+    margin: 0;
+    cursor: pointer;
+}
+.sidebar{
+  visibility: hidden;
+}
+@media only screen and (max-width:500px){
+  .Contactus_nav_img{
+    width: 70px;
+  }
+  .Contactus_nav_nav{
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  .Contactus_nav_sidebar{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    visibility: visible;
+  }
+  .headers p{
+    visibility: hidden;
+  }
+}

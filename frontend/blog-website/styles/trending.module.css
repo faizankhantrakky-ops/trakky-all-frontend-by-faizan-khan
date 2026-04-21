@@ -1,0 +1,194 @@
+.trendingDiv{
+    width: 100%;
+    padding: 40px 80px;
+    display: grid;
+    grid-template-columns: repeat(2 , 1fr);
+    gap: 80px;
+}
+.trandingSlice{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
+}
+.trandingSliceHeader{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.trandingSliceHeader h3{
+    font-size: 26px;
+    color: black;
+    line-height: 28px;
+    font-family: Raleway;
+    font-weight: 700;
+    margin-block: 0px;
+    text-transform: capitalize;
+}
+.trandingSliceHeader a{
+    font-size: 16px;
+    color: #A91F18;
+    line-height: 20px;
+    font-family: Raleway;
+    font-weight: 700;
+    margin-block: 0px;
+    text-transform: capitalize;
+    text-decoration: none;
+}
+.trandingSliceList{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.trandingSliceListItem{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 10px;
+    height: 110px;
+    box-shadow: 3.626px 3.626px 36.262px 0px rgba(0, 0, 0, 0.10);
+    background: white;
+    border-radius: 12px;
+}
+.trandingSliceListItemImg{
+    width: 90px;
+    height: 90px;
+    border-radius: 10px;
+    background-color: gray;
+    flex-shrink: 0;
+}
+.trandingSliceListItemImg img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.trandingSliceListItemContent{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}  
+.trandingItemCategory{
+    line-height: 15px;
+    font-size: 14px;
+    color: #8E8E8E;
+    line-height: 20px;
+    font-family: Raleway;
+    font-weight: 600;
+    margin-block: 0px;
+    text-transform: capitalize;
+    overflow: hidden;
+}
+.trandingItemTitle{
+    height: 40px;
+    font-size: 16px;
+    color: #000000;
+    line-height: 20px;
+    font-family: Raleway;
+    font-weight: 600;
+    margin-block: 0px;
+    text-transform: capitalize;
+    max-height: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: pre-wrap;
+    text-wrap: pretty;
+
+}
+.trandingItemDate{
+    height: 15px;
+    font-size: 12px;
+    color: #8E8E8E;
+    line-height: 20px;
+    font-family: Inter;
+    font-weight: 500;
+    margin-block: 0px;
+    text-transform: capitalize;
+}
+
+@media screen and (max-width:1024px) {
+    .trendingDiv{
+        padding: 20px 40px;
+        gap: 40px;
+    }  
+    .trandingSliceHeader h3{
+        font-size: 24px;
+        line-height: 26px;
+
+    }
+    .trandingSliceHeader a{
+        font-size: 14px;
+        line-height: 18px;
+    }
+    .trandingSliceList{
+        gap : 10px;
+    }
+}
+
+@media screen and (max-width:876px) {
+    .trendingDiv{
+        padding: 20px 30px;
+        gap: 30px;
+    }  
+    .trandingSliceHeader h3{
+        font-size: 22px;
+        line-height: 24px;
+
+    }
+    .trandingSliceHeader a{
+        font-size: 14px;
+        line-height: 18px;
+    }
+    .trandingItemCategory {
+        font-size: 12px;
+    }
+   
+}
+
+
+
+
+@media screen and (max-width:768px) {
+    .trendingDiv{
+        padding: 20px 30px;
+        grid-template-columns: repeat(1 , 1fr);
+        gap: 40px;
+    }  
+    .trandingSliceHeader h3{
+        font-size: 20px;
+        line-height: 24px;
+
+    }
+    .trandingSliceHeader a{
+        font-size: 14px;
+        line-height: 18px;
+    }
+    .trandingSliceList{
+        gap : 10px;
+    }
+    
+}
+
+
+@media screen and (max-width:540px) {
+    .trendingDiv{
+        padding: 10px 20px;
+        grid-template-columns: repeat(1 , 1fr);
+        gap: 40px;
+    }  
+    .trandingSliceHeader h3{
+        font-size: 20px;
+        line-height: 24px;
+
+    }
+    .trandingSliceHeader a{
+        font-size: 14px;
+        line-height: 18px;
+    }
+    .trandingSliceList{
+        gap : 10px;
+    }
+
+}

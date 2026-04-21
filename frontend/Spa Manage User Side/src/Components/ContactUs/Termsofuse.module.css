@@ -1,0 +1,46 @@
+.Termsofuse_main{
+    padding: 30px 80px;
+}
+.Termsofuse_unordered{
+    padding-left: 2rem !important;
+}
+.Termsofuse_number{
+    color: black !important;
+}
+.Termsofuse_unordered li{
+    list-style:disc;
+}
+.Termsofuse_order li{
+    list-style: decimal;
+}
+
+.back_arrow_btn {
+    margin: 0 80px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    margin-top: 20px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.back_arrow_btn img {
+    width: 20px;
+    height: 20px;
+    transform: rotate(180deg);
+}
+
+.back_arrow_btn span {
+    font-size: 16px;
+}
+
+@media only screen and (max-width:500px){
+    .Termsofuse_main{
+        padding: 30px 30px;
+    }
+    .back_arrow_btn {
+        margin-inline: 30px;
+    }
+}

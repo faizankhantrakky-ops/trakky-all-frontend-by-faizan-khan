@@ -1,0 +1,324 @@
+.Best-spa-city .swiper-pagination.swiper-pagination-bullets {
+    bottom: -18px !important;
+}
+.Best-spa-city .swiper {
+    overflow: visible !important;
+}
+.Best-spa-city {
+    overflow: hidden !important;
+}
+.Best-spa-city .swiper-pagination-bullet {
+    background-color: white;
+    opacity: 1;
+}
+.Best-spa-city .swiper-pagination-bullet-active {
+    background-color: #512dc8be;
+    opacity: 1;
+}
+
+ /* card css */
+
+ .SP-lc-main-container {
+    width: 100%;
+    border-radius: 16px;
+    border: 1px solid rgb(187, 187, 187);
+    height: auto;
+    transition: all 0.2s ease-in-out;
+    /* max-width: 400px; */
+    margin: auto;
+}
+
+
+.SP-lc-image-container {
+    width: 100%;
+    max-height: 240px;
+    aspect-ratio: 16/9;
+    border-radius: 15px 15px 0 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.SP-lc-image-container .SP-lc-image {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(187, 187, 187);
+}
+
+.SP-lc-image-container .SP-lc-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+}
+
+.SP-lc-image-container .SP-lc-image-premium {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #9E70FF;
+    color: #fff;
+    font-size: 12px;
+    padding: 3px 6px;
+    border-radius: 6px;
+}
+
+.SP-lc-image-container .SP-lc-image-like {
+    position: absolute;
+    top: 5px;
+    right: 18px;
+    /* background-color: white; */
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    object-fit: contain;
+    z-index: 1;
+}
+
+
+.premium_div-x {
+    display: inline-block;
+    position: absolute;
+    top: 7px;
+    left: -5px;
+    overflow: hidden;
+    background-color: #512DC8;
+    padding: auto;
+    z-index: 10;
+  
+    width: 64px;
+    text-align: center; /* Add padding to adjust the size of the box */
+    border-radius: 4px 7px 7px 4px; /* Add border radius for rounded corners */
+  
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      transform: translateX(-100%);
+      background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.2) 20%,
+        rgba(255, 255, 255, 0.5) 60%,
+        rgba(255, 255, 255, 0)
+      );
+      animation: shimmer 2s infinite;
+    }
+  }
+  .premium-text {
+    color: white;
+    font-size: 13px;
+    font-weight: 400;
+    margin: 3px;
+  }
+  
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+
+.SP-lc-image-container .SP-lc-image-like img {
+    width: 100%;
+    height: 100%;
+    /* aspect-ratio: 1; */
+    object-fit: contain;
+    margin: 5px;
+
+}
+
+.SP-lc-image-container .SP-lc-image-offer-tag {
+    position: absolute;
+    bottom: 0;
+    left: 7px;
+    z-index: 5;
+    background: linear-gradient(to right ,#512DC8 0% , #826ACF 22%,#512DC870 44% , #00000000 100%);
+    max-width: 80%;
+    color: #fff;
+    font-size: 13px;
+    width: 100%;
+    padding: 5px 30px 5px 10px;
+    border-radius: 10px 0 0 0;
+    padding-block: 10px;
+    min-height: 40px;
+}
+.SP-lc-info-container {
+    background-color: #1C1C1C;
+    padding: 0 7px 7px;
+    border-radius: 0 0 15px 15px;
+}
+
+.SP-lc-info-slice-outer {
+    background-color: white;
+    width: 100%;
+    border-radius: 0 10px 10px 10px;
+}
+
+.SP-lc-info-container .SP-lc-info-slices {
+    /* height: 70px; */
+    padding: 6px 10px;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.SP-lc-info-slices .SP-lc-basic-info-panel {
+    /* height: 70px; */
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.SP-lc-basic-info-name-addr {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+    max-width: calc(100% - 110px);
+
+}
+
+.SP-lc-basic-info-name {
+    font-size: 18px;
+    font-weight: 700;
+    /* line-height: 30px; */
+    line-height: 22px;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 30px;
+    line-height: 30px;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.SP-lc-basic-info-addr {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    color: rgb(119, 119, 119);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.SP-lc-basic-info-rating-onward {
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+}
+
+.SP-lc-basic-info-rating {
+    display: flex;
+    background: linear-gradient(to right , #9D6FFF , #5530CB);
+    color: #fff;
+    flex-direction: row-reverse;
+    gap: 5px;
+    padding: 0 7px;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    height: 30px;
+    width: fit-content;
+    margin-left: auto;
+}
+
+.SP-lc-basic-info-rating-stars {
+    display: flex;
+    align-items: center;
+    line-height: 12px;
+    font-size: 14px;
+    filter: brightness(0) invert(1);
+}
+.SP-lc-basic-info-rating-stars img {
+    width: 15px;
+    height: 15px;
+    aspect-ratio: 1;
+}
+
+.SP-lc-basic-info-rating-num {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.SP-lc-info-slices .SP-lc-facilities-panel {
+    height: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.SP-lc-facilities-section {
+    height: 30px;
+    display: flex;
+    gap: 5px;
+}
+
+.SP-lc-facilities-icon-box {
+    height: 100%;
+    width: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.SP-lc-facilities-icon-box img {
+    width: 20px;
+    height: 20px;
+    aspect-ratio: 1;
+
+}
+
+.SP-lc-offer-price-section {
+    height: 20px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    color: rgb(119, 119, 119);
+    min-width: 100px;
+    text-align: end;
+
+}
+
+.SP-lc-info-container .SP-lc-book-now-btn {
+    height: 40px;
+    max-width: 100%;
+    margin-inline: 7px;
+    padding: 2px 0;
+    /* background-color: #F8F8F8; */
+    color: #171717;
+    display: flex;
+    border-radius: 0 0 15px 15px;
+    align-items: center;
+    border-top: 1px solid rgb(187, 187, 187);
+
+}
+
+.SP-lc-book-now-btn button {
+    font-size: 14px;
+    height: 36px;
+    width: 50%;
+    flex-shrink: 1;
+    flex-grow: 1;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+}
+
+.SP-lc-book-now-btn button:nth-child(2) {
+    border-left: 1px solid rgb(187, 187, 187);
+}
+
+
+@media screen and (min-width:640px) {
+    .Best-spa-city .swiper-pagination.swiper-pagination-bullets {
+        bottom: -23px !important;
+    }
+   
+}

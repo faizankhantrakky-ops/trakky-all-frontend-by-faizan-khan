@@ -1,0 +1,10 @@
+.dangerous-html ul {
+  padding-inline: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.dangerous-html ul li {
+  list-style: disc !important;
+  font-size: 14px;
+}

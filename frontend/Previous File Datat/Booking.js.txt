@@ -1,0 +1,425 @@
+Booking.js
+
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Bookings.css";
+import "../UserProfile.css";
+import salonLogo from "../salon-logo.png";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { Modal, Box, Typography, Button } from "@mui/material";
+import Reschedule from "./Reschedule";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import CurrentBooking from "./CurrentBooking";
+import HistoryBooking from "./HistoryBooking";
+const Bookings = () => {
+  const [isCurrentBookings, setCurrentBookings] = useState(true);
+
+  const handleToggleBookings = (current) => {
+    setCurrentBookings(current);
+  };
+
+  return (
+    <div className="edit-Profile-container">
+      <h1 className="text-2xl font-bold mb-6">My Bookings</h1>
+      <div className="toggle-buttons">
+        <button
+          className={isCurrentBookings && "active"}
+          onClick={() => handleToggleBookings(true)}
+        >
+          CURRENT
+        </button>
+        <button
+          className={!isCurrentBookings && "active"}
+          onClick={() => handleToggleBookings(false)}
+        >
+          HISTORY
+        </button>
+      </div>
+      <div className={isCurrentBookings ? "grid grid-cols-1 md:grid-cols-2 gap-6" : "grid grid-cols-1 gap-6"}>
+        {isCurrentBookings ? (
+          <CurrentBooking />
+        ) : (
+          <HistoryBooking />
+        )}
+      </div>
+    </div>
+  );
+};
+export default Bookings;
+
+
+import React, { useEffect, useState, useContext } from "react";
+import salonLogo from "../salon-logo.png";
+import AuthContext from "../../../context/Auth";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+} from "@mui/material";
+
+const formatTimeToAMPM = (timeString) => {
+  if (!timeString) return "";
+
+  const [hours, minutes] = timeString.split(":");
+  const hour = parseInt(hours, 10);
+  const period = hour >= 12 ? "PM" : "AM";
+  const hour12 = hour % 12 || 12;
+
+  return `${hour12}:${minutes} ${period}`;
+};
+
+const calculatePayableAmount = (total) => {
+  if (total <= 99) {
+    return total;
+  }
+
+  if (total > 0 && total <= 500) {
+    return 99;
+  } else if (total > 500 && total <= 1000) {
+    return 199;
+  } else if (total > 1000) {
+    return 349;
+  }
+  return total;
+};
+
+const CurrentBooking = () => {
+  const [currentBookings, setCurrentBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { authTokens } = useContext(AuthContext);
+  const [openCancelDialog, setOpenCancelDialog] = useState(false);
+  const [bookingToCancel, setBookingToCancel] = useState(null);
+  const [isCanceling, setIsCanceling] = useState(false);
+  const { user, userData } = useContext(AuthContext);
+
+  useEffect(() => {
+    fetchData();
+  }, [authTokens]);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const userId = user.user_id;
+      const userPhone = userData.phone_number;
+      let url =
+        "http://20.193.149.47:2242/salons/booking/?section=current&is_payment_done=true";
+      if (userId) {
+        url += `&salonuser=${userId}`;
+      }
+
+      if (userPhone) {
+        url += `&user_phone=${userPhone}`;
+      }
+
+      // Fetch current bookings
+      const bookingsResponse = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authTokens?.access_token}`,
+        },
+      });
+
+      if (!bookingsResponse.ok) {
+        throw new Error("Failed to fetch current bookings");
+      }
+
+      const bookingsData = await bookingsResponse.json();
+      setCurrentBookings(bookingsData);
+    } catch (err) {
+      setError(err.message);
+      toast.error("Failed to load bookings. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReschedule = (booking) => {
+    const formattedDate = new Date(booking.booking_date).toLocaleDateString(
+      "en-US",
+      {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }
+    );
+    const formattedTime = formatTimeToAMPM(booking.booking_time);
+
+    const services = booking.included_services
+      ? Object.entries(booking.included_services)
+      : [];
+    const serviceNames = services
+      .map(([serviceName]) => serviceName)
+      .join(", ");
+
+    const message = `Hi, I would like to reschedule my booking at ${booking.salon_name}, ${booking.salon_area}, ${booking.salon_city}.\n\nCurrent Booking Details:\n- Order ID: ${booking.id}\n- Date: ${formattedDate}\n- Time: ${formattedTime}\n- Offer Name: ${serviceNames}\n\nPlease let me know available slots for rescheduling.`;
+
+    const whatsappLink = `https://api.whatsapp.com/send?phone=916355167304&text=${encodeURIComponent(
+      message
+    )}`;
+    window.open(whatsappLink, "_blank");
+  };
+
+  const handleCancelClick = (booking) => {
+    setBookingToCancel(booking);
+    setOpenCancelDialog(true);
+  };
+
+  const handleCancelConfirm = async () => {
+    if (!bookingToCancel) return;
+
+    setIsCanceling(true);
+    try {
+      const response = await fetch(
+        `https://trakky.in:8000/salons/booking/${bookingToCancel.id}/`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authTokens?.access_token}`,
+          },
+          body: JSON.stringify({
+            status: "cancelled",
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to cancel booking");
+      }
+
+      // Update the booking status in the state
+      setCurrentBookings(
+        currentBookings.map((b) =>
+          b.id === bookingToCancel.id ? { ...b, status: "cancelled" } : b
+        )
+      );
+
+      toast.success("Booking canceled successfully");
+    } catch (error) {
+      console.error("Error canceling booking:", error);
+      toast.error("Failed to cancel booking. Please try again.");
+    } finally {
+      setIsCanceling(false);
+      setOpenCancelDialog(false);
+      setBookingToCancel(null);
+    }
+  };
+
+  const handleCancelDialogClose = () => {
+    setOpenCancelDialog(false);
+    setBookingToCancel(null);
+  };
+
+  if (loading) {
+    return <div className="text-center p-6">Loading current bookings...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center p-6 text-red-500">Error: {error}</div>;
+  }
+
+  if (currentBookings.length === 0) {
+    return (
+      <div className="bg-white shadow-lg rounded-lg p-6 max-w-md mx-auto text-center">
+        <p className="text-gray-600">You don't have any current bookings.</p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {/* Cancel Confirmation Dialog */}
+      <Dialog
+        open={openCancelDialog}
+        onClose={handleCancelDialogClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title" className="font-bold">
+          Confirm Cancellation
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to cancel this booking?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDialogClose} disabled={isCanceling}>
+            No, Keep It
+          </Button>
+          <Button
+            onClick={handleCancelConfirm}
+            disabled={isCanceling}
+            color="error"
+            autoFocus
+          >
+            {isCanceling ? "Canceling..." : "Yes, Cancel"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Bookings List */}
+      {currentBookings.map((booking) => {
+        const services = booking.included_services
+          ? Object.entries(booking.included_services)
+          : [];
+        const totalAmount = services.reduce(
+          (sum, [_, service]) => sum + service.price,
+          0
+        );
+        const paidAmount = calculatePayableAmount(totalAmount);
+        const remainingAmount = totalAmount - paidAmount;
+
+        return (
+          <div
+            key={booking.id}
+            className="bg-white shadow-lg rounded-lg p-4 mb-6"
+          >
+            <div className="flex flex-col space-y-4">
+              <img
+                src={booking.salon_main_image || salonLogo}
+                alt="Best Salon In Ahmedabad For Beauty, Hair, And Bridal Services"
+                className="w-24 h-24 mx-auto rounded-full border-2 border-purple-500"
+              />
+              <h1 className="text-2xl font-semibold text-gray-800 text-center">
+                {booking.salon_name}
+              </h1>
+              <div className="text-center text-gray-600">
+                <p>
+                  {booking.salon_area}, {booking.salon_city}
+                </p>
+                <p>
+                  {new Date(booking.booking_date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                  , {formatTimeToAMPM(booking.booking_time)}
+                </p>
+              </div>
+
+              <div className="border-dashed border-t-2 border-gray-300 pt-4"></div>
+
+              {/* Service Details */}
+              {services.map(([serviceName, serviceDetails]) => {
+                const offerDetails = booking.profileoffer_details?.find(
+                  (offer) => offer.name === serviceName
+                );
+
+                return (
+                  <div
+                    key={serviceName}
+                    className="flex items-center space-x-4 py-4"
+                  >
+                    <img
+                      src={offerDetails?.image || salonLogo}
+                      alt="Exclusive salon offer"
+                      className="w-16 h-16 rounded-lg border border-gray-300"
+                    />
+                    <div className="flex-1">
+                      <div className="flex justify-between text-gray-800 text-sm font-medium">
+                        <span>{serviceName}</span>
+                        <span>₹{serviceDetails.price}</span>
+                      </div>
+                      {offerDetails && (
+                        <div className="text-xs text-gray-500 mt-1">
+                          <span>Original: ₹{offerDetails.actual_price}</span>
+                          {/* <span className="ml-2 text-green-600">
+                            (Save ₹
+                            {offerDetails.actual_price - serviceDetails.price})
+                          </span> */}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Order Summary */}
+              <div className="space-y-2 text-gray-800 text-sm">
+                <div className="flex justify-between">
+                  <span>Order ID</span>
+                  <span className="font-semibold">{booking.id}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Coins Used</span>
+                  <span className="font-semibold">₹0</span>
+                </div>
+                {booking.has_promo_code && (
+                  <div className="flex justify-between">
+                    <span>Discount</span>
+                    <span className="font-semibold">
+                      ₹{booking.coupon?.discount || 0}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className="border-dashed border-t-2 border-gray-300 pt-4"></div>
+
+              {/* Payment Summary */}
+              <div className="bg-gray-50 p-2 rounded-lg">
+                <div className="flex justify-between gap-2 mb-1">
+                  <span className="text-gray-700 text-md">Total Amount:</span>
+                  <span className="font-semibold text-md">
+                    ₹{booking.total_booking_amount || 0.0}
+                  </span>
+                </div>
+                <div className="flex justify-between gap-2 mb-1">
+                  <span className="text-gray-700 text-md">Paid Amount:</span>
+                  <span className="font-semibold text-green-600 text-md">
+                    ₹{booking.total_amount_paid || 0.0}
+                  </span>
+                </div>
+                <div className="flex justify-between gap-2">
+                  <span className="text-gray-700 text-md">Remaining Amount:</span>
+                  <span className="font-semibold text-purple-600 text-md">
+                    ₹
+                    {(
+                      Number(booking.total_booking_amount) -
+                      Number(booking.total_amount_paid)
+                    ).toFixed(2) || 0.0}
+                  </span>
+                </div>
+              </div>
+
+              {/* Status or Action Buttons */}
+              {booking.status === "cancelled" ? (
+                <div className="text-center py-4">
+                  <span className="bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-medium">
+                    Booking cancelled
+                  </span>
+                </div>
+              ) : (
+                <div className="flex justify-between mt-6 space-x-2">
+                  <button
+                    onClick={() => handleReschedule(booking)}
+                    className="bg-gradient-to-r from-[#9B6DFC] to-[#5732CC] text-white py-2 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 transition-transform transform active:scale-95"
+                  >
+                    Reschedule
+                  </button>
+                  <button
+                    onClick={() => handleCancelClick(booking)}
+                    className="bg-gradient-to-r from-[#fc6d6d] to-[#ff1c03] text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition-transform transform active:scale-95"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </>
+  );
+};
+
+export default CurrentBooking;

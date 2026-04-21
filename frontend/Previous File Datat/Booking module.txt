@@ -1,0 +1,2109 @@
+import React, { useState, useContext, useEffect, useRef } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import {
+  XMarkIcon,
+  CreditCardIcon,
+  ClockIcon,
+  CalendarIcon,
+  PlusIcon,
+  CheckIcon,
+  ArrowRightIcon,
+  InformationCircleIcon,
+  DocumentTextIcon,
+} from "@heroicons/react/24/outline";
+import toast from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
+import AuthContext from "../../context/Auth";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import "../BookingModule/BookingModule.css";
+import { BadgePercentIcon, ChevronDown, ArrowLeft, Check, Loader, TicketPercent, ChevronUp, X, Wallet } from "lucide-react";
+import {
+  ChevronLeftSharp,
+  ArrowBack,
+  PlayArrow,
+  Pause,
+  VolumeUp,
+  VolumeOff,
+} from "@mui/icons-material";
+import { motion, AnimatePresence } from "framer-motion";
+import EmptyCart from "../../Assets/images/other/Untitled design.png";
+
+const BookingModule = ({
+  isOpen,
+  closeModal,
+  selectedServices,
+  setSelectedServices,
+  salon,
+}) => {
+  const [bookingDate, setBookingDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [availableTimes, setAvailableTimes] = useState([]);
+  const [showTimeSlots, setShowTimeSlots] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [bookingType] = useState("advance");
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [paymentProcessing, setPaymentProcessing] = useState(false);
+  const [showPaymentSummary, setShowPaymentSummary] = useState(false);
+  const [razorpayOrder, setRazorpayOrder] = useState(null);
+  const [bookingId, setBookingId] = useState(null);
+  const [isGstApplied, setIsGstApplied] = useState(false);
+  const [showCouponPage, setShowCouponPage] = useState(false);
+  const [availableCoupons, setAvailableCoupons] = useState([]);
+  const [selectedCoupon, setSelectedCoupon] = useState(null);
+  const [loadingCoupons, setLoadingCoupons] = useState(false);
+  const [walletBalance, setWalletBalance] = useState(0);
+  const [useWalletBalance, setUseWalletBalance] = useState(false);
+  const [loadingWallet, setLoadingWallet] = useState(false);
+
+  // Video states
+  const [playingVideos, setPlayingVideos] = useState({});
+  const [mutedVideos, setMutedVideos] = useState({});
+  const videoRefs = useRef({});
+
+  const navigate = useNavigate();
+  const params = useParams();
+  const { user, authTokens, userData, fetchUserData } = useContext(AuthContext);
+  const salonOpeningHour = 10;
+  const salonClosingHour = 20;
+
+  // Fetch user wallet balance
+  const fetchWalletBalance = async () => {
+    try {
+      setLoadingWallet(true);
+      const response = await fetch(`http://20.193.149.47:2242/salons/salonuser/${user?.user_id}/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authTokens.access_token}`,
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch wallet balance");
+      }
+      
+      const userData = await response.json();
+      const balance = userData?.coin_wallet?.coin_balance || 0;
+      setWalletBalance(balance);
+      return balance;
+    } catch (error) {
+      console.error("Error fetching wallet balance:", error);
+      setWalletBalance(0);
+      return 0;
+    } finally {
+      setLoadingWallet(false);
+    }
+  };
+
+  // Fetch dynamic coupons from API
+  const fetchCoupons = async () => {
+    try {
+      setLoadingCoupons(true);
+      const response = await fetch("http://20.193.149.47:2242/salons/coupon/", {
+        method: "GET",
+      
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch coupons");
+      }
+      const couponsData = await response.json();
+      
+      // Transform API data to match our format
+      const transformedCoupons = couponsData.map(coupon => ({
+        id: coupon.id,
+        code: coupon.couponcode,
+        discount: coupon.discount_value,
+        type: coupon.coupon_choice === "percentage" ? "percentage" : "fixed",
+        description: coupon.description || coupon.couponname,
+        couponname: coupon.couponname,
+        starting_date: coupon.starting_date,
+        expire_date: coupon.expire_date,
+        active_status: coupon.active_status,
+        priority: coupon.priority,
+        terms: `Valid from ${new Date(coupon.starting_date).toLocaleDateString()} to ${new Date(coupon.expire_date).toLocaleDateString()}`,
+        minAmount: 0,
+        maxDiscount: coupon.coupon_choice === "percentage" ? coupon.discount_value * 10 : coupon.discount_value,
+      }));
+      setAvailableCoupons(transformedCoupons);
+    } catch (error) {
+      console.error("Error fetching coupons:", error);
+      toast.error("Failed to load coupons");
+    } finally {
+      setLoadingCoupons(false);
+    }
+  };
+
+  // Check coupon validity
+  const isCouponValid = (coupon) => {
+    const currentDate = new Date();
+    const startDate = new Date(coupon.starting_date);
+    const expireDate = new Date(coupon.expire_date);
+    
+    return coupon.active_status && currentDate >= startDate && currentDate <= expireDate;
+  };
+
+  // Get coupon status text and color
+  const getCouponStatus = (coupon) => {
+    const currentDate = new Date();
+    const startDate = new Date(coupon.starting_date);
+    const expireDate = new Date(coupon.expire_date);
+    if (!coupon.active_status) {
+      return { text: "Inactive", color: "text-red-500", bg: "bg-red-50" };
+    }
+    if (currentDate < startDate) {
+      return { 
+        text: `Starts ${startDate.toLocaleDateString()}`, 
+        color: "text-blue-500", 
+        bg: "bg-blue-50" 
+      };
+    }
+    if (currentDate > expireDate) {
+      return { text: "Expired", color: "text-red-500", bg: "bg-red-50" };
+    }
+    return { 
+      text: `Valid until ${expireDate.toLocaleDateString()}`, 
+      color: "text-green-500", 
+      bg: "bg-green-50" 
+    };
+  };
+
+  // Check if content is video
+  const isVideoContent = (url) => {
+    if (!url) return false;
+    return (
+      url.includes(".mp4") ||
+      url.includes(".webm") ||
+      url.includes(".mov") ||
+      url.includes("video/")
+    );
+  };
+
+  // Video control functions
+  const toggleVideoPlay = (serviceId) => {
+    const video = videoRefs.current[serviceId];
+    if (video) {
+      if (playingVideos[serviceId]) {
+        video.pause();
+      } else {
+        video.play().catch((error) => {
+          console.log("Play failed:", error);
+        });
+      }
+      setPlayingVideos((prev) => ({
+        ...prev,
+        [serviceId]: !prev[serviceId],
+      }));
+    }
+  };
+
+  const toggleMute = (serviceId) => {
+    const video = videoRefs.current[serviceId];
+    if (video) {
+      video.muted = !video.muted;
+      setMutedVideos((prev) => ({
+        ...prev,
+        [serviceId]: !prev[serviceId],
+      }));
+    }
+  };
+
+  const handleVideoEnd = (serviceId) => {
+    setPlayingVideos((prev) => ({
+      ...prev,
+      [serviceId]: false,
+    }));
+  };
+
+  const handleVideoPlay = (serviceId) => {
+    setPlayingVideos((prev) => ({
+      ...prev,
+      [serviceId]: true,
+    }));
+  };
+
+  const handleVideoPause = (serviceId) => {
+    setPlayingVideos((prev) => ({
+      ...prev,
+      [serviceId]: false,
+    }));
+  };
+
+  // Cleanup videos when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      Object.values(videoRefs.current).forEach((video) => {
+        if (video) {
+          video.pause();
+        }
+      });
+      setPlayingVideos({});
+    }
+  }, [isOpen]);
+
+  const calculatePayableAmount = (total) => {
+    if (total <= 99) {
+      return total;
+    }
+    if (total > 0 && total <= 500) {
+      return 99;
+    } else if (total > 500 && total <= 1000) {
+      return 199;
+    } else if (total > 1000) {
+      return 349;
+    }
+    return total;
+  };
+
+  const generateInstantBookingTime = () => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 30);
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const ampm = hours >= 12 ? "PM" : "AM";
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
+    return `${formattedHours}:${formattedMinutes} ${ampm}`;
+  };
+
+  const removeService = (serviceId) => {
+    if (selectedServices.length === 1) {
+      setSelectedServices((prev) => {
+        const updated = prev.filter((s) => s.id !== serviceId);
+        if (updated.length === 0) {
+          setTimeout(() => closeModal(), 0);
+        }
+        return updated;
+      });
+      return;
+    }
+    setSelectedServices((prev) => prev.filter((s) => s.id !== serviceId));
+  };
+
+  const handleQuantityChange = (serviceId, change) => {
+    setSelectedServices((prev) => {
+      const updated = prev
+        .map((service) => {
+          if (service.id === serviceId) {
+            const newQuantity = (service.quantity || 1) + change;
+            if (newQuantity < 1) return null;
+            return { ...service, quantity: newQuantity };
+          }
+          return service;
+        })
+        .filter(Boolean);
+      if (window.innerWidth <= 768) {
+        setTimeout(() => {
+          const element = document.getElementById(`booking-item-${serviceId}`);
+          if (element)
+            element.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }, 50);
+      }
+      return updated;
+    });
+  };
+
+  const handleBackClick = () => {
+    if (showCouponPage) {
+      setShowCouponPage(false);
+    } else if (showPaymentSummary) {
+      setShowPaymentSummary(false);
+    } else {
+      closeModal();
+    }
+  };
+
+  useEffect(() => {
+    if (window.innerWidth > 768) return;
+    const handlePopState = () => {
+      if (isOpen) {
+        closeModal();
+        const servicesSection = document.getElementById("salon-services");
+        if (servicesSection) {
+          servicesSection.scrollIntoView({ behavior: "smooth" });
+        }
+        setTimeout(() => {
+          window.history.pushState(null, "", window.location.href);
+        }, 100);
+      }
+    };
+
+    if (isOpen) {
+      window.history.pushState(null, "", window.location.href);
+      window.addEventListener("popstate", handlePopState);
+    }
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [isOpen, closeModal]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setShowPaymentSummary(false);
+      setShowCouponPage(false);
+      const today = new Date();
+      const formattedDate = today.toISOString().split("T")[0];
+      setBookingDate(formattedDate);
+      generateTimeSlots(formattedDate);
+      
+      // Fetch wallet balance when modal opens
+      if (user?.user_id) {
+        fetchWalletBalance();
+      }
+    }
+  }, [isOpen, user?.user_id]);
+
+  const generateTimeSlots = (date) => {
+    const isToday = date === new Date().toISOString().split("T")[0];
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    const totalDuration =
+      calculateDuration().hours * 60 + calculateDuration().minutes;
+    const slots = [];
+    let startHour = salonOpeningHour;
+    let endHour = salonClosingHour;
+    if (isToday) {
+      startHour = currentHour;
+      if (currentMinute > 30) {
+        startHour += 1;
+      }
+      if (startHour + Math.ceil(totalDuration / 60) >= endHour) {
+        startHour = endHour - Math.ceil(totalDuration / 60);
+      }
+      if (startHour < salonOpeningHour) startHour = salonOpeningHour;
+    }
+    const totalSlots = 6;
+    const slotInterval = Math.max(
+      1,
+      Math.floor((endHour - startHour) / totalSlots)
+    );
+    for (
+      let hour = startHour;
+      hour < endHour && slots.length < totalSlots;
+      hour += slotInterval
+    ) {
+      const minuteOptions = [0, 30];
+      for (const minute of minuteOptions) {
+        if (slots.length >= totalSlots) break;
+        const slotEndHour = hour + Math.floor((minute + totalDuration) / 60);
+        const slotEndMinute = (minute + totalDuration) % 60;
+        if (
+          slotEndHour > endHour ||
+          (slotEndHour === endHour && slotEndMinute > 0)
+        ) {
+          continue;
+        }
+        const startAmPm = hour >= 12 ? "PM" : "AM";
+        const startDisplayHour = hour % 12 || 12;
+        const startDisplayMinute = minute < 10 ? "0" + minute : minute;
+        const startTime = `${startDisplayHour}:${startDisplayMinute} ${startAmPm}`;
+        const endAmPm = slotEndHour >= 12 ? "PM" : "AM";
+        const endDisplayHour = slotEndHour % 12 || 12;
+        const endDisplayMinute =
+          slotEndMinute < 10 ? "0" + slotEndMinute : slotEndMinute;
+        const endTime = `${endDisplayHour}:${endDisplayMinute} ${endAmPm}`;
+        slots.push({
+          start: startTime,
+          end: endTime,
+          rawStartHour: hour,
+          rawStartMinute: minute,
+        });
+      }
+    }
+    setAvailableTimes(slots);
+    setShowTimeSlots(true);
+  };
+
+  const handleDateChange = (date) => {
+    setBookingDate(date);
+    setSelectedTime("");
+    generateTimeSlots(date);
+  };
+
+  // UPDATED: Calculate total with wallet balance and coupon
+  const calculateTotal = () => {
+    // Calculate subtotal (services total)
+    const subtotal = selectedServices.reduce((sum, service) => {
+      const quantity = service.quantity || 1;
+      const price = service.price || 0;
+      return sum + price * quantity;
+    }, 0);
+
+    // Apply coupon discount if selected and valid
+    let discountAmount = 0;
+    let finalAmountAfterDiscount = subtotal;
+    if (selectedCoupon && isCouponValid(selectedCoupon)) {
+      if (selectedCoupon.type === "percentage") {
+        discountAmount = (subtotal * selectedCoupon.discount) / 100;
+        if (selectedCoupon.maxDiscount && discountAmount > selectedCoupon.maxDiscount) {
+          discountAmount = selectedCoupon.maxDiscount;
+        }
+      } else {
+        discountAmount = selectedCoupon.discount;
+      }
+      finalAmountAfterDiscount = Math.max(0, subtotal - discountAmount);
+    }
+
+    // Apply wallet balance if selected
+    let walletAmountUsed = 0;
+    let finalAmountAfterWallet = finalAmountAfterDiscount;
+    
+    if (useWalletBalance && walletBalance > 0) {
+      walletAmountUsed = Math.min(walletBalance, finalAmountAfterDiscount);
+      finalAmountAfterWallet = Math.max(0, finalAmountAfterDiscount - walletAmountUsed);
+    }
+
+    // Calculate payable amount (advance payment) - Use final amount after all discounts
+    const payableAmount = calculatePayableAmount(finalAmountAfterWallet);
+    const convenienceFee = 0;
+    
+    // Calculate GST if applicable
+    let gstAmount = 0;
+    if (isGstApplied) {
+      gstAmount = finalAmountAfterWallet * 0.18;
+    }
+    
+    const totalWithGst = finalAmountAfterWallet + gstAmount;
+    
+    return {
+      subtotal, // Original total without discount
+      discount: discountAmount, // Coupon discount amount
+      finalAmountAfterDiscount, // Amount after coupon discount
+      walletAmountUsed, // Amount used from wallet
+      finalAmountAfterWallet, // Final amount after all discounts
+      total: totalWithGst, // Final total with GST
+      payableAmount: payableAmount, // Advance payment amount
+      convenienceFee,
+      gstAmount,
+    };
+  };
+
+  const calculateDuration = () => {
+    let totalMinutes = 0;
+    selectedServices.forEach((service) => {
+      if (service.service_time) {
+        if (service.service_time.days)
+          totalMinutes += service.service_time.days * 24 * 60;
+        if (service.service_time.hours)
+          totalMinutes += service.service_time.hours * 60;
+        if (service.service_time.minutes)
+          totalMinutes += service.service_time.minutes;
+      }
+    });
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return {
+      hours,
+      minutes,
+      formatted: `${hours > 0 ? `${hours}h ` : ""}${
+        minutes > 0 ? `${minutes}m` : ""
+      }`,
+    };
+  };
+
+  const handleAddMoreServices = () => {
+    closeModal();
+    navigate(
+      `/${encodeURIComponent(params?.city)}/${encodeURIComponent(
+        params?.area
+      )}/salons/${encodeURIComponent(params?.slug)}`
+    );
+  };
+
+  // Coupon related functions
+  const handleApplyCoupon = () => {
+    fetchCoupons();
+    setShowCouponPage(true);
+  };
+
+  const handleCouponSelect = (coupon) => {
+    if (!isCouponValid(coupon)) {
+      toast.error("This coupon is not valid or has expired");
+      return;
+    }
+    
+    const total = calculateTotal();
+    
+    setSelectedCoupon(coupon);
+    setShowCouponPage(false);
+    toast.success(
+      `Coupon ${coupon.code} applied! You save ₹${total.discount.toFixed(2)}`
+    );
+  };
+
+  const handleRemoveCoupon = () => {
+    setSelectedCoupon(null);
+    toast.success("Coupon removed successfully!");
+  };
+
+  // Wallet balance functions
+  const handleWalletToggle = () => {
+    if (walletBalance > 0) {
+      setUseWalletBalance(!useWalletBalance);
+      if (!useWalletBalance) {
+        toast.success(`Wallet balance of ₹${walletBalance} will be applied`);
+      } else {
+        toast.success("Wallet balance removed");
+      }
+    } else {
+      toast.error("No wallet balance available");
+    }
+  };
+
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+  // UPDATED: Proper booking confirmation with coupon and wallet management
+  const confirmBooking = async (bookingPayload) => {
+    try {
+      const response = await fetch(
+        "http://20.193.149.47:2242/salons/booking/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authTokens.access_token}`,
+          },
+          body: JSON.stringify(bookingPayload),
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.detail || Object.values(errorData).join(", ")
+        );
+      }
+      const responseData = await response.json();
+      setBookingId(responseData.id);
+      if (responseData.is_gst_applied) {
+        setIsGstApplied(true);
+      }
+      return responseData;
+    } catch (error) {
+      console.error("Booking error:", error);
+      throw error;
+    }
+  };
+
+  // UPDATED: Handle booking with proper coupon and wallet data
+  const handleBooking = async () => {
+    if (selectedServices.length === 0) {
+      toast.error("Please select at least one service");
+      return;
+    }
+    if (!bookingDate || !selectedTime) {
+      toast.error("Please select date and time");
+      return;
+    }
+    setIsProcessing(true);
+    try {
+      const formatTime = (timeStr) => {
+        const [time, period] = timeStr.split(" ");
+        let [hours, minutes] = time.split(":");
+        if (period === "PM" && hours !== "12") {
+          hours = String(parseInt(hours) + 12);
+        }
+        if (period === "AM" && hours === "12") {
+          hours = "00";
+        }
+        return `${hours}:${minutes}:00`;
+      };
+
+      const services = selectedServices
+        .filter((service) => !service.isOffer)
+        .map((service) => service.id);
+      const profileOffers = selectedServices
+        .filter((service) => service.isOffer)
+        .map((service) => service.id);
+      const includedServicesDetails = {};
+      selectedServices.forEach((service) => {
+        includedServicesDetails[service.service_name || service.name] = {
+          price: service.price || 0,
+          duration: service.service_time
+            ? `${service.service_time.hours || 0}h ${
+                service.service_time.minutes || 0
+              }m`
+            : "30m",
+        };
+      });
+
+      // Calculate total amounts with discount and wallet
+      const total = calculateTotal();
+      
+      // IMPORTANT: Prepare booking payload with coupon and wallet data
+      const bookingPayload = {
+        salon: salon?.id || selectedServices[0]?.salon,
+        services: services,
+        services: profileOffers,
+        user: user?.id || null,
+        salonuser: user?.user_id || null,
+        included_services: includedServicesDetails,
+        booking_date: bookingDate,
+        booking_time: formatTime(selectedTime),
+        booking_type: "advance",
+        coupon: selectedCoupon?.id || null,
+        
+        // Coupon related fields
+        has_promo_code: !!selectedCoupon,
+        coupon_code: selectedCoupon ? selectedCoupon.code : null,
+        discount_amount: total.discount,
+        want_to_apply_coupon: !!selectedCoupon,
+        
+        // Wallet related fields
+        wallet_balance_used: useWalletBalance ? total.walletAmountUsed : 0,
+        use_wallet_balance: useWalletBalance,
+        
+        // Payment fields - USE FINAL AMOUNT AFTER ALL DISCOUNTS
+        payment_status: "pending",
+        total_booking_amount: total.finalAmountAfterWallet,
+        total_amount_paid: 0,
+        is_payment_done: false,
+        status: "pending",
+      };
+
+      console.log("Booking Payload:", bookingPayload);
+      const bookingResponse = await confirmBooking(bookingPayload);
+      setBookingId(bookingResponse.id);
+      setShowPaymentSummary(true);
+      
+      // Show success message with discount details
+      let successMessage = "Booking confirmed successfully!";
+      if (selectedCoupon && useWalletBalance) {
+        successMessage = `Booking confirmed! Saved ₹${total.discount.toFixed(2)} with coupon and ₹${total.walletAmountUsed.toFixed(2)} from wallet`;
+      } else if (selectedCoupon) {
+        successMessage = `Booking confirmed with ${selectedCoupon.code} coupon! Discount: ₹${total.discount.toFixed(2)}`;
+      } else if (useWalletBalance) {
+        successMessage = `Booking confirmed! Used ₹${total.walletAmountUsed.toFixed(2)} from wallet balance`;
+      }
+      
+      toast.success(successMessage);
+    } catch (error) {
+      console.error("Booking error:", error);
+      toast.error(error.message || "Booking failed. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // UPDATED: Update booking with payment using final amount after all discounts
+  const updateBookingWithPayment = async (amountPaid) => {
+    try {
+      const total = calculateTotal();
+      const updatePayload = {
+        payment_status: "completed",
+        total_booking_amount: total.finalAmountAfterWallet,
+        total_amount_paid: amountPaid,
+        is_payment_done: true,
+        status: "completed",
+      };
+      const response = await fetch(
+        `http://20.193.149.47:2242/salons/booking/${bookingId}/`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authTokens.access_token}`,
+          },
+          body: JSON.stringify(updatePayload),
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.detail || Object.values(errorData).join(", ")
+        );
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Update booking error:", error);
+      throw error;
+    }
+  };
+
+  const initiatePayment = async () => {
+    setPaymentProcessing(true);
+    try {
+      // Calculate payable amount from final amount after all discounts
+      const payableAmount = calculateTotal().payableAmount;
+      
+      // 1. Create Razorpay order
+      const orderResponse = await fetch(
+        "http://20.193.149.47:2242/salons/create-order/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authTokens.access_token}`,
+          },
+          body: JSON.stringify({
+            amount: payableAmount,
+            currency: "INR",
+          }),
+        }
+      );
+      if (!orderResponse.ok) {
+        throw new Error("Failed to create payment order");
+      }
+      const orderData = await orderResponse.json();
+      setRazorpayOrder(orderData);
+      
+      // 2. Load Razorpay script
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        throw new Error("Razorpay SDK failed to load");
+      }
+      
+      // 3. Initialize Razorpay checkout
+      const options = {
+        key: "rzp_test_bY7cqrXxuvknwU",
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: salon?.name || "Salon Booking",
+        description: "Booking Payment",
+        image: salon?.image || "https://your-logo-url.png",
+        order_id: orderData.id,
+        handler: async function (response) {
+          try {
+            // 4. Verify payment
+            const verificationResponse = await fetch(
+              "http://20.193.149.47:2242/salons/verify-payment/",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${authTokens.access_token}`,
+                },
+                body: JSON.stringify({
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_signature: response.razorpay_signature,
+                  amount: payableAmount,
+                  booking_id: bookingId,
+                  status: "completed",
+                }),
+              }
+            );
+            if (!verificationResponse.ok) {
+              throw new Error("Payment verification failed");
+            }
+            
+            // 5. Update booking with payment details
+            await updateBookingWithPayment(payableAmount);
+            const total = calculateTotal();
+            
+            let successMessage = "Payment successful! Booking confirmed.";
+            if (selectedCoupon && useWalletBalance) {
+              successMessage = `Payment successful! You saved ₹${total.discount.toFixed(2)} with coupon and ₹${total.walletAmountUsed.toFixed(2)} from wallet`;
+            } else if (selectedCoupon) {
+              successMessage = `Payment successful! You saved ₹${total.discount.toFixed(2)} with ${selectedCoupon.code}`;
+            } else if (useWalletBalance) {
+              successMessage = `Payment successful! Used ₹${total.walletAmountUsed.toFixed(2)} from wallet`;
+            }
+            
+            toast.success(successMessage, {
+              style: {
+                background: "#502DA6",
+                color: "#fff",
+                borderRadius: "8px",
+                padding: "16px",
+              },
+            });
+            
+            navigate("/userProfile/my-bookings");
+            closeModal();
+            setSelectedServices([]);
+          } catch (error) {
+            console.error("Payment verification error:", error);
+            toast.error("Payment verification failed. Please contact support.");
+          } finally {
+            setPaymentProcessing(false);
+          }
+        },
+        prefill: {
+          name: user?.name || "",
+          email: user?.email || "",
+          contact: user?.phone || "",
+        },
+        theme: {
+          color: "#502DA6",
+        },
+        modal: {
+          ondismiss: () => {
+            setPaymentProcessing(false);
+          },
+        },
+      };
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast.error(error.message || "Payment failed. Please try again.");
+      setPaymentProcessing(false);
+    }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsInitialLoad(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Render media content (image or video)
+  const renderMediaContent = (service) => {
+    const hasVideo = service?.video && isVideoContent(service.video);
+    const mediaUrl = hasVideo
+      ? service.video
+      : service?.service_image || service?.image;
+    const posterUrl = service?.video_thumbnail_image || service?.image;
+    const serviceId = service.id;
+    if (hasVideo) {
+      return (
+        <div className="media-container relative rounded-lg overflow-hidden w-full h-full">
+          <video
+            ref={(el) => (videoRefs.current[serviceId] = el)}
+            className="w-full h-full object-cover"
+            poster={posterUrl}
+            onEnded={() => handleVideoEnd(serviceId)}
+            onPlay={() => handleVideoPlay(serviceId)}
+            onPause={() => handleVideoPause(serviceId)}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleVideoPlay(serviceId);
+            }}
+            playsInline
+            muted={mutedVideos[serviceId] !== false}
+            loop
+          >
+            <source src={mediaUrl} type="video/mp4" />
+            <source src={mediaUrl} type="video/webm" />
+            Your browser does not support the video tag.
+          </video>
+          {/* Video Overlay Controls */}
+          <div
+            className={`video-overlay absolute inset-0 flex items-center justify-center cursor-pointer transition-opacity duration-300 ${
+              playingVideos[serviceId]
+                ? "opacity-0 hover:opacity-100"
+                : "opacity-100"
+            }`}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleVideoPlay(serviceId);
+            }}
+          >
+            {!playingVideos[serviceId] && (
+              <div className="play-button bg-black bg-opacity-60 rounded-full p-2 transition-all duration-300 hover:bg-opacity-80">
+                <PlayArrow style={{ color: "white", fontSize: "24px" }} />
+              </div>
+            )}
+          </div>
+          {/* Video Controls */}
+          <div
+            className={`video-controls absolute bottom-2 left-2 right-2 flex justify-between items-center transition-opacity duration-300 ${
+              playingVideos[serviceId] ? "opacity-100" : "opacity-0"
+            }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center space-x-2">
+              <button
+                className="control-btn bg-black bg-opacity-50 rounded-full p-1"
+                onClick={() => toggleVideoPlay(serviceId)}
+              >
+                {playingVideos[serviceId] ? (
+                  <Pause style={{ color: "white", fontSize: "16px" }} />
+                ) : (
+                  <PlayArrow style={{ color: "white", fontSize: "16px" }} />
+                )}
+              </button>
+              <button
+                className="control-btn bg-black bg-opacity-50 rounded-full p-1"
+                onClick={() => toggleMute(serviceId)}
+              >
+                {mutedVideos[serviceId] !== false ? (
+                  <VolumeOff style={{ color: "white", fontSize: "16px" }} />
+                ) : (
+                  <VolumeUp style={{ color: "white", fontSize: "16px" }} />
+                )}
+              </button>
+            </div>
+          </div>
+          {/* Video Indicator */}
+          <div className="video-indicator absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-semibold">
+            VIDEO
+          </div>
+        </div>
+      );
+    } else {
+      // Image content
+      return (
+        <img
+          src={mediaUrl}
+          alt={service.service_name || service.name}
+          className="w-full h-full object-cover"
+        />
+      );
+    }
+  };
+
+  // Coupon Ticket Component
+  const CouponTicket = ({ coupon, onSelect, isSelected }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+    const status = getCouponStatus(coupon);
+    const isValid = isCouponValid(coupon);
+
+    return (
+      <div className="relative">
+        {/* Main Coupon Card */}
+        <div
+          className={`relative bg-white border-2 border-dashed cursor-pointer transition-all duration-200 rounded-lg overflow-hidden
+            ${isSelected 
+              ? 'border-[#502DA6] bg-[#f9f5ff]' 
+              : isValid 
+                ? 'border-green-400 hover:border-green-600' 
+                : 'border-gray-300 opacity-60'
+            }`}
+          onClick={() => isValid && !isExpanded && onSelect(coupon)}
+        >
+          {/* Side notches */}
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 -ml-1">
+            <div className="w-3 h-7 bg-white border-r-2 border-gray-300 rounded-full"></div>
+          </div>
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 -mr-1">
+            <div className="w-3 h-7 bg-white border-l-2 border-gray-300 rounded-full"></div>
+          </div>
+
+          <div className="py-3 px-4">
+            {/* Top: Selected Check */}
+            <div className="flex items-center justify-between mb-1">
+              {isSelected && (
+                <div className="w-5 h-5 bg-[#502DA6] rounded-full flex items-center justify-center flex-shrink-0">
+                  <Check className="w-3 h-3 text-white" />
+                </div>
+              )}
+            </div>
+
+            {/* Discount + Min Purchase */}
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-1.5">
+                <span className={`text-2xl font-black ${isValid ? 'text-[#502DA6]' : 'text-gray-400'}`}>
+                  {coupon.type === 'percentage' ? `${coupon.discount}%` : `₹${coupon.discount}`}
+                </span>
+                <span className="text-sm font-semibold text-gray-700">OFF</span>
+                {coupon.minAmount && coupon.minAmount > 0 && (
+                  <span className="text-xs text-gray-500">
+                    • min ₹{coupon.minAmount.toLocaleString('en-IN')}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Expiry */}
+            {coupon.expire_date && (
+              <div className={`text-[10px] text-center mt-1 ${isValid ? 'text-gray-500' : 'text-gray-400'}`}>
+                Expires {new Date(coupon.expire_date).toLocaleDateString('en-IN', {
+                  day: 'numeric',
+                  month: 'short',
+                })}
+              </div>
+            )}
+
+            {/* Status + Clickable T&C */}
+            <div className="flex items-center justify-center gap-3 mt-2">
+              {status && (
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${status.bg} ${status.color}`}>
+                  {status.text}
+                </span>
+              )}
+              
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsExpanded(!isExpanded);
+                }}
+                className="flex items-center gap-1 text-[9px] font-medium text-[#502DA6] hover:underline"
+              >
+                T&C
+                {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+              </button>
+            </div>
+          </div>
+
+          {/* Selected Bottom Bar */}
+          {isSelected && coupon.maxDiscount && (
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-r from-[#502DA6] to-[#3d2180] text-white text-center py-2 text-sm font-bold">
+              Save up to ₹{coupon.maxDiscount}
+            </div>
+          )}
+        </div>
+
+        {/* Expandable T&C Div */}
+        {isExpanded && (
+          <div className="mt-2 bg-purple-50 border border-purple-200 rounded-lg p-4 text-sm text-gray-700 animate-in fade-in slide-in-from-top-2 duration-300">
+            {coupon.description && (
+              <p className="font-medium text-[#502DA6] mb-3">{coupon.description}</p>
+            )}
+            <div className="text-xs space-y-2">
+              <p className="font-semibold text-gray-800">Terms & Conditions:</p>
+              <ul className="space-y-1 list-disc list-inside text-gray-600">
+                {Array.isArray(coupon.terms) && coupon.terms.length > 0 ? (
+                  coupon.terms.map((term, idx) => <li key={idx}>{term}</li>)
+                ) : typeof coupon.terms === 'string' && coupon.terms.trim() ? (
+                  <li>{coupon.terms}</li>
+                ) : (
+                  <>
+                    <li>Applicable only on selected payment methods</li>
+                    <li>Cannot be combined with any other offer</li>
+                    <li>Valid for one-time use per user</li>
+                    <li>Offer valid till {coupon.expire_date ? new Date(coupon.expire_date).toLocaleDateString('en-IN') : 'limited time'}</li>
+                  </>
+                )}
+              </ul>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Updated CouponPage with wallet balance section
+  const CouponPage = () => {
+    const [localSelectedCoupon, setLocalSelectedCoupon] = useState(selectedCoupon);
+    const [couponCode, setCouponCode] = useState('');
+    const [isChecking, setIsChecking] = useState(false);
+
+    const handleCouponSelect = (coupon) => {
+      if (!isCouponValid(coupon)) {
+        toast.error("This coupon is not valid or has expired");
+        return;
+      }
+      setLocalSelectedCoupon(coupon);
+    };
+
+    const handleCheckCode = async () => {
+      if (!couponCode.trim()) return;
+      setIsChecking(true);
+      setTimeout(() => {
+        const matchingCoupon = availableCoupons.find(c => c.code.toLowerCase() === couponCode.toLowerCase());
+        if (matchingCoupon && isCouponValid(matchingCoupon)) {
+          setLocalSelectedCoupon(matchingCoupon);
+          toast.success('Coupon code verified!');
+        } else {
+          toast.error('Invalid or expired coupon code');
+        }
+        setIsChecking(false);
+      }, 1000);
+    };
+
+    const handleApplyCoupon = () => {
+      if (localSelectedCoupon) {
+        setSelectedCoupon(localSelectedCoupon);
+        setShowCouponPage(false);
+        const total = calculateTotal();
+        toast.success(
+          `Coupon ${localSelectedCoupon.code} applied! You save ₹${total.discount.toFixed(2)}`
+        );
+      } else {
+        toast.error("Please select or enter a valid coupon");
+      }
+    };
+
+    // Filter valid and invalid coupons
+    const validCoupons = availableCoupons.filter(coupon => isCouponValid(coupon));
+    const invalidCoupons = availableCoupons.filter(coupon => !isCouponValid(coupon));
+
+    return (
+      <div className="h-full flex flex-col bg-white">
+        {/* Header */}
+        <div className="flex items-center px-4 py-4 border-b border-gray-200 bg-white sticky top-0 z-10">
+          <button
+            onClick={() => setShowCouponPage(false)}
+            className="flex items-center justify-center w-8 h-8 rounded-full border border-gray-300 hover:bg-gray-50 transition-colors mr-3"
+          >
+            <ArrowLeft className="h-5 w-5 text-gray-700" />
+          </button>
+          <h1 className="text-xl font-semibold text-[#502DA6] flex-1">Coupons</h1>
+          <div className="w-8"></div>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto p-4">
+          {/* Wallet Balance Section */}
+      <div className="mb-6 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+  <div className="flex items-center justify-between">
+    <div className="flex items-center">
+      <Wallet className="w-6 h-6 text-blue-600 mr-3" />
+      <div>
+        <p className="text-sm font-medium text-gray-600">Available Balance</p>
+        <p className="text-xl font-semibold text-gray-900">
+          {loadingWallet ? (
+            <div className="w-24 h-6 bg-gray-100 rounded animate-pulse"></div>
+          ) : (
+            `₹${walletBalance.toFixed(2)}`
+          )}
+        </p>
+      </div>
+    </div>
+    <button
+      onClick={() => {
+        setShowCouponPage(false);
+        if (walletBalance > 0) {
+          setUseWalletBalance(!useWalletBalance);
+        }
+      }}
+      className={`px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 ${
+        walletBalance > 0
+          ? useWalletBalance
+            ? 'bg-green-50 text-green-700 border border-green-200 hover:bg-green-100'
+            : 'bg-[#522EC8] text-white hover:bg-[#441EB8] shadow-sm'
+          : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+      }`}
+      disabled={walletBalance <= 0}
+    >
+      {useWalletBalance ? 'Applied' : 'Apply Balance'}
+    </button>
+  </div>
+  {walletBalance <= 0 && (
+    <p className="text-xs text-gray-500 mt-3">
+      Insufficient balance. Add funds or refer friends to earn rewards.
+    </p>
+  )}
+</div>
+          {/* Enter Coupon Code Section */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Enter coupon code</label>
+            <div className="flex">
+              <input
+                type="text"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                placeholder="Enter coupon code"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-[#502DA6] focus:border-transparent"
+                onKeyPress={(e) => e.key === 'Enter' && handleCheckCode()}
+              />
+              <button
+                onClick={handleCheckCode}
+                disabled={isChecking || !couponCode.trim()}
+                className={`px-4 py-2 font-semibold rounded-r-lg transition-colors ${
+                  isChecking || !couponCode.trim()
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-[#502DA6] text-white hover:bg-[#3d2180]'
+                }`}
+              >
+                {isChecking ? '...' : 'CHECK'}
+              </button>
+            </div>
+          </div>
+
+          {/* Loading overlay */}
+          {loadingCoupons ? (
+            <div className="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-10">
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-10 h-10 border-2 border-[#502DA6] border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-sm font-medium text-gray-600">Loading Offers...</p>
+              </div>
+            </div>
+          ) : null}
+
+          {/* Valid Coupons Section */}
+          {validCoupons.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-sm font-medium text-gray-700 mb-3">Available Coupons</h3>
+              <div className="space-y-4">
+                {validCoupons.map((coupon) => (
+                  <CouponTicket
+                    key={coupon.id}
+                    coupon={coupon}
+                    onSelect={handleCouponSelect}
+                    isSelected={localSelectedCoupon?.id === coupon.id}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Invalid Coupons */}
+          {invalidCoupons.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-sm font-medium text-gray-500 mb-3">Expired Coupons</h3>
+              <div className="space-y-3 opacity-60">
+                {invalidCoupons.map((coupon) => (
+                  <CouponTicket
+                    key={coupon.id}
+                    coupon={coupon}
+                    onSelect={handleCouponSelect}
+                    isSelected={localSelectedCoupon?.id === coupon.id}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {availableCoupons.length === 0 && !loadingCoupons && (
+            <div className="text-center py-8">
+              <p className="text-gray-500">No coupons available at the moment.</p>
+            </div>
+          )}
+
+          {/* Apply Button Section */}
+          {localSelectedCoupon && (
+            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-gray-600">Selected Coupon</span>
+                <span className="font-semibold text-[#502DA6]">{localSelectedCoupon.code}</span>
+              </div>
+              <button
+                onClick={handleApplyCoupon}
+                className="w-full py-3 px-4 bg-[#502DA6] hover:bg-[#3d2180] text-white font-semibold rounded-lg transition-colors flex items-center justify-center"
+              >
+                APPLY COUPON
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <Transition show={isOpen} as={React.Fragment}>
+      <Dialog onClose={closeModal} className="relative z-50">
+        <Transition.Child
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
+        </Transition.Child>
+        <div className="fixed inset-0 overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden">
+            <Transition.Child
+              enter="transform transition ease-out duration-300"
+              enterFrom="translate-x-full"
+              enterTo="translate-x-0"
+              leave="transform transition ease-in duration-200"
+              leaveFrom="translate-x-0"
+              leaveTo="translate-x-full"
+            >
+              <Dialog.Panel className="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-lg">
+                {showCouponPage ? (
+                  <CouponPage />
+                ) : (
+                  <div className="flex h-full flex-col">
+                    {/* Header */}
+                    <div className="flex items-center  px-2 py-5 border-b border-gray-200">
+                      {isInitialLoad ? (
+                        <Skeleton circle width={32} height={32} />
+                      ) : (
+                        <button
+                          onClick={handleBackClick}
+                          className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-50 transition-colors"
+                        >
+                          {showPaymentSummary ? (
+                            <ArrowBack className="h-5 w-5 text-gray-700" />
+                          ) : (
+                            <ChevronLeftSharp className="h-5 w-5 text-gray-700" />
+                          )}
+                        </button>
+                      )}
+                      {isInitialLoad ? (
+                        <Skeleton width={180} height={32} />
+                      ) : (
+                        <Dialog.Title className="text-xl font-semibold text-[#502DA6]">
+                          {showPaymentSummary
+                            ? "Payment Summary"
+                            : "Booking Summary"}
+                        </Dialog.Title>
+                      )}
+                    </div>
+                    {selectedServices.length === 0 ? (
+                      <div className="flex-1 flex flex-col items-center justify-center p-2">
+                        {isInitialLoad ? (
+                          <>
+                            <Skeleton circle width={160} height={160} />
+                            <Skeleton width={150} height={24} className="mt-6" />
+                            <Skeleton width={250} height={16} className="mt-3" />
+                            <Skeleton width={200} height={48} className="mt-6" />
+                          </>
+                        ) : (
+                          <>
+                            <div className="w-60 h-60 flex items-center justify-center mb-3">
+                              <img
+                                src={EmptyCart}
+                                className="w-60 h-60"
+                                alt="Your Cart Is Empty"
+                              />
+                            </div>
+                            <p className="text-gray-500 text-lg font-medium">
+                              Your Cart Is Empty
+                            </p>
+                            <p className="text-gray-400 text-sm text-center mb-3">
+                              Add Offers from the salon to start your booking.
+                            </p>
+                            <button
+                              onClick={handleAddMoreServices}
+                              className="px-3py-3 bg-[#502DA6] text-white rounded-lg border border-[#502DA6] hover:bg-[#3d2180] transition-colors flex items-center"
+                            >
+                              <PlusIcon className="w-5 h-5 mr-2" />
+                              Add Best Offers
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex-1 overflow-y-auto">
+                        {/* Applied Coupon and Wallet Display */}
+                        {(selectedCoupon || useWalletBalance) && (
+                          <div className="m-3 space-y-2">
+                            {selectedCoupon && (
+                              <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center">
+                                    <TicketPercent className="w-5 h-5 text-green-600 mr-2" />
+                                    <div>
+                                      <p className="font-medium text-green-800">
+                                        {selectedCoupon.description} Applied
+                                      </p>
+                                      <div className="text-xs text-green-500 mt-1">
+                                        {getCouponStatus(selectedCoupon).text}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <button
+                                    onClick={handleRemoveCoupon}
+                                    className="text-red-500 hover:text-red-700 text-sm font-medium"
+                                  >
+                                    Remove
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                            {useWalletBalance && (
+                              <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center">
+                                    <Wallet className="w-5 h-5 text-purple-600 mr-2" />
+                                    <div>
+                                      <p className="font-medium text-purple-800">
+                                        Wallet Balance Applied
+                                      </p>
+                                      <div className="text-xs text-purple-500 mt-1">
+                                        ₹{walletBalance.toFixed(2)} available
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <button
+                                    onClick={() => setUseWalletBalance(false)}
+                                    className="text-red-500 hover:text-red-700 text-sm font-medium"
+                                  >
+                                    Remove
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {!showPaymentSummary ? (
+                          <>
+                            {/* Services list */}
+                            <div className="p-3 space-y-4">
+                              <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-base font-semibold text-gray-700">
+                                  {selectedServices.reduce(
+                                    (sum, s) => sum + (s.quantity || 1),
+                                    0
+                                  )}{" "}
+                                  offer{selectedServices.length !== 1 ? "s" : ""}{" "}
+                                  Selected
+                                </h3>
+                              </div>
+                              <div className="space-y-3">
+                                {selectedServices.map((service) => {
+                                  const servicePrice = service.price || 0;
+                                  const totalServicePrice =
+                                    servicePrice * (service.quantity || 1);
+                                  return (
+                                    <div
+                                      key={service.id}
+                                      id={`booking-item-${service.id}`}
+                                      className="  border border-gray-300 shadow-sm  p-2 bg-white rounded-md  transition-all"
+                                    >
+                                      <div className="flex">
+                                        {/* Service/Offer media container */}
+                                        <div className="rounded-lg overflow-hidden w-20 h-20 mr-4 flex-shrink-0 bg-gray-100">
+                                          {service?.service_image ||
+                                          service?.image ||
+                                          service?.video ? (
+                                            renderMediaContent(service)
+                                          ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                                              <span className="text-gray-400 text-xl font-bold">
+                                                {(
+                                                  service.service_name ||
+                                                  service.name
+                                                )?.charAt(0) || "O"}
+                                              </span>
+                                            </div>
+                                          )}
+                                        </div>
+                                        {/* Service/Offer details */}
+                                        <div className="flex-1">
+                                          <div className="flex justify-between flex-col items-start">
+                                            <h3 className="font-medium text-gray-800 mb-1">
+                                              {service.service_name ||
+                                                service.name}
+                                            </h3>
+                                             <p className="font-semibold text-[#502DA6]">
+                                              ₹{totalServicePrice.toFixed(2)}
+                                              {service.actual_price &&
+                                                service.actual_price >
+                                                  service.price && (
+                                                  <span className="ml-2 text-xl text-gray-500 line-through">
+                                                    ₹{service.actual_price}
+                                                  </span>
+                                                )}
+                                            </p>
+                                           
+                                          </div>
+                                          {service.isOffer && (
+                                            <button
+                                              onClick={() =>
+                                                setShowTermsModal(service)
+                                              }
+                                              className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded-md mt-1 mb-2 inline-flex items-center hover:bg-blue-100 transition-colors"
+                                            >
+                                              <DocumentTextIcon className="w-3 h-3 mr-1" />
+                                              View Terms & Conditions
+                                            </button>
+                                          )}
+
+                                          <div className="flex items-center justify-between mt-2">
+                                            {/* Quantity selector - only show for services */}
+                                            {!service.isOffer && (
+                                              <div className="flex items-center border border-gray-300 rounded-md">
+                                                <button
+                                                  onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handleQuantityChange(
+                                                      service.id,
+                                                      -1
+                                                    );
+                                                  }}
+                                                  onTouchEnd={(e) => {
+                                                    e.preventDefault();
+                                                    handleQuantityChange(
+                                                      service.id,
+                                                      -1
+                                                    );
+                                                  }}
+                                                  className="px-2 py-1 text-gray-600 hover:bg-gray-100"
+                                                >
+                                                  -
+                                                </button>
+                                                <span className="px-2">
+                                                  {service.quantity || 1}
+                                                </span>
+                                                <button
+                                                  onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handleQuantityChange(
+                                                      service.id,
+                                                      1
+                                                    );
+                                                  }}
+                                                  onTouchEnd={(e) => {
+                                                    e.preventDefault();
+                                                    handleQuantityChange(
+                                                      service.id,
+                                                      1
+                                                    );
+                                                  }}
+                                                  className="px-2 py-1 text-gray-600 hover:bg-gray-100"
+                                                >
+                                                  +
+                                                </button>
+                                              </div>
+                                            )}
+                                            <div className="text-gray-400 text-xs">
+                                              {service.expire_date} Expire In Few
+                                              Days
+                                            </div>
+                                            <button
+                                              onClick={() =>
+                                                removeService(service.id)
+                                              }
+                                              className="text-red-500 text-xs flex items-center hover:text-red-600 transition-colors"
+                                            >
+                                              <X/>
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                              {/* Terms & Conditions Modal */}
+                              <Transition
+                                show={!!showTermsModal}
+                                as={React.Fragment}
+                              >
+                                <Dialog
+                                  onClose={() => setShowTermsModal(null)}
+                                  className="relative z-50"
+                                >
+                                  <Transition.Child
+                                    enter="ease-out duration-300"
+                                    enterFrom="opacity-0"
+                                    enterTo="opacity-100"
+                                    leave="ease-in duration-200"
+                                    leaveFrom="opacity-100"
+                                    leaveTo="opacity-0"
+                                  >
+                                    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
+                                  </Transition.Child>
+                                  <div className="fixed inset-0 flex items-center justify-center p-4">
+                                    <Transition.Child
+                                      enter="ease-out duration-300"
+                                      enterFrom="opacity-0 scale-95"
+                                      enterTo="opacity-100 scale-100"
+                                      leave="ease-in duration-200"
+                                      leaveFrom="opacity-100 scale-100"
+                                      leaveTo="opacity-0 scale-95"
+                                    >
+                                      <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-lg bg-white p-6 text-left align-middle shadow-lg">
+                                        <Dialog.Title
+                                          as="h3"
+                                          className="text-lg font-semibold leading-6 text-gray-900 flex items-center"
+                                        >
+                                          <InformationCircleIcon className="w-5 h-5 mr-2 text-blue-600" />
+                                          Offer Terms & Conditions
+                                        </Dialog.Title>
+                                        <div className="mt-4 max-h-96 overflow-y-auto">
+                                          {showTermsModal?.terms_and_conditions ? (
+                                            <div className="prose prose-sm">
+                                              <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                                <h4 className="font-medium text-blue-800 mb-2">
+                                                  Valid only on weekdays
+                                                </h4>
+                                                <p className="text-sm text-gray-600">
+                                                  This offer is valid from Monday
+                                                  to Friday only.
+                                                </p>
+                                              </div>
+                                              <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                                <h4 className="font-medium text-blue-800 mb-2">
+                                                  Advance booking required
+                                                </h4>
+                                                <p className="text-sm text-gray-600">
+                                                  Please book your appointment at
+                                                  least 24 hours in advance.
+                                                </p>
+                                              </div>
+                                              <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                                <h4 className="font-medium text-blue-800 mb-2">
+                                                  Non-transferable
+                                                </h4>
+                                                <p className="text-sm text-gray-600">
+                                                  This offer cannot be transferred
+                                                  to another person.
+                                                </p>
+                                              </div>
+                                              <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                                <h4 className="font-medium text-blue-800 mb-2">
+                                                  Limited availability
+                                                </h4>
+                                                <p className="text-sm text-gray-600">
+                                                  Subject to availability at
+                                                  selected salons only.
+                                                </p>
+                                              </div>
+                                              <div className="p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                                <h4 className="font-medium text-blue-800 mb-2">
+                                                  Other conditions
+                                                </h4>
+                                                <p className="text-sm text-gray-600">
+                                                  Salon reserves the right to
+                                                  modify terms without prior
+                                                  notice.
+                                                </p>
+                                              </div>
+                                            </div>
+                                          ) : (
+                                            <p className="text-gray-500">
+                                              No terms and conditions available
+                                              for this offer.
+                                            </p>
+                                          )}
+                                        </div>
+                                        <div className="mt-4 flex justify-end">
+                                          <button
+                                            type="button"
+                                            className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 transition-colors"
+                                            onClick={() =>
+                                              setShowTermsModal(null)
+                                            }
+                                          >
+                                            I Understand
+                                          </button>
+                                        </div>
+                                      </Dialog.Panel>
+                                    </Transition.Child>
+                                  </div>
+                                </Dialog>
+                              </Transition>
+                              {/* Add Services Button */}
+                              <button
+                                onClick={handleAddMoreServices}
+                                className="mt-4 w-full py-3 px-4 border border-[#502DA6] text-[#502DA6] rounded-lg hover:bg-[#f8f5ff] transition-colors flex items-center justify-center"
+                              >
+                                <PlusIcon className="w-5 h-5 mr-2" />
+                                Add More Services
+                              </button>
+                              {/* Apply Coupon Code Button */}
+                              <button
+                                onClick={handleApplyCoupon}
+                                className="mt-3 w-full py-3 px-4 border border-green-600 text-green-600 rounded-lg hover:bg-green-50 transition-colors flex items-center justify-center"
+                              >
+                                <BadgePercentIcon className="w-5 h-5 mr-2" />
+                                Apply Coupon Code
+                              </button>
+                            </div>
+                            {/* Booking Type Selection */}
+                            <div className="px-3 pt-4 pb-2 bg-gray-50 border-t border-gray-200">
+                                <div className="p-4 flex items-center">
+                                  <div className="w-12 h-12 rounded-lg bg-[#502DA6] flex items-center justify-center mr-4">
+                                    <CalendarIcon className="w-6 h-6 text-white" />
+                                  </div>
+                                  <div>
+                                    <h3 className="font-semibold text-gray-800">
+                                      Book Appointment
+                                    </h3>
+                                    <p className="text-sm text-gray-500">
+                                      Select your preferred date & time
+                                    </p>
+                                  </div>
+                                </div>
+                            </div>
+                            {/* Booking Time Section */}
+                            <div className="p-6 bg-gray-50">
+                              <>
+                                {/* Date Selection */}
+                                <div className="mb-4">
+                                  <label className="text-gray-700 font-medium mb-2 flex items-center">
+                                    <CalendarIcon className="w-5 h-5 mr-2 text-[#502DA6]" />
+                                    Select Date
+                                  </label>
+                                  <input
+                                    type="date"
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#502DA6] focus:border-[#502DA6]"
+                                    value={bookingDate}
+                                    onChange={(e) =>
+                                      handleDateChange(e.target.value)
+                                    }
+                                    min={new Date().toISOString().split("T")[0]}
+                                  />
+                                </div>
+                                {/* Time Slot Selection */}
+                               <div className="mb-6">
+                                  <label className="text-gray-800 font-medium mb-3 flex items-center text-sm uppercase tracking-wider">
+                                    <ClockIcon className="w-5 h-5 mr-2 text-purple-500" />
+                                    Select Your Preferred Time
+                                  </label>
+                                  <div className="time-slots-grid">
+                                    {[
+                                      "10:00 AM",
+                                      "11:00 AM",
+                                      "12:00 PM",
+                                      "01:00 PM",
+                                      "02:00 PM",
+                                      "03:00 PM",
+                                      "04:00 PM",
+                                      "05:00 PM",
+                                      "06:00 PM",
+                                      "07:00 PM",
+                                      "08:00 PM",
+                                    ].map((time) => {
+                                      // Check if the time slot is in the past
+                                      const isTimeSlotAvailable = () => {
+                                        const isToday =
+                                          bookingDate ===
+                                          new Date().toISOString().split("T")[0];
+
+                                        if (!isToday) {
+                                          return true;
+                                        }
+
+                                        // For today, check if time is in the future
+                                        const now = new Date();
+                                        const [timeStr, period] = time.split(" ");
+                                        let [hours, minutes] = timeStr
+                                          .split(":")
+                                          .map(Number);
+
+                                        // Convert to 24-hour format
+                                        if (period === "PM" && hours !== 12) {
+                                          hours += 12;
+                                        }
+                                        if (period === "AM" && hours === 12) {
+                                          hours = 0;
+                                        }
+
+                                        const slotTime = new Date();
+                                        slotTime.setHours(hours, minutes, 0, 0);
+
+                                        return slotTime > now;
+                                      };
+
+                                      const isAvailable = isTimeSlotAvailable();
+
+                                      return (
+                                        <button
+                                          key={time}
+                                          onClick={() =>
+                                            isAvailable && setSelectedTime(time)
+                                          }
+                                          disabled={!isAvailable}
+                                          className={`time-slot-btn rounded-full ${
+                                            selectedTime === time
+                                              ? "selected"
+                                              : ""
+                                          } ${
+                                            !isAvailable
+                                              ? "bg-gray-100 text-gray-400 cursor-not-allowed opacity-50"
+                                              : "bg-white text-gray-700 hover:bg-purple-50 hover:border-purple-300"
+                                          }`}
+                                        >
+                                          {time}
+                                          {!isAvailable && (
+                                            <span className="block text-xs text-gray-500 mt-1">
+                                              Not available
+                                            </span>
+                                          )}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              </>
+                              {/* Proceed to Payment Button */}
+                              <button
+                                onClick={handleBooking}
+                                disabled={
+                                  isProcessing || !bookingDate || !selectedTime
+                                }
+                                className={`mt-4 w-full py-3 rounded-lg flex items-center justify-center font-semibold text-white transition-all
+    ${
+      isProcessing || !bookingDate || !selectedTime
+        ? "bg-gray-400 cursor-not-allowed border border-gray-400"
+        : "bg-[#502DA6] hover:bg-[#3d2180] border border-[#502DA6]"
+    }`}
+                              >
+                                {isProcessing ? (
+                                  <>
+                                    <svg
+                                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <circle
+                                        className="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        strokeWidth="4"
+                                      ></circle>
+                                      <path
+                                        className="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                      ></path>
+                                    </svg>
+                                    Processing...
+                                  </>
+                                ) : !selectedTime ? (
+                                  "Select Available Time"
+                                ) : (
+                                  <>
+                                    Proceed to Payment
+                                    <ArrowRightIcon className="w-5 h-5 ml-2" />
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            {/* Payment Summary Section */}
+                            <div className="p-3">
+                              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                                {/* Header */}
+                                <div className="bg-[#502DA6] p-4">
+                                  <h3 className="font-semibold text-white flex items-center">
+                                    <CreditCardIcon className="w-5 h-5 mr-2" />
+                                    Payment Summary
+                                  </h3>
+                                </div>
+                                {/* Booking Details */}
+                                <div className="p-4 border-b border-gray-200">
+                                  <h4 className="font-medium text-gray-700 mb-3">
+                                    Booking Details
+                                  </h4>
+                                  <div className="grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                      <p className="text-gray-600">Appointment Date</p>
+                                      <p className="font-medium">
+                                        {new Date(bookingDate).toLocaleDateString(
+                                          "en-US",
+                                          {
+                                            weekday: "long",
+                                            month: "short",
+                                            day: "numeric",
+                                          }
+                                        )}
+                                      </p>
+                                    </div>
+                                    <div>
+                                      <p className="text-gray-600">Appointment Time</p>
+                                      <p className="font-medium">
+                                        {selectedTime}
+                                      </p>
+                                    </div>
+                                    <div className="col-span-2">
+                                      <p className="text-gray-600">
+                                        Approx Duration
+                                      </p>
+                                      <p className="font-medium">
+                                        {calculateDuration().formatted}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                                {/* Selected Services Summary */}
+                                <div className="p-4 border-b border-gray-200">
+                                  <h4 className="font-medium text-gray-700 mb-3 flex items-center">
+                                    Selected Services ({selectedServices.length})
+                                  </h4>
+                                  <div className="space-y-2 max-h-32 overflow-y-auto">
+                                    {selectedServices.map((service) => {
+                                      const servicePrice = service.price || 0;
+                                      const totalServicePrice =
+                                        servicePrice * (service.quantity || 1);
+                                      return (
+                                        <div
+                                          key={service.id}
+                                          className="flex justify-between items-center py-1 text-sm"
+                                        >
+                                          <div className="flex-1 truncate">
+                                            <span className="font-medium text-gray-800 text-sm truncate">
+                                              {service.service_name ||
+                                                service.name}
+                                            </span>
+                                            {service.isOffer && (
+                                              <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-xs bg-green-100 text-green-800">
+                                                Offer
+                                              </span>
+                                            )}
+                                            {!service.isOffer &&
+                                              service.quantity &&
+                                              service.quantity > 1 && (
+                                                <span className="ml-2 text-xs text-gray-500">
+                                                  x{service.quantity}
+                                                </span>
+                                              )}
+                                          </div>
+                                          <div className="text-right">
+                                            <p className="font-medium text-[#502DA6]">
+                                              ₹{totalServicePrice.toFixed(2)}
+                                            </p>
+                                            {service.actual_price &&
+                                              service.actual_price >
+                                                service.price && (
+                                                <p className="text-xs text-gray-400 line-through">
+                                                  ₹{service.actual_price}
+                                                </p>
+                                              )}
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                                {/* Price Breakdown - UPDATED to show wallet and coupon discounts */}
+                                <div className="p-4">
+                                  <h4 className="font-medium text-gray-700 mb-3">
+                                    Price Breakdown
+                                  </h4>
+                                  <div className="space-y-2 mb-4">
+                                    <div className="flex justify-between">
+                                      <span className="text-gray-600">
+                                        Subtotal (
+                                        {selectedServices.reduce(
+                                          (sum, s) => sum + (s.quantity || 1),
+                                          0
+                                        )}{" "}
+                                        items)
+                                      </span>
+                                      <span className="font-medium">
+                                        ₹{calculateTotal().subtotal.toFixed(2)}
+                                      </span>
+                                    </div>
+                                    {selectedCoupon && (
+                                      <div className="flex justify-between text-green-600">
+                                        <span className="flex items-center">
+                                          <BadgePercentIcon className="w-4 h-4 mr-1" />
+                                          Discount ({selectedCoupon.code})
+                                        </span>
+                                        <span className="text-sm font-medium">
+                                          -₹{calculateTotal().discount.toFixed(2)}
+                                        </span>
+                                      </div>
+                                    )}
+                                    {useWalletBalance && (
+                                      <div className="flex justify-between text-purple-600">
+                                        <span className="flex items-center">
+                                          <Wallet className="w-4 h-4 mr-1" />
+                                          Wallet Balance
+                                        </span>
+                                        <span className="text-sm font-medium">
+                                          -₹{calculateTotal().walletAmountUsed.toFixed(2)}
+                                        </span>
+                                      </div>
+                                    )}
+                                    <div className="flex justify-between pt-2 border-t border-gray-200">
+                                      <span className="text-gray-600">
+                                        Convenience Fee
+                                      </span>
+                                      <span className="text-sm">
+                                    0
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="h-px bg-gray-200 my-4"></div>
+                                  {/* UPDATED: Show final amount after all discounts */}
+                                  <div className="flex justify-between items-center py-2 bg-gray-50 rounded-lg px-3">
+                                    <span className="font-bold text-lg text-gray-900">
+                                      Total Amount
+                                    </span>
+                                    <span className="font-bold text-lg text-[#502DA6]">
+                                      ₹{calculateTotal().finalAmountAfterWallet.toFixed(2)}
+                                    </span>
+                                  </div>
+                                  {/* Payment Note - UPDATED with all discount details */}
+                                  <div className="mt-4 p-4 bg-[#f8f5ff] rounded-lg border border-[#e8e0ff]">
+                                    <div className="flex items-start space-x-3">
+                                      <div className="w-8 h-8 bg-[#502DA6] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <InformationCircleIcon className="w-4 h-4 text-white" />
+                                      </div>
+                                      <div>
+                                        <p className="font-semibold text-[#502DA6] mb-2">
+                                          Payment Info
+                                        </p>
+                                        <div className="space-y-1 text-sm text-gray-700">
+                                          <p>
+                                            • Pay ₹
+                                            {calculateTotal().payableAmount.toFixed(
+                                              2
+                                            )}{" "}
+                                            now to confirm
+                                          </p>
+                                          <p>
+                                            • Balance ₹
+                                            {(
+                                              calculateTotal().finalAmountAfterWallet -
+                                              calculateTotal().payableAmount
+                                            ).toFixed(2)}{" "}
+                                            payable at salon
+                                          </p>
+                                          {selectedCoupon && (
+                                            <p className="text-green-600 font-medium">
+                                              • You save ₹{calculateTotal().discount.toFixed(2)} with {selectedCoupon.code}
+                                            </p>
+                                          )}
+                                          {useWalletBalance && (
+                                            <p className="text-purple-600 font-medium">
+                                              • You used ₹{calculateTotal().walletAmountUsed.toFixed(2)} from wallet
+                                            </p>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              {/* Payment Button */}
+                              <button
+                                onClick={initiatePayment}
+                                disabled={paymentProcessing}
+                                className={`mt-6 w-full py-3 rounded-lg flex items-center justify-center font-semibold text-white transition-all ${
+                                  paymentProcessing
+                                    ? "bg-gray-400 cursor-not-allowed border border-gray-400"
+                                    : "bg-[#502DA6] hover:bg-[#3d2180] border border-[#502DA6]"
+                                }`}
+                              >
+                                {paymentProcessing ? (
+                                  <>
+                                    <svg
+                                      className="animate-spin -ml-1 mr-3 h-5 w-5"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <circle
+                                        className="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        strokeWidth="4"
+                                      />
+                                      <path
+                                        className="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                      />
+                                    </svg>
+                                    Processing Payment...
+                                  </>
+                                ) : (
+                                  <>
+                                    Pay ₹
+                                    {calculateTotal().payableAmount.toFixed(2)}{" "}
+                                    Now
+                                    <CreditCardIcon className="w-5 h-5 ml-2" />
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </div>
+      </Dialog>
+    </Transition>
+  );
+};
+
+export default BookingModule;

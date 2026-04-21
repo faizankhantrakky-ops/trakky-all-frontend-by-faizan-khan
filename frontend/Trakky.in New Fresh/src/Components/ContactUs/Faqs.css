@@ -1,0 +1,39 @@
+.vendor_faq_accordian {
+    width: 100%;
+    padding-inline: 60px;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .title_Acc {
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #333;
+  }
+  
+  .MuiTypography-root {
+    line-height: 1.6;
+    color: #555;
+  }
+  
+  .vendor_faq_ul_li {
+    padding-left: 20px;
+    margin-top: 10px;
+  }
+  
+  .vendor_faq_ul_li .vendor_faq_li {
+    margin-bottom: 10px;
+  }
+  
+  @media (max-width:786px) {
+      .vendor_faq_accordian  
+      {
+        padding: 30px;
+      }
+      .title_Acc
+      {
+        text-align: center;
+      }
+  }

@@ -1,0 +1,44 @@
+.DB-main-header{
+    display: flex;
+    padding: 20px 40px;
+    justify-content: space-between;
+    align-items: center;
+}
+.DB-main-header-title {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.DB-Dashboard {
+    font-size: 20px;
+    font-weight: 600;
+}
+.DB-UserName {
+    font-size: 16px;
+    font-weight: 400;
+}
+.DB-main-date-range {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    padding: 5px 15px;
+    border-radius: 5px;
+    box-shadow: 0px 3px 5px 0px #00000015;
+}
+.DB-Date-Range-Button input{
+    border: none;
+    background-color: white;
+    outline: none;
+}
+.DB-Date-Range-Button input:active ,
+.DB-Date-Range-Button input:focus {
+    border: none;
+    outline: none;
+}
+
+@media screen and (max-width:600px) {
+    .DB-main-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

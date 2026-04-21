@@ -1,0 +1,226 @@
+.Gl-image-m-container {
+  background-color: white;
+  width: 90%;
+  height: auto;
+  max-height: 90vh;
+  margin: 5% auto;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 1111px;
+}
+
+.Gl-spa-name-close-btnm {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+}
+
+.Gl-spa-name-close-btnm h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000;
+}
+
+.Gl-close-btn-a-s {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e6e5e5;
+  font-size: 20px;
+}
+
+/* Gallery layout */
+.Gl-gallery-container {
+  display: flex;
+  width: 100%;
+}
+
+/* Left side (column of images) */
+.Gl-left-gallery {
+  width: 40%;
+  height: 100%;
+  flex-grow: 0;
+  flex-shrink: 0;
+  overflow-y: auto;
+  max-height: calc(90vh - 80px);
+  margin-top: 15px;
+  box-sizing: border-box;
+  display: inline-block;
+}
+
+.GL-le-g-item {
+  width: calc(50%);
+  height: auto;
+  padding: 5px;
+  /* float: left; */
+  float: left;
+  display: inline-block;
+}
+
+
+.GL-gallery-image-best
+{
+  width: 205px;
+  height: 120px;
+  max-width: 205px;
+  max-height: 115px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+
+}
+
+/* Right side (horizontal swiper) */
+.Gl-r-swiper-container {
+  width: 60%;
+  overflow-x: auto;
+  white-space: nowrap;
+  border-radius: 8.5px !important;
+  position: relative;
+  aspect-ratio:calc(16/9);
+  height: max-content;
+  margin: 15px 0 0 15px;
+}
+
+
+
+.Gl-swiper-class-slide {
+  width: 100%;
+  height: 100%;
+  border-radius: 8.5px;
+
+}
+
+.Gl-r-swiper-container .scroll-image {
+  width: 100%;
+  height: 100%;
+  margin-right: 12px;
+  border-radius: 8.5px;
+  object-fit: cover;
+}
+
+.swiper-container img {
+  display: inline-block;
+  width: 100%;
+  height: 25vw;
+  margin-right: 12px;
+  border-radius: 8.5px;
+
+}
+
+/* Custom navigation button styles */
+.custom-prev-button,
+.custom-next-button {
+  position: absolute;
+  /* Position the buttons absolutely */
+  top: 50%;
+  /* Center vertically */
+  transform: translateY(-50%);
+  /* Adjust vertical position */
+  width: 40px;
+  /* Adjust width */
+  height: 40px;
+  /* Adjust height */
+  display: flex;
+  /* Use flexbox for alignment */
+  justify-content: center;
+  /* Center content */
+  align-items: center;
+  /* Center content */
+  color: white;
+  /* White color for icons or text */
+  border-radius: 50%;
+  /* Rounded corners */
+  cursor: pointer;
+  /* Change cursor to pointer */
+  z-index: 10;
+  /* Ensure the buttons are above other elements */
+}
+
+/* Positioning the previous button to the left */
+.custom-prev-button {
+  left: 10px;
+  /* Adjust distance from the left */
+}
+
+/* Positioning the next button to the right */
+.custom-next-button {
+  right: 10px;
+  /* Adjust distance from the right */
+}
+
+.model {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
+  transition: opacity 0.4s ease, visibility .4s ease, transform .5s ease-in-out;
+  visibility: hidden;
+  opacity: 0;
+  transform: scale(0);
+  overflow: hidden;
+  z-index: 999;
+}
+.model img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
+  display: block;
+  line-height: 0;
+  box-sizing: border-box;
+  padding: 20px 0 20px;
+  margin: 0 auto;
+}
+.open {
+  visibility: visible;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.open svg {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 2rem;
+  height: 2rem;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.4);
+  color: #FFF;
+  cursor: pointer;
+}
+
+
+
+@media (max-width: 768px) {
+  .Gl-r-swiper-container {
+    display: none;
+  }
+  .Gl-left-gallery {
+    width: 100%;
+    max-height: 100%;
+    height: 100%;
+  }
+  .Gl-image-m-container {
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+    height: 100%;
+    max-height: 100%;
+    overflow: auto;
+  }
+  .GL-gallery-image-best
+  {
+    height: 115px;
+    width: 100%;
+  }
+}

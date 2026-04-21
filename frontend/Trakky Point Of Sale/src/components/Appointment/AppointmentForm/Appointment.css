@@ -1,0 +1,35 @@
+.sidecard-container {
+    position: fixed;
+    top: 70px; /* Adjust based on the height of your fixed navbar */
+    right: -100%; /* Start off-screen */
+    width: 40%;
+    height: calc(100vh - 60px); /* Full screen height minus navbar height */
+    background-color: #f9f9f9;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease; /* Smooth transition */
+    z-index: 1000; /* Ensure it appears above content */
+  }
+  
+  .sidecard-container.open {
+    right: 0; /* Slide in to take 30% width */
+  }
+  
+  /* Style for multi-line content */
+.terms-and-conditions.list-format {
+    display: list-item;
+    list-style-type: disc; /* Use bullet points for unordered lists */
+    margin-left: 1.5rem; /* Indent the list */
+    padding-left: 0; /* Remove default padding */
+  }
+  
+  /* Style for single-line content */
+  .terms-and-conditions.single-line-format {
+    text-align: center; /* Center the single line content */
+  }
+  @media (max-width: 768px) {
+    .AppoinmentFromDiv
+    {
+      width: 100%;
+    }
+  }
+  

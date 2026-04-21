@@ -1,0 +1,113 @@
+.topPOSpreview{
+    padding-bottom: 25px;
+    color: black;
+    background-image: url('../../assets/DiffcolorBackground.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: auto;
+    width: 250px;
+}
+.scorePOSProfilePreview{
+    color: white;
+    font-size: 12px;
+    border-radius: 5px;
+    padding: 5px 10px;
+    width: max-content;
+    background-color: rgba(0, 0, 0, 0.395);
+}
+.GrediantBackgroundPOS{
+    z-index: 10;
+    padding: 25px 10px 10px 10px;
+    position: relative;
+    top: -10px;
+    height: auto;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    background-image: linear-gradient(to bottom, transparent, #00000029, #0000006e, #000000b3, black);
+}
+.Callnowbtn_POSprofilepreview{
+    background-image: linear-gradient(to right, #9E70FF,#512DC8);
+}
+.Callnowbtn_POSprofilepreview:first-child{
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+}
+.Callnowbtn_POSprofilepreview:last-child{
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+.linestraightPOSprofilePreviewright{
+    height: 1px;
+    width: 30px;
+    background-image: linear-gradient(to right, transparent,rgba(0, 0, 0, 0.53),black);
+}
+.linestraightPOSprofilePreviewleft{
+    height: 1px;
+    width: 30px;
+    background-image: linear-gradient(to left, transparent,rgba(0, 0, 0, 0.53),black);
+}
+.CustomerExperiancePOSprofilePreview{
+    z-index: 1;
+    top: -25px;
+    position: relative;
+    background-color: white;
+}
+.dividerPOSprofilepreview{
+    height: 0.2px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.151);
+}
+.cardsProfilePreviewPOS{
+    background-repeat: no-repeat;
+    background-image: url('../../assets/DiffcolorBackground.png');
+    background-size: 105px 125px;
+    display: block;
+    height: 125px;
+    width: 105px;
+    border-radius: 8px;
+}
+.cardsOfferProfilePreviewPOS{
+    background-image: url('../../assets/DiffcolorBackground.png');
+    background-size: 120px 90px;
+    display: block;
+    height: 90px;
+    width: 120px;
+    border-radius: 8px;
+}
+.btngrpMaleprofilepreview{
+    position: relative;
+    z-index: 5;
+    border-radius: 8px;
+    color: white;
+    font-size: 12px;
+    padding: 5px 15px;
+    background-image: linear-gradient(to right, #9C6FFE,#512DC8);
+}
+.btngrpfemaleprofilepreview{
+    left: -10px;
+    position: relative;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.195)  ;
+   padding:4px 15px;
+    font-size: 12px;
+}
+.BooknowbtnprofilepreviewPOS{
+    position: relative;
+    top: -10px;
+    font-size: 10px;
+    background-color: white;
+    box-shadow: 0px 4px 4px -2px #00000061;
+    padding: 5px 4px;
+    border-radius: 10px;
+}
+.wholeSampleImgPOSprofilepreview{
+    position: relative;
+    top: 10px;
+}
+.DailyupadtesPOSprofilepreview{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-repeat: no-repeat;
+    background-image: url('../../assets/DiffcolorBackground.png');
+    background-size: 150px 100px ;
+}

@@ -1,0 +1,26 @@
+.DashboardTable th , .DashboardTable td {
+    width: auto !important;
+    height: auto !important;
+    min-width: max-content !important;
+}
+.DashboardTable th span ,
+.DashboardTable td span {
+    display: block;
+    min-width: max-content !important;
+    margin-block: 8px !important;
+    border : none !important;
+    cursor: auto !important;
+}
+
+@media (max-width: 768px) {
+    .DashboardTable th,
+    .DashboardTable td {
+        text-align: left; /* Left-align text on smaller screens */
+        font-size: 14px;
+    }
+
+    .DashboardTable th span,
+    .DashboardTable td span {
+        font-size: 12px; /* Smaller font for mobile */
+    }
+}

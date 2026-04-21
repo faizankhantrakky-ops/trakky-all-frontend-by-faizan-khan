@@ -1,0 +1,1564 @@
+import React, { useEffect, useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Settings, ChevronRight, Menu, X } from "lucide-react";
+
+const SettingMain = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (location.pathname === "/settings") {
+      navigate("manager");
+    }
+  }, [location.pathname, navigate]);
+
+  const sidebarOptionsServices = [
+    { name: "Automation Report", link: "automation-report" },
+    { name: "Manager", link: "manager" },
+   
+    { name: "Whatsapp Message Reminder", link: "whatsapp-message-remider" },
+    { name: "Change Tax", link: "custom-tax" },
+    { name: "Payment Method", link: "payment-method" },
+     { name: "Change Password", link: "Chnage-Password" },
+    { name: "Manage Templates", link: "template-manage" },
+    { name: "Version Info", link: "version-info" },
+    { name: "Instant Report Genrate", link: "report-setting" },
+  ];
+
+  const isActive = (link) => location.pathname.includes(link);
+
+  return (
+    <>
+      <div className="md:pl-[72px] w-full h-[calc(100vh-52px)] md:h-[calc(100vh-70px)] bg-gray-50">
+        <div className="flex w-full h-full">
+
+          {/* Mobile: Menu Button */}
+          <div className="md:hidden fixed top-16 left-4 z-50">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 bg-white rounded-lg shadow-md hover:bg-gray-100 transition-all border border-gray-200"
+            >
+              {mobileMenuOpen ? (
+                <X className="w-5 h-5 text-gray-700" />
+              ) : (
+                <Menu className="w-5 h-5 text-gray-700" />
+              )}
+            </button>
+          </div>
+
+          {/* Sidebar */}
+          <div
+            className={`
+              fixed md:relative inset-y-0 left-0 z-40
+              w-80 bg-white border-r border-gray-200
+              transform transition-transform duration-300 ease-in-out
+              ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+              md:w-64
+              overflow-y-auto
+            `}
+          >
+            {/* Header */}
+            <div className="p-6 border-b border-gray-200 bg-white">
+              <div className="flex items-center space-x-3">
+               
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Settings</h2>
+                  <p className="text-sm text-gray-500 mt-1">Manage your preferences</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Navigation Items */}
+            <div className="p-4 space-y-1">
+              {sidebarOptionsServices.map((option) => (
+                <button
+                  key={option.link}
+                  onClick={() => {
+                    navigate(`/settings/${option.link}`);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`
+                    w-full flex items-center justify-between p-3 rounded-lg text-left transition-all
+                    ${isActive(option.link)
+                      ? "bg-[#492DBD] text-white shadow-sm"
+                      : "hover:bg-gray-100 text-gray-700 hover:text-gray-900"
+                    }
+                  `}
+                >
+                  <span className="font-medium text-sm">{option.name}</span>
+                  <ChevronRight className={`w-4 h-4 ${
+                    isActive(option.link) ? "text-white" : "text-gray-400"
+                  }`} />
+                </button>
+              ))}
+            </div>
+
+            {/* Footer */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-white">
+              <div className="text-center">
+                <p className="text-xs text-gray-500">
+                  Version 1.0.0
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Overlay for mobile */}
+          {mobileMenuOpen && (
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+          )}
+
+          {/* Main Content */}
+          <div className="flex-1 w-full h-full overflow-auto bg-gray-50">
+            <div className="p-4 md:p-6 h-full">
+              <Outlet />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default SettingMain;
+
+
+import React, { useEffect, useState, useContext, useRef } from "react";
+import "./Appointment.css";
+import GeneralModal from "../generalModal/GeneralModal";
+import CancelModal from "./CancelModal";
+import ReviewModal from "./ReviewModal";
+import AuthContext from "../../Context/Auth";
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditAppointment from "./Temp";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ListItemIcon, ListItemText } from "@mui/material";
+import axios from "axios";
+
+// Global sendWhatsAppMessage function
+const sendWhatsAppMessage = async (appointmentData, authTokens, vendorData) => {
+  try {
+    let values = [];
+    if (appointmentData.for_consultation) {
+      values = [
+        appointmentData.customer_name,
+        "Consultation Appointment",
+        appointmentData.consultation_remark || "N/A",
+        "N/A",
+        appointmentData.gst || 18,
+        appointmentData.date,
+        appointmentData.time_in,
+        vendorData?.salon_name || "Salon",
+        vendorData?.salon_name || "Team",
+      ];
+    } else {
+      values = [
+        appointmentData.customer_name,
+        appointmentData.included_services?.map((s) => s.service_name).join(", ") || "Services",
+        appointmentData.included_services?.map((s) => s.service_name).join(", ") || "Services",
+        appointmentData.final_amount,
+        appointmentData.gst || 18,
+        appointmentData.date,
+        appointmentData.time_in,
+        vendorData?.salon_name || "Salon",
+        vendorData?.salon_name || "Team",
+      ];
+    }
+    const payload = {
+      phone_number: `91${appointmentData.customer_phone}`,
+      values: values,
+    };
+    const response = await axios.post(
+      "http://20.193.149.47:2242/salonvendor/send-whatsapp-message/",
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${authTokens.access_token}`,
+        },
+      }
+    );
+    if (response.status === 200) {
+      console.log("WhatsApp message sent successfully");
+    } else {
+      console.error("Failed to send WhatsApp message");
+    }
+  } catch (error) {
+    console.error("Error sending WhatsApp message:", error);
+  }
+};
+
+// Service Selection Drawer Component
+const ServiceSelectionDrawer = ({ open, onClose, onSave, appointment, authTokens, initialServices = [], vendorData }) => {
+  const [services, setServices] = useState([]);
+  const [allServices, setAllServices] = useState([]);
+  const [serviceLoading, setServiceLoading] = useState(false);
+  const [staffList, setStaffList] = useState([]);
+  const [staffContributions, setStaffContributions] = useState({});
+  const [staffContributionErrors, setStaffContributionErrors] = useState({});
+
+  useEffect(() => {
+    // Safe initialization
+    setServices(initialServices && initialServices.length > 0 ? initialServices : [{ 
+      id: "", 
+      service_name: "", 
+      service_time: "", 
+      gender: "", 
+      discount: "", 
+      price: "", 
+      from_membership: false, 
+      membership_id: 0 
+    }]);
+  }, [initialServices]);
+
+  useEffect(() => {
+    fetchServices();
+    fetchStaff();
+  }, []);
+
+  const fetchServices = async () => {
+    setServiceLoading(true);
+    try {
+      const response = await fetch(
+        `http://20.193.149.47:2242/salons/service/?page=1&salon_id=${vendorData?.salon}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${authTokens?.access_token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      
+      if (response.ok) {
+        const data = await response.json();
+        setAllServices(data?.results || data || []);
+      } else {
+        console.error("Failed to fetch services");
+        setAllServices([]);
+      }
+    } catch (error) {
+      console.error("Error fetching services:", error);
+      toast.error("Failed to load services");
+      setAllServices([]);
+    } finally {
+      setServiceLoading(false);
+    }
+  };
+
+  // ADDED: fetchStaff function
+  const fetchStaff = async () => {
+    try {
+      const response = await fetch(
+        `http://20.193.149.47:2242/salonvendor/staff/`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${authTokens?.access_token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        const presentStaff = data.filter(staff => staff.is_present === true);
+        setStaffList(presentStaff);
+      }
+    } catch (error) {
+      console.error("Error fetching staff:", error);
+    }
+  };
+
+  // ADDED: getStaffName function
+  const getStaffName = (staffId) => {
+    const staff = staffList.find(s => s.id === staffId);
+    return staff ? staff.staffname : "Unknown Staff";
+  };
+
+  // ADDED: getTotalPercentage function
+  const getTotalPercentage = (serviceId) => {
+    const contributions = staffContributions[serviceId] || [];
+    return contributions.reduce((total, c) => total + (c.percent || 0), 0);
+  };
+
+  // ADDED: validateStaffContributions function
+  const validateStaffContributions = (serviceId, contributions) => {
+    const total = contributions?.reduce((sum, c) => sum + (c.percent || 0), 0) || 0;
+    return total === 100;
+  };
+
+  // ADDED: handleStaffPercentageChange function
+  const handleStaffPercentageChange = (serviceId, staffId, value) => {
+    setStaffContributions(prev => {
+      const updated = { ...prev };
+      if (!updated[serviceId]) return prev;
+      
+      updated[serviceId] = updated[serviceId].map(c => 
+        c.staff_id === staffId ? { ...c, percent: value === "" ? "" : Number(value) } : c
+      );
+      
+      const valid = validateStaffContributions(serviceId, updated[serviceId]);
+      setStaffContributionErrors(p => ({ ...p, [serviceId]: !valid }));
+      return updated;
+    });
+  };
+
+  // ADDED: formateTime function
+  const formateTime = (timeObj) => {
+    if (!timeObj) return "0 min";
+    const { days, hours, minutes } = timeObj;
+    const totalMinutes = (days || 0) * 24 * 60 + (hours || 0) * 60 + (minutes || 0);
+    return totalMinutes > 0 ? `${totalMinutes} min` : "0 min";
+  };
+
+  // ADDED: handleSave function
+  const handleSave = () => {
+    // Validate all services have staff contributions
+    const invalidServices = services.filter(s => 
+      s.id && (!staffContributions[s.id] || !validateStaffContributions(s.id, staffContributions[s.id]))
+    );
+
+    if (invalidServices.length > 0) {
+      toast.error("Please ensure all services have 100% staff contribution");
+      return;
+    }
+
+    const servicesWithStaff = services.map(service => ({
+      ...service,
+      staff: staffContributions[service.id]?.map(c => c.staff_id) || [],
+      staff_contributions: staffContributions[service.id] || []
+    }));
+
+    onSave(servicesWithStaff);
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 overflow-hidden">
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black bg-opacity-50" onClick={onClose} />
+      
+      {/* Drawer */}
+      <div className="absolute right-0 top-0 h-full w-[800px] bg-white shadow-2xl">
+        <div className="h-full flex flex-col">
+          {/* Header */}
+          <div className="flex justify-between items-center p-6 border-b border-gray-200 bg-[#6B4CD1] text-white">
+            <div>
+              <h3 className="text-xl font-bold">Select Services</h3>
+              <p className="text-sm opacity-90">Choose services for {appointment?.customer_name}</p>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-purple-700 rounded transition-colors duration-200"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 overflow-y-auto p-6">
+            <div className="space-y-6">
+              {/* Loading state */}
+              {serviceLoading && (
+                <div className="text-center py-8">
+                  <div className="w-8 h-8 border-4 border-[#6B4CD1] border-t-transparent rounded-full animate-spin mx-auto"></div>
+                  <p className="text-gray-600 mt-2">Loading services...</p>
+                </div>
+              )}
+              
+              {/* Safe mapping with optional chaining */}
+              {!serviceLoading && services?.map((service, index) => (
+                <div key={index} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                  <div className="flex gap-4 items-start mb-4">
+                    {/* Service Selection */}
+                    <div className="flex-1">
+                      <label className="block text-sm font-semibold text-gray-800 mb-2">
+                        Service {index + 1}
+                      </label>
+                      <select
+                        value={service?.id || ""}
+                        onChange={(e) => {
+                          const selectedService = allServices?.find(s => s.id === parseInt(e.target.value));
+                          const temp = [...services];
+                          
+                          if (!selectedService) {
+                            temp[index] = { 
+                              id: "", 
+                              service_name: "", 
+                              service_time: "", 
+                              gender: "", 
+                              discount: "", 
+                              price: "", 
+                              from_membership: false, 
+                              membership_id: 0 
+                            };
+                          } else {
+                            temp[index] = {
+                              ...selectedService,
+                              service_id: selectedService.id,
+                              actual_price: selectedService.price,
+                              final_price: selectedService.price,
+                              discount: selectedService.price,
+                              price: selectedService.price,
+                              from_membership: false,
+                              membership_id: 0,
+                              duration: selectedService.service_time
+                            };
+                          }
+                          setServices(temp);
+                        }}
+                        className="w-full px-4 py-3 border border-gray-400 focus:border-[#6B4CD1] focus:outline-none transition-colors duration-200"
+                      >
+                        <option value="">Select a service</option>
+                        {/* Safe mapping with empty array fallback */}
+                        {allServices?.map((srv) => (
+                          <option key={srv.id} value={srv.id}>
+                            {srv.service_name} ({srv.gender}) - ₹{srv.price}
+                          </option>
+                        )) || []}
+                      </select>
+                    </div>
+
+                    {/* Price Display */}
+                    <div className="w-48">
+                      <label className="block text-sm font-semibold text-gray-800 mb-2">
+                        Price
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="number"
+                          value={service?.price || ""}
+                          readOnly
+                          className="flex-1 px-3 py-3 border border-gray-300 bg-gray-100 text-gray-600"
+                          placeholder="Price"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Add/Remove Buttons */}
+                    <div className="flex gap-2 pt-6">
+                      {index === services.length - 1 ? (
+                        <button
+                          onClick={() => setServices([...services, { 
+                            id: "", 
+                            service_name: "", 
+                            service_time: "", 
+                            gender: "", 
+                            discount: "", 
+                            price: "", 
+                            from_membership: false, 
+                            membership_id: 0 
+                          }])}
+                          className="w-10 h-10 bg-emerald-500 rounded flex items-center justify-center cursor-pointer hover:bg-emerald-600 transition-colors"
+                        >
+                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                          </svg>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            const temp = [...services];
+                            temp.length === 1 
+                              ? temp[index] = { 
+                                  id: "", 
+                                  service_name: "", 
+                                  service_time: "", 
+                                  gender: "", 
+                                  discount: "", 
+                                  price: "", 
+                                  from_membership: false, 
+                                  membership_id: 0 
+                                }
+                              : temp.splice(index, 1);
+                            setServices(temp);
+                          }}
+                          className="w-10 h-10 bg-red-500 rounded flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors"
+                        >
+                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Service Details */}
+                  {service?.id && (
+                    <div className="ml-3 p-3 bg-white rounded border">
+                      <div className="text-sm text-gray-600 mb-2">
+                        Duration: {formateTime(service.service_time)} | Gender: {service.gender}
+                      </div>
+
+                      {/* Staff Contribution */}
+                      <div className="mt-3">
+                        <div className="font-medium text-sm text-gray-800 mb-2">Staff Contribution *</div>
+                        <select
+                          multiple
+                          value={staffContributions[service.id]?.map(c => c.staff_id) || []}
+                          onChange={(e) => {
+                            const selectedStaffIds = Array.from(e.target.selectedOptions, option => parseInt(option.value));
+                            const selectedStaff = staffList.filter(st => selectedStaffIds.includes(st.id));
+                            
+                            setStaffContributions(prev => {
+                              const updated = { ...prev };
+                              updated[service.id] = selectedStaff.map(st => ({
+                                staff_id: st.id,
+                                staff_name: st.staffname,
+                                staff_role: st.staff_role || "Unknown",
+                                percent: selectedStaff.length === 1 ? 100 : 0
+                              }));
+                              
+                              const valid = validateStaffContributions(service.id, updated[service.id]);
+                              setStaffContributionErrors(p => ({ ...p, [service.id]: !valid }));
+                              return updated;
+                            });
+                          }}
+                          className="w-full px-3 py-2 border border-gray-400 rounded focus:border-[#6B4CD1] focus:outline-none"
+                          size={3}
+                        >
+                          {/* Safe staff list mapping */}
+                          {staffList?.map(staff => (
+                            <option key={staff.id} value={staff.id}>
+                              {staff.staffname} ({staff.staff_role || "No Role"})
+                            </option>
+                          )) || []}
+                        </select>
+                        
+                        {staffContributions[service.id]?.length > 0 && (
+                          <div className="mt-3 space-y-2">
+                            {staffContributions[service.id].map(contribution => {
+                              const single = staffContributions[service.id].length === 1;
+                              return (
+                                <div key={contribution.staff_id} className="flex items-center gap-3">
+                                  <span className="text-sm font-medium min-w-32">
+                                    {getStaffName(contribution.staff_id)}:
+                                  </span>
+                                  {single ? (
+                                    <span className="px-3 py-1 bg-gray-100 border rounded text-sm font-medium">
+                                      100%
+                                    </span>
+                                  ) : (
+                                    <div className="flex items-center gap-2">
+                                      <input
+                                        type="number"
+                                        value={contribution.percent || ""}
+                                        onChange={(e) => handleStaffPercentageChange(service.id, contribution.staff_id, e.target.value)}
+                                        className="w-20 px-2 py-1 border border-gray-300 rounded text-sm"
+                                        min="0"
+                                        max="100"
+                                        placeholder="%"
+                                      />
+                                      <span className="text-sm">%</span>
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                            <div className={`text-sm font-bold mt-2 ${
+                              getTotalPercentage(service.id) === 100 ? "text-green-600" : "text-red-600"
+                            }`}>
+                              Total: {getTotalPercentage(service.id)}%
+                              {getTotalPercentage(service.id) !== 100 && (
+                                <span className="text-red-500 ml-2">Must be 100%</span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="p-6 border-t border-gray-200 bg-gray-50">
+            <div className="flex justify-between items-center">
+              <div>
+                <span className="text-sm text-gray-600">
+                  Total Services: {services?.filter(s => s.id).length || 0}
+                </span>
+                <span className="mx-2">•</span>
+                <span className="text-sm font-semibold text-[#6B4CD1]">
+                  Total Amount: ₹{services?.reduce((sum, s) => sum + (parseFloat(s.discount) || 0), 0).toFixed(2) || "0.00"}
+                </span>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={onClose}
+                  className="px-6 py-3 text-gray-700 font-semibold border border-gray-400 hover:border-gray-600 transition-colors duration-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSave}
+                  className="px-6 py-3 bg-[#6B4CD1] text-white font-semibold hover:bg-[#5a3cb0] transition-colors duration-200"
+                >
+                  Save Services
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ReSchedule Modal Component
+const ReScheduleModal = ({ appointment, onClose, onSuccess }) => {
+  const { authTokens, vendorData } = useContext(AuthContext);
+  const [newDate, setNewDate] = useState(appointment?.date || "");
+  const [newTime, setNewTime] = useState(appointment?.appointment_start_time?.slice(0, 5) || "");
+  const [loading, setLoading] = useState(false);
+  const [showServiceDrawer, setShowServiceDrawer] = useState(false);
+  const [editedServices, setEditedServices] = useState([]);
+
+  // Safe initialization
+  const selectedServices = appointment?.included_services || [];
+
+  useEffect(() => {
+    setEditedServices(selectedServices);
+  }, [selectedServices]);
+
+  const handleServiceSave = (updatedServices) => {
+    setEditedServices(updatedServices);
+    toast.success("Services updated successfully");
+  };
+
+  const handleReschedule = async () => {
+    if (!newDate || !newTime) {
+      toast.error("Please select new date and time");
+      return;
+    }
+
+    if (editedServices.length === 0) {
+      toast.error("Please add at least one service");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Step 1: Delete old appointment
+      const deleteRes = await fetch(
+        `http://20.193.149.47:2242/salonvendor/appointments-new/${appointment?.id}/`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${authTokens?.access_token}`,
+          },
+        }
+      );
+      
+      if (!deleteRes.ok && deleteRes.status !== 204) {
+        throw new Error("Old appointment delete failed");
+      }
+      
+      // Step 2: Create new appointment with updated services
+      const freshPayload = {
+        date: newDate,
+        time_in: newTime + ":00",
+        customer_phone: appointment.customer_phone,
+        customer_name: appointment.customer_name,
+        customer_gender: appointment.customer_gender || "Not Specified",
+        manager: appointment.manager || null,
+        service: editedServices.map(s => s.service_id || s.id),
+        staff: [...new Set([
+          ...(editedServices.flatMap(s => s.staff || []) || []),
+          ...(appointment.included_offers?.flatMap(o => o.staff || []) || [])
+        ])],
+        included_services: editedServices,
+        included_offers: appointment.included_offers || [],
+        staff_contributions: editedServices.flatMap(s => 
+          (s.staff_contributions || []).map(sc => ({
+            ...sc,
+            service_id: s.service_id || s.id
+          }))
+        ),
+        package: appointment.package || [],
+        included_package_details: appointment.included_package_details || [],
+        for_consultation: appointment.for_consultation || false,
+        consultation_remark: appointment.consultation_remark || "",
+        appointment_status: "not_started",
+        actual_amount: calculateTotalAmount(editedServices),
+        final_amount: calculateTotalAmount(editedServices),
+        amount_paid: 0,
+        due_amount: calculateTotalAmount(editedServices),
+        is_reviewed: false,
+        membership: appointment.membership || [],
+      };
+      
+      const createRes = await axios.post(
+        "http://20.193.149.47:2242/salonvendor/appointments-new/",
+        freshPayload,
+        {
+          headers: {
+            Authorization: `Bearer ${authTokens.access_token}`,
+          },
+        }
+      );
+      
+      if (createRes.status === 201) {
+        const newAppointment = createRes.data;
+        await sendWhatsAppMessage({
+          customer_name: appointment.customer_name,
+          customer_phone: appointment.customer_phone,
+          included_services: editedServices,
+          final_amount: calculateTotalAmount(editedServices),
+          gst: 18,
+          date: newDate,
+          time_in: newTime,
+          for_consultation: appointment.for_consultation || false,
+          consultation_remark: appointment.consultation_remark || "",
+        }, authTokens, vendorData);
+        
+        toast.success("Appointment Rescheduled Successfully!");
+        onSuccess?.(newAppointment);
+        onClose?.();
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Reschedule failed. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const calculateTotalAmount = (services) => {
+    return services.reduce((total, service) => total + (parseFloat(service.final_price) || parseFloat(service.actual_price) || 0), 0);
+  };
+
+  return (
+    <>
+      <div className="p-4 bg-white shadow-lg border-l-4 border-[#6B4CD1] mx-auto">
+        {/* Header Section */}
+        <div className="text-left mb-8">
+          <h3 className="text-2xl font-bold text-gray-900 mb-3 tracking-tight">
+            Reschedule Appointment
+          </h3>
+          <p className="text-gray-600 text-base leading-relaxed">
+            Please select your preferred new date and time for the appointment.
+          </p>
+        </div>
+
+        {/* Current Appointment Details */}
+        <div className="mb-8 p-6 mt-5 bg-gray-50 border border-gray-200">
+          <div className="flex justify-between items-center mb-4">
+            <h4 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+              <svg className="w-5 h-5 text-[#6B4CD1]" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
+              </svg>
+              Current Appointment Details
+            </h4>
+            <button
+              onClick={() => setShowServiceDrawer(true)}
+              className="px-4 py-2 bg-[#6B4CD1] text-white text-sm font-medium hover:bg-[#5a3cb0] transition-colors duration-200 flex items-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Change Services
+            </button>
+          </div>
+          
+          {/* Customer Information */}
+          <div className="mb-4">
+            <div className="flex justify-between items-start mb-3">
+              <div>
+                <p className="font-medium text-gray-900">{appointment?.customer_name}</p>
+                <p className="text-sm text-gray-600">{appointment?.customer_phone}</p>
+              </div>
+              <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                {appointment?.customer_gender}
+              </span>
+            </div>
+          </div>
+
+          {/* Selected Services */}
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <h5 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+                Selected Services ({editedServices?.length || 0})
+              </h5>
+              <span className="text-sm font-semibold text-[#6B4CD1]">
+                Total: ₹{calculateTotalAmount(editedServices).toLocaleString()}
+              </span>
+            </div>
+            
+            {/* Safe mapping with optional chaining */}
+            {editedServices?.map((service, index) => (
+              <div key={index} className="flex justify-between items-center py-3 px-4 bg-white border border-gray-200 rounded-lg hover:shadow-sm transition-shadow duration-200">
+                <div className="flex-1">
+                  <p className="font-medium text-gray-800 text-sm">
+                    {service?.service_name}
+                  </p>
+                  {service?.duration?.minutes && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      Duration: {service.duration.minutes} minutes
+                    </p>
+                  )}
+                  {service?.staff_contributions?.length > 0 && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      Staff: {service.staff_contributions.map(sc => sc.staff_name).join(", ")}
+                    </p>
+                  )}
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold text-gray-900 text-sm">
+                    ₹{service?.final_price?.toLocaleString() || service?.actual_price?.toLocaleString()}
+                  </p>
+                </div>
+              </div>
+            ))}
+            
+            {(!editedServices || editedServices.length === 0) && (
+              <div className="text-center py-8 text-gray-500">
+                <svg className="w-12 h-12 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <p className="mt-2">No services selected</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Reschedule Form */}
+        <div className="space-y-6">
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 mb-3 uppercase tracking-wide">
+              New Date
+              <span className="text-red-500 ml-1">*</span>
+            </label>
+            <input
+              type="date"
+              value={newDate}
+              onChange={(e) => setNewDate(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-400 focus:border-[#6B4CD1] focus:outline-none focus:shadow-sm transition-all duration-200"
+              min={new Date().toISOString().split('T')[0]}
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 mb-3 uppercase tracking-wide">
+              New Time
+              <span className="text-red-500 ml-1">*</span>
+            </label>
+            <input
+              type="time"
+              value={newTime}
+              onChange={(e) => setNewTime(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-400 focus:border-[#6B4CD1] focus:outline-none focus:shadow-sm transition-all duration-200"
+            />
+          </div>
+        </div>
+        
+        {/* Action Buttons */}
+        <div className="flex justify-end gap-4 mt-10 pt-8 border-t border-gray-300">
+          <button
+            onClick={onClose}
+            disabled={loading}
+            className="px-8 py-3 text-gray-700 hover:text-gray-900 font-semibold border border-gray-400 hover:border-gray-600 transition-colors duration-200 disabled:opacity-50"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleReschedule}
+            disabled={loading || !newDate || !newTime || editedServices.length === 0}
+            className="px-8 py-3 bg-[#6B4CD1] text-white font-semibold hover:bg-[#5a3cb0] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center gap-3"
+          >
+            {loading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent animate-spin" />
+                Processing Request...
+              </>
+            ) : (
+              "Confirm Reschedule"
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Service Selection Drawer */}
+      {showServiceDrawer && (
+        <ServiceSelectionDrawer
+          vendorData={vendorData}
+          open={showServiceDrawer}
+          onClose={() => setShowServiceDrawer(false)}
+          onSave={handleServiceSave}
+          appointment={appointment}
+          authTokens={authTokens}
+          initialServices={editedServices}
+        />
+      )}
+    </>
+  );
+};
+
+const WhatsAppIcon = ({ phoneNumber, message = "Hello" }) => {
+  const handleWhatsAppClick = () => {
+    if (!phoneNumber) {
+      toast.error("No phone number available");
+      return;
+    }
+    const formattedMessage = encodeURIComponent(message);
+    const url = `https://wa.me/${phoneNumber}?text=${formattedMessage}`;
+    window.open(url, '_blank');
+  };
+
+  return (
+    <div
+      onClick={handleWhatsAppClick}
+      className="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center cursor-pointer hover:bg-green-600 transition-all shadow-sm hover:shadow-md"
+      title="Contact via WhatsApp"
+    >
+      <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893c0-3.189-1.248-6.189-3.515-8.464"/>
+      </svg>
+    </div>
+  );
+};
+
+const StatusBadge = ({ status }) => {
+  const getStatusConfig = (status) => {
+    const config = {
+      running: { label: "IN PROGRESS", bg: "bg-emerald-100 text-emerald-800 border-emerald-200" },
+      completed: { label: "COMPLETED", bg: "bg-blue-100 text-blue-800 border-blue-200" },
+      cancelled: { label: "CANCELLED", bg: "bg-red-100 text-red-800 border-red-200" },
+      not_started: { label: "PENDING", bg: "bg-gray-100 text-gray-700 border-gray-400 border-dashed" }
+    };
+    return config[status] || config.not_started;
+  };
+  const { label, bg } = getStatusConfig(status);
+  return (
+    <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border ${bg}`}>
+      {label}
+    </span>
+  );
+};
+
+const InfoSection = ({ title, value, children, className = "" }) => (
+  <div className={`border-b border-gray-400 border-dashed py-3 ${className}`}>
+    <div className="flex justify-between items-start">
+      <span className="text-sm font-semibold text-gray-700 min-w-28">{title}:</span>
+      <div className="text-sm text-gray-800 text-right flex-1 ml-4 font-medium">
+        {children || value}
+      </div>
+    </div>
+  </div>
+);
+
+// FIXED: EditAppointment component with safe array handling
+const SafeEditAppointment = ({ appointment, closeDrawer, setAppointmentData, onRefresh, isEditMode = false }) => {
+  // Add safe initialization for all arrays
+  const safeAppointment = {
+    ...appointment,
+    included_services: appointment?.included_services || [],
+    included_offers: appointment?.included_offers || [],
+    staff_contributions: appointment?.staff_contributions || [],
+    package: appointment?.package || [],
+    membership: appointment?.membership || [],
+    selled_product_details: appointment?.selled_product_details || { product_list: [] }
+  };
+
+  return (
+    <EditAppointment 
+      appointment={safeAppointment}
+      closeDrawer={closeDrawer}
+      setAppointmentData={setAppointmentData}
+      onRefresh={onRefresh}
+      isEditMode={isEditMode}
+    />
+  );
+};
+
+const AppointmentListCard = ({ appointment, onRefresh }) => {
+  const { authTokens, vendorData } = useContext(AuthContext);
+  const [appointmentData, setAppointmentData] = useState(appointment);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showRescheduleModal, setShowRescheduleModal] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false); // Checkout drawer
+  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showCard, setShowCard] = useState(true);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  // Safe initialization for appointment data
+  useEffect(() => {
+    if (appointment) {
+      setAppointmentData({
+        ...appointment,
+        included_services: appointment.included_services || [],
+        included_offers: appointment.included_offers || [],
+        staff_contributions: appointment.staff_contributions || [],
+        package: appointment.package || [],
+        membership: appointment.membership || [],
+        selled_product_details: appointment.selled_product_details || { product_list: [] }
+      });
+    }
+  }, [appointment]);
+
+  const isCheckout = appointmentData?.checkout === true;
+
+  const productList = appointmentData?.selled_product_details?.product_list || [];
+  const hasProducts = productList.length > 0;
+
+  const serviceAmount = parseFloat(appointmentData?.final_amount || 0);
+  const productAmount = appointmentData?.selled_product_details?.final_total ? parseFloat(appointmentData.selled_product_details.final_total) : 0;
+
+  const totalBilled = isCheckout
+    ? (parseFloat(appointmentData?.amount_paid || 0) + parseFloat(appointmentData?.due_amount || 0)).toFixed(2)
+    : serviceAmount.toFixed(2);
+
+  const amountPaid = parseFloat(appointmentData?.amount_paid || 0).toFixed(2);
+  const dueAmount = parseFloat(appointmentData?.due_amount || 0).toFixed(2);
+
+  const paymentLabel = isCheckout
+    ? (dueAmount > 0 ? "PARTIAL" : "PAID")
+    : "PENDING PAYMENT";
+
+  const paymentBgClass = paymentLabel === "PAID" ? "bg-green-100 text-green-800 border-green-200" :
+    paymentLabel === "PARTIAL" ? "bg-amber-100 text-amber-800 border-amber-200" :
+    "bg-orange-100 text-orange-800 border-orange-200";
+
+  const getBorderColor = () => {
+    switch (appointmentData?.appointment_status) {
+      case "running": return "border-l-emerald-500";
+      case "completed": return "border-l-blue-500";
+      case "cancelled": return "border-l-red-500";
+      default: return "border-l-gray-400";
+    }
+  };
+
+  const handleStartTimer = async () => {
+    let currentTime = new Date().toTimeString().slice(0, 8);
+    try {
+      const res = await fetch(
+        `http://20.193.149.47:2242/salonvendor/appointments-new/${appointmentData?.id}/`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authTokens?.access_token}`,
+          },
+          body: JSON.stringify({
+            time_in: currentTime,
+            appointment_status: "running",
+          }),
+        }
+      );
+      const data = await res.json();
+      if (res?.ok) {
+        setAppointmentData(data);
+        toast.success("Service started successfully");
+      }
+    } catch (err) {
+      toast.error("Failed to start service");
+    }
+  };
+
+  const handleEndTimer = async () => {
+    try {
+      let res = await fetch(
+        `http://20.193.149.47:2242/salonvendor/appointments-new/${appointmentData?.id}/`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authTokens?.access_token}`,
+          },
+          body: JSON.stringify({
+            appointment_end_time: new Date().toTimeString().slice(0, 8),
+            appointment_status: "completed",
+          }),
+        }
+      );
+      let data = await res.json();
+      if (res?.ok) {
+        setAppointmentData(data);
+        toast.success("Service ended successfully");
+      }
+    } catch (err) {
+      toast.error("Failed to end service");
+    }
+    setDrawerOpen(true); // open checkout after ending service
+  };
+
+  const toggleDrawer = (open) => (event) => {
+    if (event?.type === "keydown" && (event?.key === "Tab" || event?.key === "Shift")) return;
+    setDrawerOpen(open);
+  };
+
+  const toggleEditDrawer = (open) => (event) => {
+    if (event?.type === "keydown" && (event?.key === "Tab" || event?.key === "Shift")) return;
+    setEditDrawerOpen(open);
+  };
+
+  const handleClick = (event) => setAnchorEl(event.currentTarget);
+  const handleClose = () => setAnchorEl(null);
+
+  const handleDeleteClick = () => {
+    handleClose();
+    setShowDeleteConfirm(true);
+  };
+
+  const handleRescheduleClick = () => {
+    setShowRescheduleModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      const res = await fetch(
+        `http://20.193.149.47:2242/salonvendor/appointments-new/${appointmentData?.id}/`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authTokens?.access_token}`,
+          },
+          body: JSON.stringify({ is_delete: true }),
+        }
+      );
+      if (res.ok) {
+        toast.success("Appointment deleted successfully");
+        setShowCard(false);
+        onRefresh?.();
+      } else {
+        toast.error("Failed to delete appointment");
+      }
+    } catch (err) {
+      toast.error("Failed to delete appointment");
+    }
+    setShowDeleteConfirm(false);
+  };
+
+  const handleRescheduleSuccess = (updatedData) => {
+    setAppointmentData(updatedData);
+    onRefresh?.();
+  };
+
+  return (
+    <>
+      {showCard && (
+        <>
+         <div
+  className={`bg-white rounded-sm shadow-sm hover:shadow-lg transition-all duration-300 
+  border border-gray-200 ${getBorderColor()} border-l-4 overflow-hidden w-full 
+  max-w-full sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl`}
+  style={{
+    minHeight: "530px",
+    display: "flex",
+    flexDirection: "column",
+  }}
+>
+
+            {/* Header */}
+            <div className="px-5 pt-4 pb-3 border-b border-gray-400 border-dashed">
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 bg-blue-600 rounded-full"></div>
+                  <h3 className="text-base font-bold text-gray-900">#{appointmentData?.id}</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <StatusBadge status={appointmentData?.appointment_status} />
+                  <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border ${paymentBgClass}`}>
+                    {paymentLabel}
+                  </span>
+                  <IconButton size="small" onClick={handleClick}>
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                    PaperProps={{
+                      elevation: 0,
+                      sx: {
+                        overflow: 'visible',
+                        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                        mt: 1.5,
+                        '&:before': {
+                          content: '""',
+                          display: 'block',
+                          position: 'absolute',
+                          top: 0,
+                          right: 14,
+                          width: 10,
+                          height: 10,
+                          bgcolor: 'background.paper',
+                          transform: 'translateY(-50%) rotate(45deg)',
+                          zIndex: 0,
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem onClick={handleDeleteClick}>
+                      <ListItemIcon>
+                        <DeleteIcon fontSize="small" />
+                      </ListItemIcon>
+                      <ListItemText>Delete Appointment</ListItemText>
+                    </MenuItem>
+                  </Menu>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-xs text-gray-500 font-medium">{appointmentData?.date}</p>
+                  <p className="text-sm font-semibold text-gray-800 mt-0.5">{appointmentData?.customer_name}</p>
+                  <p className="text-xs text-gray-600">{appointmentData?.customer_phone}</p>
+                </div>
+                <WhatsAppIcon
+                  phoneNumber={appointmentData?.customer_phone}
+                  message={`Hello ${appointmentData?.customer_name}, your appointment is confirmed for ${appointmentData?.date}. We look forward to seeing you!`}
+                />
+              </div>
+            </div>
+
+            {/* Body */}
+            <div className="px-5 py-3 flex-1 space-y-1 text-sm">
+              <InfoSection
+                title="Services"
+                value={appointmentData?.included_services
+                  ?.map((s) => s.service_name)
+                  .join(", ") ?? "No services"}
+              />
+
+              {hasProducts && (
+                <InfoSection title="Products Sold">
+                  <div className="-mx-4 px-4 space-y-2">
+                    {productList.map((p, i) => (
+                      <div key={i} className="flex justify-between text-sm">
+                        <span>{p.qauntity} × {p.product_name} {p.product_brand ? `(${p.product_brand})` : ""}</span>
+                        <span>₹{p.net_sub_total}</span>
+                      </div>
+                    ))}
+                    <div className="border-t border-gray-300 pt-2 flex justify-between font-bold text-sm">
+                      <span>Products Total</span>
+                      <span>₹{productAmount.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </InfoSection>
+              )}
+
+              <InfoSection
+                title="Offers"
+                value={appointmentData?.included_offers?.length > 0
+                  ? appointmentData.included_offers.map((o) => o.offer_name).join(", ")
+                  : "No offers"}
+              />
+
+              <div className="grid grid-cols-2 gap-4 py-2 border-b border-gray-400 border-dashed">
+                <div>
+                  <p className="text-xs font-medium text-gray-500">Start Time</p>
+                  <p className="font-semibold text-gray-800">{appointmentData?.time_in ?? "Not Started"}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-500">End Time</p>
+                  <p className="font-semibold text-gray-800">{appointmentData?.appointment_end_time ?? "Not Ended"}</p>
+                </div>
+              </div>
+
+              <InfoSection title="Manager" value={appointmentData?.manager_name || "No Manager"} />
+              <InfoSection title="Customer Type" value={appointmentData?.customer_type ?? "-"} />
+
+              <div className="grid grid-cols-2 gap-8 py-3">
+                <div>
+                  <p className="text-xs font-medium text-gray-500">Total Billed</p>
+                  <p className="text-lg font-bold text-gray-900">₹ {totalBilled}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs font-medium text-gray-500">Payment Status</p>
+                  <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border ${paymentBgClass}`}>
+                    {paymentLabel}
+                  </span>
+                </div>
+              </div>
+
+              {isCheckout && (
+                <div className="py-2 -mt-2 space-y-1">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Payment Mode</span>
+                    <span className="font-medium">{appointmentData?.payment_mode || "Not Selected"}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Paid Amount</span>
+                    <span className="font-medium text-green-600">₹ {amountPaid}</span>
+                  </div>
+                  {dueAmount > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Due Amount</span>
+                      <span className="font-medium text-red-600">₹ {dueAmount}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Action Buttons */}
+            <div className="px-5 py-4 bg-gray-50 border-t border-gray-400 border-dashed space-y-2">
+              {appointmentData?.is_reviewed && appointmentData.appointment_status === "completed" ? (
+                <div className="space-y-2">
+                  <button className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2.5 rounded-lg text-sm transition">
+                    Thank You
+                  </button>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      className="bg-gray-900 hover:bg-black text-white font-medium py-2.5 rounded-lg text-sm transition"
+                      onClick={toggleEditDrawer(true)}
+                    >
+                      Edit Appointment
+                    </button>
+                    <button
+                      className="bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-lg text-sm transition"
+                      onClick={handleRescheduleClick}
+                    >
+                      Reschedule Appointment
+                    </button>
+                  </div>
+                </div>
+              ) : appointmentData.appointment_status === "cancelled" ? (
+                <div className="space-y-2">
+                  <button className="w-full bg-red-600 text-white font-medium py-2.5 rounded-lg text-sm opacity-80 cursor-not-allowed">
+                    Cancelled
+                  </button>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      className="bg-gray-900 hover:bg-black text-white font-medium py-2.5 rounded-lg text-sm transition"
+                      onClick={toggleEditDrawer(true)}
+                    >
+                      Edit Appointment
+                    </button>
+                    <button
+                      className="bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-lg text-sm transition"
+                      onClick={handleRescheduleClick}
+                    >
+                      Reschedule Appointment
+                    </button>
+                  </div>
+                </div>
+              ) : appointmentData.appointment_status === "running" ? (
+                <div className="space-y-2">
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition"
+                      onClick={handleEndTimer}
+                    >
+                      End Service
+                    </button>
+                    <button
+                      className="bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 rounded-lg text-sm transition"
+                      onClick={() => setShowCancelModal(true)}
+                    >
+                      Cancel Service
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      className="bg-gray-900 hover:bg-black text-white font-medium py-2.5 rounded-lg text-sm transition"
+                      onClick={toggleEditDrawer(true)}
+                    >
+                      Edit Appointment
+                    </button>
+                    <button
+                      className="bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-lg text-sm transition"
+                      onClick={handleRescheduleClick}
+                    >
+                      Reschedule Appointment
+                    </button>
+                  </div>
+                </div>
+              ) : !appointmentData?.is_reviewed && appointmentData.appointment_status === "completed" && !isCheckout ? (
+                <div className="space-y-2">
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      className="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2.5 rounded-lg text-sm transition"
+                      onClick={() => setShowReviewModal(true)}
+                    >
+                      Review
+                    </button>
+                    <button
+                      className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg text-sm transition"
+                      onClick={() => setDrawerOpen(true)}
+                    >
+                      Checkout
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      className="bg-gray-900 hover:bg-black text-white font-medium py-2.5 rounded-lg text-sm transition"
+                      onClick={toggleEditDrawer(true)}
+                    >
+                      Edit Appointment
+                    </button>
+                    <button
+                      className="bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-lg text-sm transition"
+                      onClick={handleRescheduleClick}
+                    >
+                      Reschedule Appointment
+                    </button>
+                  </div>
+                </div>
+              ) : !appointmentData?.is_reviewed && appointmentData.appointment_status === "completed" && isCheckout ? (
+                <div className="space-y-2">
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      className="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2.5 rounded-lg text-sm transition"
+                      onClick={() => setShowReviewModal(true)}
+                    >
+                      Review
+                    </button>
+                    <button className="bg-green-600 text-white font-medium py-2.5 rounded-lg text-sm opacity-80">
+                      Thank You
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      className="bg-gray-900 hover:bg-black text-white font-medium py-2.5 rounded-lg text-sm transition"
+                      onClick={toggleEditDrawer(true)}
+                    >
+                      Edit Appointment
+                    </button>
+                    <button
+                      className="bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-lg text-sm transition"
+                      onClick={handleRescheduleClick}
+                    >
+                      Reschedule Appointment
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                appointmentData.appointment_status === "not_started" && (
+                  <div className="space-y-2">
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg text-sm transition"
+                        onClick={handleStartTimer}
+                      >
+                        Start Service
+                      </button>
+                      <button
+                        className="bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 rounded-lg text-sm transition"
+                        onClick={() => setShowCancelModal(true)}
+                      >
+                        Cancel Service
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        className="bg-gray-900 hover:bg-black text-white font-medium py-2.5 rounded-lg text-sm transition"
+                        onClick={toggleEditDrawer(true)}
+                      >
+                        Edit Appointment
+                      </button>
+                      <button
+                        className="bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-lg text-sm transition"
+                        onClick={handleRescheduleClick}
+                      >
+                        Reschedule Appointment
+                      </button>
+                    </div>
+                  </div>
+                )
+              )}
+            </div>
+          </div>
+
+          {/* Checkout Drawer - FIXED: Using SafeEditAppointment */}
+          <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
+            <Box style={{ width: "fit-content" }} role="presentation">
+              <SafeEditAppointment
+                appointment={appointmentData}
+                closeDrawer={() => setDrawerOpen(false)}
+                setAppointmentData={setAppointmentData}
+                onRefresh={onRefresh}
+              />
+            </Box>
+          </Drawer>
+
+          {/* Edit Drawer - FIXED: Using SafeEditAppointment */}
+          <Drawer anchor="right" open={editDrawerOpen} onClose={toggleEditDrawer(false)}>
+            <Box style={{ width: "fit-content" }} role="presentation">
+              <SafeEditAppointment
+                appointment={appointmentData}
+                closeDrawer={() => setEditDrawerOpen(false)}
+                setAppointmentData={setAppointmentData}
+                isEditMode={true}
+              />
+            </Box>
+          </Drawer>
+        </>
+      )}
+
+      {/* ReSchedule Modal */}
+      <GeneralModal open={showRescheduleModal} handleClose={() => setShowRescheduleModal(false)}>
+        <ReScheduleModal
+          appointment={appointmentData}
+          onClose={() => setShowRescheduleModal(false)}
+          onSuccess={handleRescheduleSuccess}
+        />
+      </GeneralModal>
+
+      <GeneralModal open={showCancelModal} handleClose={() => setShowCancelModal(false)}>
+        <CancelModal
+          id={appointmentData?.id}
+          customer={appointmentData?.customer_name}
+          setShowCancelModal={setShowCancelModal}
+          setAppointmentData={setAppointmentData}
+        />
+      </GeneralModal>
+
+      <GeneralModal open={showReviewModal} handleClose={() => setShowReviewModal(false)}>
+        <ReviewModal
+          id={appointmentData?.id}
+          customer={appointmentData?.customer_name}
+          setShowReviewModal={setShowReviewModal}
+        />
+      </GeneralModal>
+
+      <GeneralModal open={showDeleteConfirm} handleClose={() => setShowDeleteConfirm(false)}>
+        <div className="p-6 bg-white rounded-2xl shadow-xl border border-gray-200 text-center">
+          <h3 className="text-xl font-semibold text-gray-900 mb-3">
+            Confirm Deletion
+          </h3>
+          <p className="text-gray-600 mb-8 leading-relaxed">
+            Are you sure you want to delete appointment
+            <span className="font-semibold text-gray-800"> #{appointmentData?.id}</span>?
+            <br />
+            This action cannot be undone.
+          </p>
+          <div className="flex justify-center gap-4">
+            <button
+              onClick={() => setShowDeleteConfirm(false)}
+              className="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition-all"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleConfirmDelete}
+              className="px-5 py-2.5 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition-all"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </GeneralModal>
+    </>
+  );
+};
+
+export default AppointmentListCard;

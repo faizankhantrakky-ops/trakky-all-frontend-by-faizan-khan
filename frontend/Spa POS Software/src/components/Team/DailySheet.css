@@ -1,0 +1,84 @@
+.table-container table{
+    box-shadow: 0px 10px 11px 0px #615b5b45;
+    border-radius: 10px;
+    background-color: white;
+    table-layout: fixed;
+    width: 100%;
+
+}
+.table-container table th,
+.table-container table td{
+    width: 250px;
+    height: 50px;
+    text-align: center;
+    border-right: 1px solid #D5D7DA;
+    border-bottom: 1px solid #D5D7DA;
+    padding-inline: 6px;
+}
+.table-container table th:last-child,
+.table-container table td:last-child{
+    border-right: none;
+    
+}
+.table-container td select{
+    padding: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: 1px solid #D5D7DA;
+    border-radius: 8px;
+
+}
+.table-container td span{
+    padding: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+    /* border: 1px solid #D5D7DA; */
+    border-radius: 8px;
+    cursor: pointer;
+}
+.table-container td input
+{
+    border: 1px solid #D5D7DA;
+    border-radius: 8px;
+    /* padding: 4px;
+    padding-left: 10px;
+    padding-right: 10px; */
+    width: 60px;
+    text-align: center;
+
+}
+.table-container td input::placeholder{
+    color: black;
+}
+.table-container td button{
+    border: 1px solid #9E9E9E;
+    border-radius: 8px;
+    padding: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #E7E7E7 ;
+
+}
+.table-container input[type=number] {
+    -moz-appearance: textfield;
+  }
+  .table-container input::-webkit-outer-spin-button,
+.table-container input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.dailySheetModalButton{
+    display: flex;
+    justify-content: end;
+    margin-top: 20px;
+}
+
+.sheetTableContainer{
+    width: 100%;
+    overflow: auto;
+}
+.sheetTableContainer table{
+    width: 95vw;
+    overflow-x: auto;
+}

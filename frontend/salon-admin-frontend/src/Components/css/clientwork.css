@@ -1,0 +1,37 @@
+.CWP-modal-spa-dht{
+    padding-block: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+.CWP-modal-spa-details{
+    padding-block: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+.CWP-modal-room-images table{
+    width: 100%;
+    border-collapse: collapse;
+}
+.CWP-modal-room-images table tr td{
+    padding: 8px;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+
+}
+.CWP-modal-room-images table tr:nth-child(1){
+    position: sticky;
+    top: 0;
+    background: white;
+    height: 40px;
+    width: 100%;
+    font-weight: 500;
+}
+.CWP-modal-room-images table tr td:nth-child(1){
+    display: flex;
+    justify-content: center;
+}

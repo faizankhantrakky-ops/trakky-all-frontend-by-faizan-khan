@@ -1,0 +1,149 @@
+/* HowTrakkyWorks.module.css */
+.HowTrakkyWorks_main_div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1rem;
+  background-color: #f9f9f9; /* Light background color */
+}
+
+.HowTrakkyWorks_content {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.HowTrakkyWorks_p1 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.HowTrakkyWorks_card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.HowTrakkyWorks_ind_card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  width: 275px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.HowTrakkyWorks_card_img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.HowTrakkyWorks_image {
+  background-color: #f5e3e7;
+  border-radius: 50%;
+  width: 6rem;
+  height: 6rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.HowTrakkyWorks_card_img img {
+  width: 50%;
+}
+
+.HowTrakkyWorks_card_content {
+  text-align: center;
+}
+
+.HowTrakkyWorks_p2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 0.5rem;
+}
+
+.HowTrakkyWorks_p3 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.HowTrakkyWorks_p4 {
+  font-size: 1rem;
+  color: #666;
+}
+
+.HowTrakkyWorks_a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.HowTrakkyWorks_a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .HowTrakkyWorks_main_div
+  {
+    padding: 2rem 1rem;
+  }
+  .HowTrakkyWorks_p1 {
+    font-size: 1.5rem;
+  }
+
+  .HowTrakkyWorks_ind_card {
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .HowTrakkyWorks_p2 {
+    font-size: 1.2rem;
+  }
+
+  .HowTrakkyWorks_p3 {
+    font-size: 1rem;
+  }
+
+  .HowTrakkyWorks_p4 {
+    font-size: 0.9rem;
+  }
+
+  .HowTrakkyWorks_image {
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .HowTrakkyWorks_card_img img {
+    width: 40%;
+  }
+}
+
+@media only screen and (min-width: 601px) and (max-width: 1000px) {
+  .HowTrakkyWorks_p1 {
+    font-size: 1.8rem;
+  }
+
+  .HowTrakkyWorks_p2 {
+    font-size: 1.3rem;
+  }
+
+  .HowTrakkyWorks_p3 {
+    font-size: 1.1rem;
+  }
+
+  .HowTrakkyWorks_p4 {
+    font-size: 1rem;
+  }
+
+  .HowTrakkyWorks_image {
+    width: 5rem;
+    height: 5rem;
+  }
+}

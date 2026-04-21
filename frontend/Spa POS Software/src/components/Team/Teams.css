@@ -1,0 +1,176 @@
+.teamsTableContainer{
+    padding: 20px;
+    padding-left: 90px;
+    width: 100%;
+}
+
+.teamsTableNavigationAndFilter{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.teamsTableNavigation{
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #C5CAFF;    
+   
+}
+.teamsTableNavigation div{
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #C5CAFF;
+}
+.teamsTableNavigation .activeTeamsLink{
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px 0px #615b5b45;
+    background-color: white;
+}
+.navabarstaffmanagementPOS{
+    height: fit-content;
+    font-size: 12px;
+    padding-left: 10px;
+    display: flex;
+}
+.navabarstaffmanagementPOS h1{
+    transition: 0.1s;
+    background-color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-weight: 100;
+
+}
+.navabarstaffmanagementPOS h1:first-child{
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+.navabarstaffmanagementPOS h1:last-child{
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.TeamsActivePOS{
+    border-radius: 5px !important;
+    background-color: black !important;
+    color: white;
+}
+/* .TbodydailysheetPOS td,.tHeadDailysheetPOS th{
+
+    text-align: center;
+} */
+.tHeadDailysheetPOS th{
+    border-bottom: 1px solid black;
+    width: fit-content;
+}
+.Savebtndailysheetpos{
+
+    cursor: pointer;
+    border-radius: 15px;
+}
+.Savebtndailysheetpos span{
+    color: white;
+    border-radius: 5px;
+    padding: 8px 10px;
+    background-color: #512DC8;
+}
+.TbodydailysheetPOS .css-z3c6am-MuiFormControl-root-MuiTextField-root{
+ min-width: 150px !important;
+}
+.TbodydailysheetPOS select{
+
+    border-radius:5px ;
+    font-size: 18px;
+    padding: 10px;
+    background-color: transparent;
+    height: 50px;
+    width: 120px;
+}
+.inputnumberPOSDailysheet{
+    font-size: 18px;
+    border: 1px solid black;
+    height: 35px;
+    padding: 10px;
+    background-color: transparent;
+    width: 180px;
+    border-radius:5px ;
+}
+.forminputRegisterStaff .css-z3c6am-MuiFormControl-root-MuiTextField-root{
+    width: 180px !important;
+   }
+.inputaddressPOSregisterform{
+    font-size: 18px;
+    border: 1px solid black;
+    height: 35px;
+    padding: 10px;
+    background-color: transparent;
+    width: 380px;
+    border-radius:5px ;
+}
+.inputdropdownPOSDailysheet{
+    font-size: 18px;
+    border: 1px solid black;
+    height: 56px;
+    padding: 10px;
+    background-color: transparent;
+    width: 180px;
+    border-radius:5px ;
+}
+.FileStaffRegisteration{
+    font-size: 18px;
+    border: 1px solid black;
+    height: 56px;
+    padding: 10px;
+    background-color: transparent;
+    width: 380px;
+    border-radius:5px ;
+}
+.SubmitForminputregister{
+    cursor: pointer;
+    color: white;
+    background-color: rgb(28, 144, 28);
+    border-radius: 5px;
+    padding: 10px 25px;
+}
+.TbodydailysheetPOS td{
+    padding-top: 20px;
+}
+.tablePOSDailySheet{
+    box-shadow: 0px 10px 11px 0px #615b5b45;
+    border-radius: 10px;
+    background-color: white;
+}
+.InsideFormFieldPOS{
+    display: flex;
+    gap: 10px;
+}
+
+
+
+@media (max-width: 769px) {
+    
+    .teamsTableContainer{
+        padding: 10px;
+        padding-right: 0px;
+        /* width: 100vw; */
+    }
+    .teamsTableNavigationAndFilter{
+        flex-direction: column;
+        gap: 20px;
+    }
+    /* .teamsTableNavigation{
+        width: 100%;
+        justify-content: space-between;
+    } */
+    .table-container{
+        width: 100%;
+    }
+    .table-container .sheetTableContainer{
+        width: 100%;
+        overflow-x: scroll;
+    }
+
+} 

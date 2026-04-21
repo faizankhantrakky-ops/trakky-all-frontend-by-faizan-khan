@@ -1,0 +1,101 @@
+/* PartnerUs.module.css */
+.Vendor_partnerus_main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  color: white;
+  padding: 2rem 1rem;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../../Assets/images/contactus/joinus.jpg') no-repeat center center;
+  background-size: cover;
+}
+
+.Vendor_partnerus_content {
+  padding: 2rem;
+  width: 80%;
+  max-width: 1200px;
+  background: rgba(0, 0, 0, 0.6); /* Semi-transparent background for better text readability */
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.Vendor_partnerus_p1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.Vendor_partnerus_p2 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: #dcdcdc;
+  margin-bottom: 1.5rem;
+}
+
+.Vendor_partnerus_button {
+  padding: 0.8rem 2rem;
+  background: linear-gradient(to right, #8e2de2, #4a00e0); /* Gradient background */
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 500;
+  border-radius: 10px;
+  border: none;
+  transition: background-color 0.3s, color 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+
+.Vendor_partnerus_button:hover {
+  background: linear-gradient(to right, #4a00e0, #8e2de2); /* Reversed gradient on hover */
+  color: white; 
+  transform: scale(1.05); 
+}
+
+@media only screen and (max-width: 1000px) {
+  .Vendor_partnerus_p1 {
+    font-size: 2rem;
+  }
+
+  .Vendor_partnerus_p2 {
+    font-size: 1.3rem;
+  }
+
+  .Vendor_partnerus_button {
+    font-size: 1rem;
+    padding: 0.6rem 1.5rem;
+  }
+
+  .Vendor_partnerus_content {
+    width: 90%;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .Vendor_partnerus_content {
+    padding: 1rem;
+    width: 100%;
+    border-radius: 0;
+    text-align: center;
+  }
+
+  .Vendor_partnerus_p1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .Vendor_partnerus_p2 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .Vendor_partnerus_button {
+    padding: 0.5rem 2rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+  }
+}

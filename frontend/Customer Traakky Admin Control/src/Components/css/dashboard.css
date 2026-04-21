@@ -1,0 +1,243 @@
+.professional-dashboard {
+  min-height: 100vh;
+  background-color: white;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Header Styles */
+.dashboard-header-professional {
+  /* background: linear-gradient(135deg, #1e293b 0%, #334155 100%); */
+  color: black !important;
+  padding: 2rem 0;
+  /* box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); */
+  border: 1px solid lightgray;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+}
+
+.header-content {
+  /* max-width: 1200px; */
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.header-title-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.title-icon {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.75rem;
+  backdrop-filter: blur(10px);
+}
+
+.title-icon .icon {
+  font-size: 2rem;
+  color: #502DA6;
+}
+
+.title-content .main-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+  /* color: #f8fafc; */
+}
+
+.title-content .welcome-text {
+  font-size: 20px;
+  font-weight: bold;
+  /* color: #cbd5e1; */
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Header Controls */
+.header-controls {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.control-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.control-icon {
+  font-size: 1.25rem;
+  color: #502DA6;
+}
+
+.custom-select {
+  min-width: 160px;
+}
+
+.custom-select .MuiOutlinedInput-root {
+  background: white;
+  border-radius: 6px;
+}
+
+.date-range-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.25rem 0;
+}
+
+.date-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  /* color: #0000; */
+  color: black !important;
+}
+
+.date-separator {
+  color: #94a3b8;
+  font-size: 0.75rem;
+}
+
+/* Section Styles */
+.quick-actions-section,
+.statistics-section {
+  /* max-width: 1200px; */
+  margin: 0 auto;
+  padding: 10px;
+  margin-top: 25px;
+}
+
+.section-header {
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 0.75rem 0;
+}
+
+.section-divider {
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  width: 60px;
+  border-radius: 2px;
+}
+
+/* Quick Actions */
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.action-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.action-card:hover {
+  transform: translateY(-2px);
+  border-color: #3b82f6;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+}
+
+.action-icon {
+  font-size: 2rem;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border-radius: 10px;
+  padding: 0.75rem;
+  color: white;
+}
+
+.action-content h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 0.25rem 0;
+}
+
+.action-content p {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Statistics Section */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 1rem;
+  }
+
+  .header-controls {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .control-item {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .quick-actions-section,
+  .statistics-section {
+    padding: 1.5rem 1rem;
+  }
+
+  .actions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .dashboard-header-professional {
+    padding: 1.5rem 0;
+  }
+
+  .header-title-section {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .action-card {
+    flex-direction: column;
+    text-align: center;
+  }
+}

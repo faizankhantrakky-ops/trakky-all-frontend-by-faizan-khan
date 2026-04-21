@@ -1,0 +1,43 @@
+.N-salon_about_us__container{
+    /* margin: 10px 40px 40px; */
+    padding-top: 10px;
+    padding-inline: 40px;
+}
+
+.N-about-us-header {
+    margin-top: 10px;
+}
+
+.N-about-us-header h2 {
+    /* padding-bottom: 1rem; */
+    font-size: 1.3rem;
+    font-weight: 500;
+
+}
+
+.N-salon_about_us__description p {
+    padding: 0.5rem 0;
+}
+
+.N-salon_about_us__description button {
+    text-decoration: underline;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+@media screen and (max-width:1024px) {
+    .N-salon_about_us__container {
+        padding-inline: 20px;
+    }
+}
+
+
+@media screen and (max-width:520px) {
+    
+    .N-about-us-header h2 {
+        font-size: 18px;
+    }
+    .N-salon_about_us__description p {
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,65 @@
+.day-input-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.day-label {
+  margin-bottom: 7px;
+  font-size: 0.93rem;
+}
+
+.checkbox-label {
+  margin-left: 10px;
+  width: 15px;
+  height: 15px;
+  margin-top: 6px;
+}
+.custom-timings-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 20px;
+}
+
+.day-input-group {
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+  font-size: 0.93rem;
+  margin-left: 10px;
+}
+.from-to-label {
+  font-size: 0.93rem;
+  margin-right: 07px;
+  margin-left: 10px;
+}
+
+@media screen and (max-width: 550px) {
+  .day-label,
+  .from-to-label {
+    font-size: 0.73rem;
+  }
+
+  .checkbox-label {
+    margin-left: 7px;
+    width: 10px;
+    height: 10px;
+    margin-top: 4px;
+  }
+  .custom-timings-row {
+    gap: 20px;
+  }
+  .custom-input {
+    width: 86px;
+    font-size: 0.73rem;
+    height: fit-content;
+  }
+
+  .day-input-group {
+    /* margin-top: 5px;
+        margin-left: 10px; */
+    font-size: 0.73rem;
+  }
+}

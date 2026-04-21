@@ -1,0 +1,10 @@
+.search-hero__container{
+    position: relative;
+    /* margin: 1rem 0; */
+}
+
+.filter__card p {
+    padding: 0.5rem 1rem;
+    border-radius: 40px;
+    color: gray / 700;
+}

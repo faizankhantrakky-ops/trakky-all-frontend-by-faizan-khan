@@ -1,0 +1,92 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@300;400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400&display=swap");
+/* Add these imports to your CSS file */
+/* @import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css"; */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body {
+  @apply leading-[normal] m-0;
+}
+*,
+::before,
+::after {
+  border-width: 0;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.blog-index-container{
+  max-width: 1600px;
+  margin: auto;
+}
+
+.indexHeaderDiv{
+  height: 650px;
+  width: 100%;
+  background: #512DC8B2;
+  position: relative;
+  /* overflow: hidden; */
+  border-radius: 0 0 50px 50px;
+}
+.indexHeaderDiv::before{
+  content: '';
+  display: block;
+  position: absolute;
+  background: #512DC854;
+  width: 550px;
+  height: 500px;
+  border-radius: 50%;
+  right: -150px;
+  top: -150px;
+  z-index: -1;
+}
+
+
+.blogCategories{
+  height: 150px;
+  width: 100%;
+  position: relative;
+  width: 100%;
+}
+.blogCategoriesContent{
+  height: 430px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+
+.trandingSection{
+  margin-top: 60px;
+}
+
+@media screen and (max-width:1024px) {
+ 
+  .indexHeaderDiv{
+      height: 600px;
+      border-radius: 0 0 30px 30px;
+  }
+ 
+}
+
+@media screen and (max-width:540px) {
+ 
+  .indexHeaderDiv::before{
+      width: 350px;
+      height: 350px;
+      right: -100px;
+      top: -100px;
+  }
+  .trandingSection{
+    margin-top: 20px;
+}
+}

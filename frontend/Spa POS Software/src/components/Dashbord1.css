@@ -1,0 +1,27 @@
+.total-appoinmnet-scrollbar::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  /* Track */
+.total-appoinmnet-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+  }
+  
+  /* Handle */
+.total-appoinmnet-scrollbar::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+  }
+  
+  /* Handle on hover */
+.total-appoinmnet-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  .apexcharts-menu.apexcharts-menu-open
+  {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }

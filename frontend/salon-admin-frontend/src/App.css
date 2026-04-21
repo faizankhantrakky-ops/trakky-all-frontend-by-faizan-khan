@@ -1,0 +1,282 @@
+*{
+   font-family: "DM Sans", sans-serif;
+}
+#main_root {
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+#main {
+  display: flex;
+  /* max-width: 1536px; */
+  width: 100vw;
+  height: 100vh;
+}
+
+#sidebar {
+  position: fixed;
+  width: 100vw;
+  top: 0px;
+  left: -100vw;
+  /* background-color: #fcd34d; */
+  height: 100%;
+  z-index: 50;
+  transition: transform 1s ease-in-out;
+}
+
+#sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebar_open {
+  transform: translateX(100vw);
+}
+
+.sidebar_close {
+  transform: translateX(-100vw);
+}
+
+#body_div {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+
+#header_div {
+  display: flex;
+  width: 100%;
+  height: 10%;
+  justify-content: space-between;
+  top: 0px;
+  display: fixed;
+  background: white;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+#hamburger_icon {
+  width: 3rem;
+}
+
+#searchbar_div {
+  display: none;
+  height: 100%;
+}
+
+#searchbar_div input {
+  border: none;
+}
+
+#profile_div {
+  border-left: 1px solid #e1e5eb;
+  padding-left: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
+  height: 100%;
+}
+
+#profile_dropdown {
+  text-decoration: none;
+  display: flex;
+  gap: 1rem;
+}
+
+#profile_dropdown span {
+  display: none;
+}
+
+#down_arrow {
+  width: 0.5rem;
+}
+
+#hamburger_div {
+  border-left: 1px solid #e1e5eb;
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+#route_body_div {
+  background-color: whitesmoke;
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  box-sizing: border-box;
+}
+
+/* #route_body_div::-webkit-scrollbar {
+  display: none;
+} */
+
+/* #route_body_div {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;  
+} */
+.dropdown {
+  position: absolute;
+  top: 10%;
+  display: none;
+  justify-content: center;
+  text-align: center;
+  width: 4rem;
+  background-color: white;
+  height: 5rem;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border-radius: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  transition: height 0.3s ease-in-out;
+}
+.dropdown_scale_up {
+  display: flex;
+  height: 5rem;
+  overflow: visible;
+}
+
+.dropdown_scale_down {
+  display: none;
+  height: 0rem;
+}
+/* .dropdown_scale_up div
+  {
+    display: block;
+
+    
+
+ 
+  }
+  .dropdown_child
+  {
+    display:none
+  } */
+
+#profile_img {
+  width: 1.5rem;
+  border-radius: 50%;
+}
+/* someerrr */
+
+/* media query */
+@media (min-width: 768px) {
+  #sidebar {
+    position: static;
+    display: block;
+    width: 17%;
+    flex: 1 0 17%;
+    min-width: 225px;
+    height: 100%;
+    overflow-y: scroll;
+    /* background-color: #fcd34d; */
+    z-index: 35;
+  }
+
+  .dropdown {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    top: 8%;
+    width: 8rem;
+    background-color: white;
+    transition: height 0.3s ease-in-out;
+  }
+
+  /* d */
+
+  #profile_dropdown {
+    font-size: 1rem;
+    text-decoration: none;
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  #profile_dropdown:hover {
+    color: black;
+  }
+
+  #profile_dropdown span {
+    display: inline;
+  }
+
+  #profile_img {
+    width: 2rem;
+    border-radius: 50%;
+  }
+
+  #header_div {
+    display: flex;
+    width: 100%;
+    height: 8%;
+    max-height: 8rem;
+
+    justify-content: space-evenly;
+    top: 0px;
+    background: white;
+    display: fixed;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  #body_div {
+    width: min(83%, calc(100vw - 225px));
+  }
+
+  #hamburger_div {
+    display: none;
+    width: 8%;
+  }
+
+  #profile_div {
+    border-left: 1px solid #e1e5eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 13%;
+    height: 100%;
+  }
+
+  #down_arrow {
+    width: 0.3rem;
+  }
+
+  #search_icon {
+    width: 0.8rem;
+  }
+
+  #searchbar_div {
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+    width: 85%;
+    height: 100%;
+    visibility: hidden;
+  }
+
+  #searchbar {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.Note_Inp_Classs {
+  font-size: 14px;
+  font-weight: 500;
+  padding-left: 15px;
+  color: gray;
+}
+.Note_Inp_Classs::before {
+  content: "( Note : ";
+  color: gray;
+  font-weight: 700;
+}
+.Note_Inp_Classs::after {
+  content: " )";
+  color: gray;
+  font-weight: 700;
+}

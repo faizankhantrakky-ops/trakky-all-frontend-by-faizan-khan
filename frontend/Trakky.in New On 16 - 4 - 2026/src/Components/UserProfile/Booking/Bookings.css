@@ -1,0 +1,417 @@
+.booking-main-title{
+  margin-bottom: 20px;
+}
+.toggle-buttons {
+  margin: 0;
+  padding: 0;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.toggle-buttons button {
+  width: 50%;
+  height: 42px;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-weight: 500;
+  color: #4b5563;
+  font-size: 16px; /* Base font size */
+}
+
+.toggle-buttons .active {
+  background-color: #6B45BC;
+  color: white;
+  font-weight: 600;
+}
+
+/* Booking Container */
+.innerBoxCB {
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
+  border-radius: 26px;
+  width: 280px;
+  padding: 20px;
+  background-color: white;
+}
+
+.outerBoxCB {
+  padding-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.containerBooking {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.bookingIMGCard {
+  width: 90px;
+  height: 88px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.containerBooking h1 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.containerBooking span {
+  color: #858383;
+  font-size: 14px;
+}
+
+/* Booking Cards */
+.booking-cards-container {
+  padding: 20px;
+  overflow-y: auto;
+  max-height: 850px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 50px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Dotted Line */
+.dottedlineBooking {
+  border-bottom: 3px dotted #7d7979;
+  width: 250px;
+  margin: 8px 0;
+}
+
+/* Order Details */
+.orderBookingPP {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+}
+
+.orderImagePP {
+  width: 50px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.categoryservicePP {
+  display: flex;
+  flex-direction: column;
+  padding-left: 15px;
+  width: 100%;
+}
+
+.categoryservicePP span {
+  color: #333;
+  font-size: 14px;
+}
+
+.orderIDPP {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 10px;
+}
+
+/* Buttons */
+.btnrescan {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 5px;
+}
+
+.btnrescan div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  width: 100px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 14px;
+}
+
+.ReschedulePP {
+  background-color: #6B45BC;
+  background-image: linear-gradient(to right, #9D6FFE, #5430CA);
+  color: white;
+}
+
+.CancelPP {
+  background-color: #FFBCBC;
+  color: #FF0000;
+}
+
+/* History Cards */
+.HistCardPP {
+  display: flex;
+  gap: 15px;
+}
+
+.SalonNameHist {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.salondetailHist {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.SalonPackageHist {
+  color: #827b7b;
+  font-size: 14px;
+}
+
+.HLHist {
+  height: 1px;
+  width: 100%;
+  background-color: black;
+}
+
+.OuterBoxHist {
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid #dedede;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Responsive Design for All Devices */
+@media screen and (max-width: 768px) {
+  /* Mobile Devices */
+  .toggle-buttons {
+    max-width: 300px;
+    border-radius: 10px;
+  }
+  
+  .toggle-buttons button {
+    height: 38px;
+    font-size: 14px !important; /* Smaller font for mobile */
+    font-weight: 500;
+  }
+  
+  .innerBoxCB {
+    width: 260px;
+    padding: 16px;
+    border-radius: 20px;
+  }
+  
+  .bookingIMGCard {
+    width: 80px;
+    height: 78px;
+  }
+  
+  .containerBooking h1 {
+    font-size: 16px !important;
+  }
+  
+  .containerBooking span {
+    font-size: 12px !important;
+  }
+  
+  .booking-cards-container {
+    padding: 15px;
+    gap: 30px;
+    max-height: 600px;
+  }
+  
+  .dottedlineBooking {
+    width: 220px;
+  }
+  
+  .orderBookingPP {
+    padding: 6px 8px;
+  }
+  
+  .orderImagePP {
+    width: 45px;
+  }
+  
+  .categoryservicePP span {
+    font-size: 12px !important;
+  }
+  
+  .btnrescan {
+    margin-top: 15px;
+  }
+  
+  .btnrescan div {
+    width: 90px;
+    padding: 6px;
+    font-size: 12px !important;
+    border-radius: 8px;
+  }
+  
+  .SalonNameHist {
+    font-size: 16px !important;
+  }
+  
+  .SalonPackageHist {
+    font-size: 12px !important;
+  }
+  
+  .OuterBoxHist {
+    padding: 16px;
+    border-radius: 16px;
+  }
+  
+  .HistCardPP {
+    gap: 12px;
+  }
+  
+  .salondetailHist {
+    gap: 10px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  /* Small Mobile Devices */
+  .toggle-buttons {
+    max-width: 280px;
+  }
+  
+  .toggle-buttons button {
+    height: 36px;
+    font-size: 13px !important; /* Even smaller for very small devices */
+  }
+  
+  .innerBoxCB {
+    width: 240px;
+    padding: 14px;
+    border-radius: 18px;
+  }
+  
+  .bookingIMGCard {
+    width: 70px;
+    height: 68px;
+  }
+  
+  .containerBooking h1 {
+    font-size: 15px !important;
+  }
+  
+  .containerBooking span {
+    font-size: 11px !important;
+  }
+  
+  .booking-cards-container {
+    padding: 12px;
+    gap: 20px;
+    max-height: 500px;
+  }
+  
+  .dottedlineBooking {
+    width: 200px;
+  }
+  
+  .orderImagePP {
+    width: 40px;
+  }
+  
+  .categoryservicePP {
+    padding-left: 12px;
+  }
+  
+  .btnrescan div {
+    width: 85px;
+    font-size: 11px !important;
+  }
+  
+  .SalonNameHist {
+    font-size: 15px !important;
+  }
+  
+  .OuterBoxHist {
+    padding: 14px;
+  }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  /* Tablet Devices */
+  .toggle-buttons {
+    max-width: 320px;
+  }
+  
+  .toggle-buttons button {
+    font-size: 15px;
+  }
+  
+  .innerBoxCB {
+    width: 270px;
+  }
+  
+  .booking-cards-container {
+    gap: 40px;
+    max-height: 700px;
+  }
+  
+  .containerBooking h1 {
+    font-size: 17px;
+  }
+  
+  .containerBooking span {
+    font-size: 13px;
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  /* Desktop Devices */
+  .booking-cards-container {
+    max-height: 800px;
+  }
+}
+
+/* Extra small devices */
+@media screen and (max-width: 360px) {
+  .toggle-buttons {
+    max-width: 260px;
+  }
+  
+  .toggle-buttons button {
+    height: 34px;
+    font-size: 12px !important;
+  }
+  
+  .innerBoxCB {
+    width: 220px;
+    padding: 12px;
+  }
+  
+  .booking-cards-container {
+    gap: 15px;
+  }
+}
+
+/* Ensure all text elements have proper font sizes */
+.edit-Profile-container h1 {
+  font-size: 24px;
+}
+
+@media screen and (max-width: 768px) {
+  .edit-Profile-container h1 {
+    font-size: 20px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .edit-Profile-container h1 {
+    font-size: 18px !important;
+  }
+}

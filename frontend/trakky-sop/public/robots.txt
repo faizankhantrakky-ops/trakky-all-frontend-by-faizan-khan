@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://salonmanagementsoftware.trakky.in
+
+# Sitemaps
+Sitemap: https://salonmanagementsoftware.trakky.in/sitemap.xml

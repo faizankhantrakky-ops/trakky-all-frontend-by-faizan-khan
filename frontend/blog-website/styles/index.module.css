@@ -1,0 +1,21 @@
+.searchResultTag{
+    padding: 30px 80px 15px;
+    font-size: 30px;
+    font-weight: 600;
+    font-family: Inter;
+}
+
+@media screen and (max-width: 1024px) {
+    .searchResultTag{
+        padding: 30px 50px 15px;
+    }
+    
+}
+
+@media screen and (max-width: 540px) {
+    .searchResultTag{
+        padding: 30px 20px 15px;
+        font-size: 20px;
+    }
+    
+}

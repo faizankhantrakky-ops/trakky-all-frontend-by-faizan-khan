@@ -1,0 +1,65 @@
+.dashboard-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 16rem;
+  height: 8.5rem;
+  padding: 1.5rem 1rem;
+  background: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  border-bottom: 4px solid var(--card-border-color, #6b7280);
+}
+
+.dashboard-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.15), 0 10px 20px -10px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card:hover::before {
+  opacity: 1;
+}
+
+.dashboard-card:active {
+  transform: translateY(-3px);
+}
+
+.card-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4b5563;
+  text-align: center;
+  letter-spacing: 0.025em;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+.card-value {
+  font-size: 2.125rem;
+  font-weight: 700;
+  color: #1f2937;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Focus style for accessibility */
+.dashboard-card:focus-visible {
+  outline: 2px solid var(--card-border-color);
+  outline-offset: 2px;
+}

@@ -1,0 +1,34 @@
+.date-range-parent-container {
+    padding: 10px 10px 0;
+    background-color: white;
+}
+
+@media screen and (max-width : 960px) {
+    .date-range-parent-container .rdrDateRangePickerWrapper{
+        flex-direction: column;
+        width: 100%;
+    }
+    .date-range-parent-container .rdrDefinedRangesWrapper{
+        width: 100%;
+    }
+    .date-range-parent-container .rdrStaticRanges{
+        flex-direction: row;
+        overflow: scroll;
+
+    }
+    .date-range-parent-container .rdrStaticRangeLabel{
+        min-width: max-content;
+    }
+    .date-range-parent-container .rdrInputRanges{
+        display: flex;
+    }
+    .date-range-parent-container .rdrMonths{
+        overflow: scroll;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .date-range-parent-container .rdrInputRange{
+        font-size: 9px;
+    }
+}

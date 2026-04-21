@@ -1,0 +1,271 @@
+.OL-lc-main-container {
+    width: 100%;
+    border-radius: 16px;
+    border: 1px solid rgb(187, 187, 187);
+    height: auto;
+    transition: all 0.2s ease-in-out;
+    max-width: 500px;
+    margin: auto;
+}
+
+.OL-lc-main-container:hover {
+    box-shadow: 0 0 10px 0 rgb(187, 187, 187);
+}
+
+
+@keyframes enter-animation {
+
+    0% {
+        transform: translateY(80px);
+        opacity: 0;
+        scale: 0.95;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+        scale: 1;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .OL-image-animation {
+        animation: enter-animation 0.6s 1;
+    }
+}
+
+
+.OL-lc-image-container {
+    width: 100%;
+    max-height: 240px;
+    aspect-ratio: 16/9;
+    border-radius: 15px 15px 0 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.OL-lc-image-container .OL-lc-image {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(187, 187, 187);
+}
+
+.OL-lc-image-container .OL-lc-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+}
+
+.OL-lc-image-container .OL-lc-image-premium {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #9E70FF;
+    color: #fff;
+    font-size: 12px;
+    padding: 3px 6px;
+    border-radius: 6px;
+}
+
+.OL-lc-image-container .OL-lc-image-like {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    /* background-color: white; */
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    object-fit: contain;
+    z-index: 1;
+}
+
+.OL-lc-image-container .OL-lc-image-like img {
+    width: 100%;
+    height: 100%;
+    /* aspect-ratio: 1; */
+    object-fit: contain;
+    margin: 5px;
+
+}
+
+.OL-lc-image-container .OL-lc-image-offer-tag {
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    z-index: 5;
+    background: linear-gradient(to right ,#512DC8 0% , #826ACF 22%,#512DC870 44% , #00000000 100%);
+    max-width: 80%;
+    color: #fff;
+    font-size: 13px;
+    width: 100%;
+    padding: 5px 30px 5px 10px;
+    border-radius: 10px 0 0 0;
+    padding-block: 10px;
+    min-height: 40px;
+}
+.OL-lc-info-container {
+    background-color: #1C1C1C;
+    padding: 0 10px 10px;
+    border-radius: 0 0 15px 15px;
+}
+
+.OL-lc-info-slice-outer {
+    background-color: white;
+    width: 100%;
+    border-radius: 0 10px 10px 10px;
+}
+
+.OL-lc-info-container .OL-lc-info-slices {
+    /* height: 70px; */
+    padding: 6px 10px;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.OL-lc-info-slices .OL-lc-basic-info-panel {
+    /* height: 70px; */
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.OL-lc-basic-info-name-addr {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+    max-width: calc(100% - 110px);
+
+}
+
+.OL-lc-basic-info-name {
+    font-size: 18px;
+    font-weight: 700;
+    /* line-height: 30px; */
+    line-height: 22px;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 30px;
+    line-height: 30px;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.OL-lc-basic-info-addr {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    color: rgb(119, 119, 119);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.OL-lc-basic-info-rating-onward {
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+}
+
+.OL-lc-basic-info-rating {
+    display: flex;
+    background: linear-gradient(to right , #9D6FFF , #5530CB);
+    color: #fff;
+    flex-direction: row-reverse;
+    gap: 5px;
+    padding: 0 7px;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    height: 30px;
+    width: fit-content;
+    margin-left: auto;
+}
+
+.OL-lc-basic-info-rating-stars {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    line-height: 14px;
+    font-size: 14px;
+
+}
+
+.OL-lc-basic-info-rating-num {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.OL-lc-info-slices .OL-lc-facilities-panel {
+    height: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.OL-lc-facilities-section {
+    height: 30px;
+    display: flex;
+    gap: 5px;
+}
+
+.OL-lc-facilities-icon-box {
+    height: 100%;
+    width: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.OL-lc-facilities-icon-box img {
+    width: 20px;
+    height: 20px;
+    aspect-ratio: 1;
+
+}
+
+.OL-lc-offer-price-section {
+    height: 20px;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+    color: rgb(119, 119, 119);
+    min-width: 100px;
+    text-align: end;
+
+}
+
+.OL-lc-info-container .OL-lc-book-now-btn {
+    height: 40px;
+    max-width: 100%;
+    margin-inline: 7px;
+    padding: 2px 0;
+    /* background-color: #F8F8F8; */
+    color: #171717;
+    display: flex;
+    border-radius: 0 0 15px 15px;
+    align-items: center;
+    border-top: 1px solid rgb(187, 187, 187);
+
+}
+
+.OL-lc-book-now-btn button {
+    font-size: 14px;
+    height: 36px;
+    width: 50%;
+    flex-shrink: 1;
+    flex-grow: 1;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+}
+
+.OL-lc-book-now-btn button:nth-child(2) {
+    border-left: 1px solid rgb(187, 187, 187);
+}

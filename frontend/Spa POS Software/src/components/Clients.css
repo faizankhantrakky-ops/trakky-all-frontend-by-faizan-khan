@@ -1,0 +1,124 @@
+.client-scrollbar::-webkit-scrollbar {
+    width: 0px;
+  }
+  
+  /* Track */
+.client-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+  }
+  
+  /* Handle */
+.client-scrollbar::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+  }
+  
+  /* Handle on hover */
+.client-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input
+
+.clientDetailsContainer {
+    padding: 10px;
+    padding-left: 90px;
+}
+
+.clientDetailsContainer .controls {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    justify-content: space-between;
+}
+
+.clientsEditModalTextFields{
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+
+.clientsTablePOS {
+    width: 92vw;
+    overflow-y: auto;
+}
+
+
+.clientDetailsContainer table tbody tr td:first-child div{
+    display: flex;
+    gap: 10px;
+    height: 100%;
+    border-bottom: none;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: auto;
+} 
+.clientsTablePOS table {
+    box-shadow: 0px 10px 11px 0px #615b5b45;
+    border-radius: 10px;
+    background-color: white;
+    
+}
+
+
+.clientsTablePOS table th,
+.clientsTablePOS table td {
+    border-right: 1px solid #D5D7DA;
+    border-bottom: 1px solid #D5D7DA;
+    padding: 8px;
+    text-align: center;
+    padding-left: 40px;
+    padding-right: 40px;
+  
+}
+.clientsTabelPos th:last-child,
+.clientsTabelPos td:last-child {
+    border-right: none;
+    
+}
+
+.clientsTablePOS th {
+    border-right: 1px solid #D5D7DA;
+    font-weight: bold;
+    position: sticky;
+    top: -1;
+    z-index: 1;
+}
+
+.clientsTablePOS button {
+    cursor: pointer;
+}
+
+.react-select-container {
+          height: 100%;
+        }
+        .react-select__control {
+          min-height: 100% !important;
+          border-radius: 12px !important;
+          border: 1px solid #d1d5db !important;
+        }
+        .react-select__value-container {
+          height: 100%;
+          padding: 0 8px;
+        }
+        .react-select__indicators {
+          height: 100%;
+        }
+
+@media (max-width:769px) {
+    
+    .clientsTablePOS{
+        width: 100%;
+    }
+    .clientDetailsContainer{
+        width: 100vw;
+        padding: 10px;
+
+        
+    }
+    .controls{
+        flex-direction: column;
+        gap: 10px;
+    }
+}

@@ -1,0 +1,72 @@
+    .PPRateus{
+        border-radius: 20px;
+        height: 675px;
+        margin-inline: 20px;
+        background-color: #9E70FF;
+    }
+    .PPRateUsOuterBox{
+        justify-content: center;
+        gap: 50px;
+        flex-flow: column;
+        height: 100%;
+        display: flex;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        align-items: center;
+
+    }
+    .PPRateUS{
+        margin-top: 50px;
+        padding: 0 0 20px 0;
+        gap: 10px;
+        align-items: center;
+        display: flex;
+        border-radius: 20px;
+        background-color: white;
+        width: 280px;
+        height: 400px;
+        flex-flow: column;
+    }
+    .StarRatePP{
+        color: #9E70FF ;
+        width: 200px  !important;
+        height: 200px  !important;
+    }
+    .PPRateUS h1{
+        font-size: 17px;
+        font-weight: bold ;
+    }
+    .rateStarsPP{
+        cursor: pointer;
+        width: 50px !important; 
+        height: 50px !important;
+        color: #0000004d;
+    }
+    .btnrateUs{
+        cursor: pointer;
+        color: white;
+        background-image: linear-gradient(to right, #9D6FFF, #5430CB);
+        border-radius: 10.35px;
+        background-color: #512DC8;
+        padding: 5px 90px;
+    }
+    .starsPP{
+        padding: 5px 0;
+    }
+    .TrakkyLovePP{
+        font-size: 22px;
+        color: white;
+    font-family: 'Julius Sans One', sans-serif;
+    }
+    .rateStarsPP.filled {
+        fill: #FFD700; /* Change the background color of filled stars */
+        /* You can adjust the color as needed */
+    }
+
+    @media screen and (max-width:768px) {
+        .PPRateus {
+            margin-top: 20px;
+            margin-inline: 10px 0;
+        }
+        
+    }

@@ -1,0 +1,92 @@
+.Vendor_review_main {
+  padding-bottom: 35px;
+  position: relative;
+  z-index: 10;
+  font-size: 1.375rem; /* 22px for better readability */
+  text-decoration: none;
+  height: auto;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+  border-radius: 10px; /* Rounded corners for a modern look */
+  overflow: hidden;
+}
+
+.Vendor_review_heading {
+  display: flex;
+  justify-content: center;
+  font-size: 2rem; /* Larger heading font size for emphasis */
+  font-weight: 700; /* Bold for stronger visual impact */
+  color: #333; /* Darker color for better contrast */
+  margin-bottom: 20px; /* Spacing below the heading */
+  margin-top: 20px; /* Spacing below the heading */
+}
+
+.Vendor_review_comma {
+  left: 4px;
+  top: 8px;
+  width: 60px;
+  height: auto;
+  position: absolute;
+  z-index: -1;
+  opacity: 0.5; /* Make the comma less prominent */
+  transition: opacity 0.3s ease-in-out; /* Smooth transition */
+}
+
+.Vendor_review_slide {
+  width: min(90%, 540px);
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+  z-index: 10;
+  transition: transform 0.3s ease-in-out; /* Smooth hover effect */
+}
+
+.Vendor_review_slide:hover {
+  transform: translateY(-5px); /* Slight lift on hover */
+}
+
+.Vendor_review_owner_name {
+  color: #8a2be2; /* Use hex for better consistency */
+  /* margin-left: -40px; */
+  font-size: 1rem; /* Standard font size */
+  text-align: center;
+  padding-top: 12px;
+  font-weight: 600; 
+  margin-bottom: 20px;
+}
+
+.Vendor_review_reviews {
+  display: flex;
+  flex-direction: column; /* Stack reviews vertically */
+  align-items: center;
+}
+
+.Vendor_review_review {
+  font-size: 1rem; /* Standard font size */
+  padding-left: 10px;
+  line-height: 1.5; /* Improved line height for readability */
+  max-height: 72px;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis for overflow text */
+}
+
+@media (max-width: 768px) {
+  .Vendor_review_heading {
+    font-size: 1.75rem; /* Slightly larger font size */
+    font-weight: 600;
+  }
+  
+  .Vendor_review_review {
+    font-size: 0.875rem; /* Reduced font size */
+    line-height: 1.4; /* Adjusted line height */
+    max-height: 60px;
+  }
+  
+  .Vendor_review_review 
+  {
+    margin-top: 10px;
+  }
+
+  .Vendor_review_slide {
+    padding: 20px; /* Consistent padding */
+  }
+}

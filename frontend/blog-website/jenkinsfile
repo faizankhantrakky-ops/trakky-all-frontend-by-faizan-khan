@@ -1,0 +1,69 @@
+pipeline {
+    agent any
+
+        environment {
+        EC2_SERVER = 'ubuntu@13.233.99.70'
+        DESTINATION_PATH = '/var/www/html/'
+    }
+
+
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage('Initialize') {
+            steps {
+                echo 'Initializing pipeline...'
+            }
+        }
+
+        stage('Clone Repository') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    echo 'Installing Node.js dependencies...'
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    echo 'Building Next.js application...'
+                    sh 'npm run build'
+                }
+            }
+        }
+
+          stage('Deploy') {
+            steps {
+                script {
+                    echo 'Checking and adjusting permissions...'
+                    echo 'Copying build files to Apache web directory...'
+                    sh "cp -r ./out/* ${DESTINATION_PATH}"
+                }
+            }
+          }
+
+    }
+
+    post {
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed!'
+        }
+        always {
+            echo 'Deployment completed!'
+        }
+    }
+}

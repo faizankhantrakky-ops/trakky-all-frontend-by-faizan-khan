@@ -1,0 +1,42 @@
+.POSlinegraph{
+    margin-top: 20px;
+    background-color: white;
+    height: fit-content;
+    width:640px;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow  : 3px 5px 12px 3px #b2acac;
+}
+.linegraphPOS{
+    height: 300px !important;
+    width: auto !important;
+}
+.POSgraphs{
+    padding-left: 82px;
+    padding-bottom:50px;
+    gap: 60px;
+    width: 100%;
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+}
+@media (max-width: 769px) {
+    .POSgraphs{
+        gap: 50px;
+        padding-left: 0;
+    }
+    .POSlinegraph{
+        width: 310px;
+    }
+    .linegraphPOS{
+        height: 212px !important;
+        width: 300px !important;
+    }
+    .HomeCardPOS{
+        width: 310px !important;
+        height: 300px !important;
+    }
+    .Headingtable_POS th:first-child{
+        padding-right: 65px !important;
+    }
+}

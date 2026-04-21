@@ -1,0 +1,1244 @@
+{activeStep === "Checkout" && (
+  <>
+    <div className="col-span-2 -mb-2 mt-1">
+      <h1 className="text-base font-semibold">Payment Details</h1>
+    </div>
+
+    {/* Appointment Total */}
+    <div className="w-full ">
+      <TextField
+        id="appointment-total"
+        label="Appointment Total"
+        type="number"
+        variant="standard"
+        fullWidth
+        value={Math.round(totalFinalAmount * 100) / 100}
+        InputProps={{
+          readOnly: true,
+        }}
+        sx={{ cursor: "not-allowed", backgroundColor: "#f9f9f9" }}
+      />
+    </div>
+
+    {/* Product Total */}
+    {(productFormData.final_total > 0 || appointment?.selled_product_details) && (
+      <div className="w-full">
+        <TextField
+          id="product-total"
+          label="Product Total"
+          type="number"
+          variant="standard"
+          fullWidth
+          value={Math.round(
+            (appointment?.selled_product_details?.final_total ||
+            productFormData.final_total) * 100
+          ) / 100}
+          InputProps={{
+            readOnly: true,
+          }}
+          sx={{ cursor: "not-allowed", backgroundColor: "#f9f9f9" }}
+        />
+      </div>
+    )}
+
+    {/* Combined Total (Actual Amount) */}
+    <div className="w-full">
+      <TextField
+        id="combined-total"
+        label="Combined Total (Actual Amount)"
+        type="number"
+        variant="standard"
+        fullWidth
+        value={Math.round(actualAmount * 100) / 100}
+        InputProps={{
+          readOnly: true,
+        }}
+        sx={{
+          cursor: "not-allowed",
+          backgroundColor: "#f9f9f9",
+        }}
+      />
+    </div>
+
+    {/* APPOINTMENT SECTION */}
+    <div className="w-full col-span-2">
+      <Typography variant="h6" className="font-semibold mb-2 border-b pb-1">
+        Appointment Details..
+      </Typography>
+    </div>
+
+    {/* Appointment Tax Display (Auto from vendor) */}
+    {vendorData?.is_gst && (
+      <div className="w-full ">
+        <TextField
+          id="appointment-tax-display"
+          label={
+            appointmentTaxType === "percentage" 
+              ? `Appointment Tax (${appointmentTaxValue}%)` 
+              : `Appointment Tax (₹${appointmentTaxValue})`
+          }
+          type="number"
+          variant="standard"
+          fullWidth
+          value={appointmentTaxValue}
+          InputProps={{
+            readOnly: true,
+          }}
+          sx={{ 
+            cursor: "not-allowed", 
+            backgroundColor: "#f0f8ff",
+            "& .MuiInputBase-input": {
+              fontWeight: "bold",
+              color: "#1976d2"
+            }
+          }}
+          helperText="Automatically set from vendor settings"
+        />
+      </div>
+    )}
+
+    {/* Appointment Discount Type Dropdown */}
+    <div className="w-full">
+      <FormControl fullWidth variant="standard">
+        <InputLabel id="appointment-discount-type-label">Appointment Discount Type</InputLabel>
+        <Select
+          labelId="appointment-discount-type-label"
+          id="appointment-discount-type"
+          value={appointmentDiscountType}
+          label="Appointment Discount Type"
+          onChange={(e) => {
+            setAppointmentDiscountType(e.target.value);
+            setAppointmentDiscountValue(0);
+          }}
+        >
+          <MenuItem value="percentage">Percentage (%)</MenuItem>
+          <MenuItem value="amount">Amount (₹)</MenuItem>
+        </Select>
+      </FormControl>
+    </div>
+
+    {/* Appointment Discount Value */}
+    <div className="w-full">
+      <TextField
+        id="appointment-discount-value"
+        label={
+          appointmentDiscountType === "percentage" 
+            ? "Appointment Discount Percentage" 
+            : "Appointment Discount Amount"
+        }
+        type="number"
+        variant="standard"
+        fullWidth
+        value={appointmentDiscountValue}
+        onChange={(e) => {
+          const value = parseFloat(e.target.value) || 0;
+          if (appointmentDiscountType === "percentage") {
+            const roundedValue = Math.min(100, Math.max(0, Math.round(value * 100) / 100));
+            setAppointmentDiscountValue(roundedValue);
+          } else {
+            const roundedValue = Math.max(0, Math.round(value * 100) / 100);
+            setAppointmentDiscountValue(roundedValue);
+          }
+        }}
+        inputProps={{
+          min: 0,
+          max: appointmentDiscountType === "percentage" ? 100 : undefined,
+          step: 0.01
+        }}
+        onBlur={(e) => {
+          const value = parseFloat(e.target.value) || 0;
+          const roundedValue = Math.round(value * 100) / 100;
+          setAppointmentDiscountValue(roundedValue);
+        }}
+      />
+    </div>
+
+    {/* Appointment Discount Amount Display (Read-only) */}
+    <div className="w-full">
+      <TextField
+        id="appointment-discount-amount-display"
+        label="Appointment Discount Amount"
+        type="number"
+        variant="standard"
+        fullWidth
+        value={Math.round(appointmentDiscountAmount * 100) / 100}
+        InputProps={{
+          readOnly: true,
+        }}
+        sx={{ cursor: "not-allowed", backgroundColor: "#fff9e6" }}
+        helperText={`Calculated from ${appointmentDiscountValue}${appointmentDiscountType === "percentage" ? "%" : "₹"}`}
+      />
+    </div>
+
+    {/* Appointment Tax Amount Display (Read-only) */}
+    <div className="w-full">
+      <TextField
+        id="appointment-tax-amount-display"
+        label="Appointment Tax Amount"
+        type="number"
+        variant="standard"
+        fullWidth
+        value={Math.round(appointmentTaxAmount * 100) / 100}
+        InputProps={{
+          readOnly: true,
+        }}
+        sx={{ cursor: "not-allowed", backgroundColor: "#f0f8ff" }}
+        helperText={`Calculated from ${appointmentTaxValue}${appointmentTaxType === "percentage" ? "%" : "₹"}`}
+      />
+    </div>
+
+    {/* PRODUCT SECTION */}
+    <div className="w-full col-span-2 mt-4">
+      <Typography variant="h6" className="font-semibold mb-2 border-b pb-1">
+        Product Details
+      </Typography>
+    </div>
+
+    {/* Product Tax Display (Auto from vendor) */}
+    {vendorData?.product_is_gst && (
+      <div className="w-full">
+        <TextField
+          id="product-tax-display"
+          label={
+            productTaxType === "percentage" 
+              ? `Product Tax (${productTaxValue}%)` 
+              : `Product Tax (₹${productTaxValue})`
+          }
+          type="number"
+          variant="standard"
+          fullWidth
+          value={productTaxValue}
+          InputProps={{
+            readOnly: true,
+          }}
+          sx={{ 
+            cursor: "not-allowed", 
+            backgroundColor: "#f0f8ff",
+            "& .MuiInputBase-input": {
+              fontWeight: "bold",
+              color: "#1976d2"
+            }
+          }}
+          helperText="Automatically set from vendor settings"
+        />
+      </div>
+    )}
+
+    {/* Product Discount Type Dropdown */}
+    <div className="w-full">
+      <FormControl fullWidth variant="standard">
+        <InputLabel id="product-discount-type-label">Product Discount Type</InputLabel>
+        <Select
+          labelId="product-discount-type-label"
+          id="product-discount-type"
+          value={productDiscountType}
+          label="Product Discount Type"
+          onChange={(e) => {
+            setProductDiscountType(e.target.value);
+            setProductDiscountValue(0);
+          }}
+        >
+          <MenuItem value="percentage">Percentage (%)</MenuItem>
+          <MenuItem value="amount">Amount (₹)</MenuItem>
+        </Select>
+      </FormControl>
+    </div>
+
+    {/* Product Discount Value */}
+    <div className="w-full">
+      <TextField
+        id="product-discount-value"
+        label={
+          productDiscountType === "percentage" 
+            ? "Product Discount Percentage" 
+            : "Product Discount Amount"
+        }
+        type="number"
+        variant="standard"
+        fullWidth
+        value={productDiscountValue}
+        onChange={(e) => {
+          const value = parseFloat(e.target.value) || 0;
+          if (productDiscountType === "percentage") {
+            const roundedValue = Math.min(100, Math.max(0, Math.round(value * 100) / 100));
+            setProductDiscountValue(roundedValue);
+          } else {
+            const roundedValue = Math.max(0, Math.round(value * 100) / 100);
+            setProductDiscountValue(roundedValue);
+          }
+        }}
+        inputProps={{
+          min: 0,
+          max: productDiscountType === "percentage" ? 100 : undefined,
+          step: 0.01
+        }}
+        onBlur={(e) => {
+          const value = parseFloat(e.target.value) || 0;
+          const roundedValue = Math.round(value * 100) / 100;
+          setProductDiscountValue(roundedValue);
+        }}
+      />
+    </div>
+
+    {/* Product Discount Amount Display (Read-only) */}
+    <div className="w-full">
+      <TextField
+        id="product-discount-amount-display"
+        label="Product Discount Amount"
+        type="number"
+        variant="standard"
+        fullWidth
+        value={Math.round(productDiscountAmount * 100) / 100}
+        InputProps={{
+          readOnly: true,
+        }}
+        sx={{ cursor: "not-allowed", backgroundColor: "#fff9e6" }}
+        helperText={`Calculated from ${productDiscountValue}${productDiscountType === "percentage" ? "%" : "₹"}`}
+      />
+    </div>
+
+    {/* Product Tax Amount Display (Read-only) */}
+    <div className="w-full">
+      <TextField
+        id="product-tax-amount-display"
+        label="Product Tax Amount"
+        type="number"
+        variant="standard"
+        fullWidth
+        value={Math.round(productTaxAmount * 100) / 100}
+        InputProps={{
+          readOnly: true,
+        }}
+        sx={{ cursor: "not-allowed", backgroundColor: "#f0f8ff" }}
+        helperText={`Calculated from ${productTaxValue}${productTaxType === "percentage" ? "%" : "₹"}`}
+      />
+    </div>
+
+    {/* FINAL CALCULATIONS SECTION */}
+    <div className="w-full col-span-2 mt-4">
+      <Typography variant="h6" className="font-semibold mb-2 border-b pb-1">
+        Final Calculations
+      </Typography>
+    </div>
+
+    {/* Final Appointment Amount After Discount */}
+    <div className="w-full">
+      <TextField
+        id="final-appointment-after-discount"
+        label="Final Appointment (After Discount)"
+        type="number"
+        variant="standard"
+        fullWidth
+        value={Math.round(finalTotalAppointmentAmountAfterDiscount * 100) / 100}
+        InputProps={{
+          readOnly: true,
+        }}
+        sx={{
+          cursor: "not-allowed",
+          backgroundColor: "#f0f8ff",
+          "& .MuiInputBase-input": {
+            fontWeight: "bold",
+          },
+        }}
+      />
+    </div>
+
+    {/* Final Product Amount After Discount */}
+    <div className="w-full">
+      <TextField
+        id="final-product-after-discount"
+        label="Final Product (After Discount)"
+        type="number"
+        variant="standard"
+        fullWidth
+        value={Math.round(finalTotalProductSellAmountAfterDiscount * 100) / 100}
+        InputProps={{
+          readOnly: true,
+        }}
+        sx={{
+          cursor: "not-allowed",
+          backgroundColor: "#f0f8ff",
+          "& .MuiInputBase-input": {
+            fontWeight: "bold",
+          },
+        }}
+      />
+    </div>
+
+    {/* Final Appointment Amount After Tax & Discount */}
+    <div className="w-full">
+      <TextField
+        id="final-appointment-after-tax-discount"
+        label="Final Appointment Amount (After Tax)"
+        type="number"
+        variant="standard"
+        fullWidth
+        value={Math.round(finalTotalAppointmentAmountAfterTaxDiscount * 100) / 100}
+        InputProps={{
+          readOnly: true,
+        }}
+        sx={{
+          cursor: "not-allowed",
+          backgroundColor: "#e8f5e8",
+          "& .MuiInputBase-input": {
+            fontWeight: "bold",
+          },
+        }}
+      />
+    </div>
+
+    {/* Final Product Amount After Discount & Tax */}
+    <div className="w-full">
+      <TextField
+        id="final-product-after-discount-tax"
+        label="Final Product Amount (After Tax)"
+        type="number"
+        variant="standard"
+        fullWidth
+        value={Math.round(finalTotalProductSellAmountAfterDiscountTax * 100) / 100}
+        InputProps={{
+          readOnly: true,
+        }}
+        sx={{
+          cursor: "not-allowed",
+          backgroundColor: "#e8f5e8",
+          "& .MuiInputBase-input": {
+            fontWeight: "bold",
+          },
+        }}
+      />
+    </div>
+
+    {/* Combined Total (After all calculations) */}
+    <div className="w-full">
+      <TextField
+        id="combined-final-total"
+        label="Combined Final Total (After tax)"
+        type="number"
+        variant="standard"
+        fullWidth
+        value={Math.round((finalTotalAppointmentAmountAfterTaxDiscount + finalTotalProductSellAmountAfterDiscountTax) * 100) / 100}
+        InputProps={{
+          readOnly: true,
+        }}
+        sx={{
+          cursor: "not-allowed",
+          backgroundColor: "#e8f5e8",
+          "& .MuiInputBase-input": {
+            fontWeight: "bold",
+            fontSize: "1.1rem",
+          },
+        }}
+      />
+    </div>
+
+    {/* LEGACY FIELDS (Read-only for display) */}
+    <div className="w-full col-span-2 mt-4">
+      <Typography variant="h6" className="font-semibold mb-2 border-b pb-1">
+        Legacy Fields (Auto-calculated)
+      </Typography>
+    </div>
+    
+    {/* Combined Discount Percentage */}
+    <div className="w-full">
+      <TextField
+        id="combined-discount-percentage"
+        label="Combined Discount %"
+        type="number"
+        variant="standard"
+        fullWidth
+        value={Math.round(combinedDiscountPercentage * 100) / 100}
+        InputProps={{
+          readOnly: true,
+        }}
+        sx={{ cursor: "not-allowed", backgroundColor: "#fff9e6" }}
+        helperText="Auto-calculated from appointment & product discounts"
+      />
+    </div>
+
+    {/* Combined Discount Amount */}
+    <div className="w-full">
+      <TextField
+        id="combined-discount-amount"
+        label="Combined Discount Amount"
+        type="number"
+        variant="standard"
+        fullWidth
+        value={Math.round(combinedDiscountAmount * 100) / 100}
+        InputProps={{
+          readOnly: true,
+        }}
+        sx={{ cursor: "not-allowed", backgroundColor: "#fff9e6" }}
+      />
+    </div>
+
+    {/* Combined Tax Percentage */}
+    <div className="w-full">
+      <TextField
+        id="combined-tax-percentage"
+        label="Combined Tax %"
+        type="number"
+        variant="standard"
+        fullWidth
+        value={Math.round(combinedTaxPercentage * 100) / 100}
+        InputProps={{
+          readOnly: true,
+        }}
+        sx={{ cursor: "not-allowed", backgroundColor: "#f0f8ff" }}
+        helperText="Auto-calculated from appointment & product taxes"
+      />
+    </div>
+
+    {/* Combined Tax Amount */}
+    <div className="w-full">
+      <TextField
+        id="combined-tax-amount"
+        label="Combined Tax Amount"
+        type="number"
+        variant="standard"
+        fullWidth
+        value={Math.round(combinedTaxAmount * 100) / 100}
+        InputProps={{
+          readOnly: true,
+        }}
+        sx={{ cursor: "not-allowed", backgroundColor: "#f0f8ff" }}
+      />
+    </div>
+
+    {/* PAYMENT SECTION */}
+    <div className="w-full col-span-2 mt-4">
+      <Typography variant="h6" className="font-semibold mb-2 border-b pb-1">
+        Payment Information
+      </Typography>
+    </div>
+
+    {/* Amount Paid - Only show if not in split payment mode */}
+    {!splitPaymentMode && (
+      <div className="w-full">
+        <TextField
+          id="amount-paid"
+          label="Amount Paid"
+          type="number"
+          variant="standard"
+          fullWidth
+          value={amountPaid}
+          onWheel={() => document.activeElement.blur()}
+          onKeyDownCapture={(event) => {
+            if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+              event.preventDefault();
+            }
+          }}
+          onChange={(e) => {
+            const paid = parseFloat(e.target.value) || 0;
+            const total = parseFloat(finalTotalAppointmentAmountAfterTaxDiscount + finalTotalProductSellAmountAfterDiscountTax) || 0;
+
+            // Only validate wallet balance if wallet is applied and not in split mode
+            if (
+              isWalletApplied &&
+              selectedWallet &&
+              paymentMode === "wallet"
+            ) {
+              const selectedWalletData = wallets.find(
+                (w) => w.id === selectedWallet
+              );
+              if (
+                selectedWalletData &&
+                paid > selectedWalletData.remaining_price_benefits
+              ) {
+                return;
+              }
+            }
+
+            setAmountPaid(paid);
+
+            // Calculate due and credit amounts with decimal fix
+            const due = Math.max(0, total - paid);
+            const credit = Math.max(0, paid - total);
+
+            setDueAmount(Math.round(due * 100) / 100);
+            setCreditAmount(Math.round(credit * 100) / 100);
+            setRemainingAmount(Math.round(due * 100) / 100);
+
+            // Auto-update payment status based on amount paid
+            if (paid >= total) {
+              setPaymentStatus("paid");
+            } else if (paid > 0 && paid < total) {
+              setPaymentStatus("partial");
+            } else if (paid === 0 && total > 0) {
+              setPaymentStatus("unpaid");
+            }
+          }}
+          onBlur={(e) => {
+            const paid = parseFloat(e.target.value) || 0;
+            const roundedPaid = Math.round(paid * 100) / 100;
+            setAmountPaid(roundedPaid);
+          }}
+        />
+      </div>
+    )}
+
+    {/* Due Amount Field */}
+    <div className="w-full">
+      <TextField
+        id="due-amount"
+        label="Due Amount"
+        type="number"
+        variant="standard"
+        fullWidth
+        value={Math.round(dueAmount * 100) / 100}
+        InputProps={{
+          readOnly: true,
+        }}
+        sx={{ cursor: "not-allowed", backgroundColor: "#f9f9f9" }}
+      />
+    </div>
+
+    {/* Credit Amount Field */}
+    <div className="w-full">
+      <TextField
+        id="credit-amount"
+        label="Credit Amount"
+        type="number"
+        variant="standard"
+        fullWidth
+        value={Math.round(creditAmount * 100) / 100}
+        InputProps={{
+          readOnly: true,
+        }}
+        sx={{
+          cursor: "not-allowed",
+          backgroundColor: creditAmount > 0 ? "#e8f5e8" : "#f9f9f9",
+        }}
+      />
+    </div>
+
+    {/* Payment Status */}
+    <div className="w-full">
+      <FormControl fullWidth variant="standard">
+        <InputLabel id="payment-status-label">
+          Payment Status
+        </InputLabel>
+        <Select
+          labelId="payment-status-label"
+          id="payment-status"
+          value={paymentStatus}
+          label="Payment Status"
+          onChange={(e) => {
+            setPaymentStatus(e.target.value);
+            if (e.target.value === "unpaid") {
+              setAmountPaid(0);
+            }
+            if (e.target.value === "paid") {
+              setAmountPaid(Math.round((finalTotalAppointmentAmountAfterTaxDiscount + finalTotalProductSellAmountAfterDiscountTax) * 100) / 100);
+            }
+          }}
+        >
+          <MenuItem value="paid">Paid</MenuItem>
+          <MenuItem value="unpaid">Unpaid</MenuItem>
+          <MenuItem value="partial">Partial</MenuItem>
+        </Select>
+      </FormControl>
+    </div>
+
+    {/* Payment Mode Selection */}
+    <div className="w-full">
+      <FormControl fullWidth variant="standard">
+        <InputLabel id="payment-mode-label">Payment mode</InputLabel>
+        <Select
+          labelId="payment-mode-label"
+          id="payment-mode"
+          value={paymentMode}
+          label="Payment Mode"
+          onChange={(e) => {
+            const newMode = e.target.value;
+            setPaymentMode(newMode);
+
+            // If wallet is selected as primary mode, ensure it's included in split if split mode is on
+            if (splitPaymentMode && newMode === "wallet") {
+              if (!selectedPaymentModes.includes("wallet")) {
+                const updatedModes = [
+                  ...selectedPaymentModes,
+                  "wallet",
+                ];
+                setSelectedPaymentModes(updatedModes);
+
+                const updatedDetails = [...splitPaymentDetails];
+                // Add wallet to split details if not already present
+                if (!updatedDetails.find((d) => d.mode === "wallet")) {
+                  updatedDetails.push({
+                    mode: "wallet",
+                    amount: 0,
+                  });
+                }
+                setSplitPaymentDetails(updatedDetails);
+              }
+            }
+          }}
+          disabled={paymentStatus === "unpaid" && !splitPaymentMode}
+        >
+          <MenuItem value="cash">Cash</MenuItem>
+          <MenuItem value="upi">UPI</MenuItem>
+          <MenuItem value="wallet">Wallet</MenuItem>
+          <MenuItem value="credit-card">Credit card</MenuItem>
+          <MenuItem value="debit-card">Debit card</MenuItem>
+          <MenuItem value="net-banking">Net Banking</MenuItem>
+          <MenuItem value="other">Other</MenuItem>
+        </Select>
+      </FormControl>
+    </div>
+
+    {/* Split Payment Mode Toggle */}
+    <div className="w-full">
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={splitPaymentMode}
+            onChange={(e) => {
+              const isSplit = e.target.checked;
+              setSplitPaymentMode(isSplit);
+
+              if (isSplit) {
+                // Initialize with current payment mode and include wallet if selected
+                const initialModes = [];
+                if (paymentMode) {
+                  initialModes.push(paymentMode);
+                }
+                // Always include wallet in split if wallet is applied
+                if (
+                  isWalletApplied &&
+                  selectedWallet &&
+                  !initialModes.includes("wallet")
+                ) {
+                  initialModes.push("wallet");
+                }
+                // If no modes selected, default to cash
+                if (initialModes.length === 0) {
+                  initialModes.push("cash");
+                }
+
+                setSelectedPaymentModes(initialModes);
+                setSplitPaymentDetails(
+                  initialModes.map((mode) => ({
+                    mode: mode,
+                    amount:
+                      mode === "wallet"
+                        ? 0
+                        : Math.round(parseFloat(amountPaid) || 0 * 100) / 100,
+                  }))
+                );
+              } else {
+                // Reset split payment data but keep wallet applied
+                setSelectedPaymentModes([]);
+                setSplitPaymentDetails([]);
+              }
+            }}
+          />
+        }
+        label="Split Payment across multiple modes"
+      />
+    </div>
+
+    {/* Split Payment Mode Selection */}
+    {splitPaymentMode && (
+      <div className="w-full col-span-2">
+        <FormControl fullWidth variant="standard">
+          <InputLabel id="split-payment-modes-label">
+            Select Payment Modes for Split
+          </InputLabel>
+          <Select
+            labelId="split-payment-modes-label"
+            id="split-payment-modes"
+            multiple
+            value={selectedPaymentModes}
+            onChange={(e) => {
+              const newModes = e.target.value;
+
+              // Ensure wallet is always included if wallet is applied
+              let finalModes = newModes;
+              if (
+                isWalletApplied &&
+                selectedWallet &&
+                !newModes.includes("wallet")
+              ) {
+                finalModes = [...newModes, "wallet"];
+              }
+
+              setSelectedPaymentModes(finalModes);
+
+              // Update split payment details
+              const currentDetails = [...splitPaymentDetails];
+              const updatedDetails = finalModes.map((mode) => {
+                const existing = currentDetails.find(
+                  (d) => d.mode === mode
+                );
+                return existing || { mode: mode, amount: 0 };
+              });
+
+              setSplitPaymentDetails(updatedDetails);
+
+              // Update total paid amount
+              const totalPaid = updatedDetails.reduce(
+                (sum, d) => sum + d.amount,
+                0
+              );
+              setAmountPaid(Math.round(totalPaid * 100) / 100);
+            }}
+            renderValue={(selected) => selected.join(", ")}
+          >
+            <MenuItem value="cash">Cash</MenuItem>
+            <MenuItem value="upi">UPI</MenuItem>
+            <MenuItem value="wallet">Wallet</MenuItem>
+            <MenuItem value="credit-card">Credit Card</MenuItem>
+            <MenuItem value="debit-card">Debit Card</MenuItem>
+            <MenuItem value="net-banking">Net Banking</MenuItem>
+            <MenuItem value="other">Other</MenuItem>
+          </Select>
+        </FormControl>
+        <Typography variant="caption" color="textSecondary">
+          {isWalletApplied && selectedWallet
+            ? "Wallet is automatically included. Select additional payment modes."
+            : "Select all payment modes you want to split the payment across"}
+        </Typography>
+      </div>
+    )}
+
+    {/* Split Payment Amount Inputs */}
+    {splitPaymentMode && selectedPaymentModes.length > 0 && (
+      <div className="w-full col-span-2">
+        <Typography variant="subtitle2" className="font-semibold mb-2">
+          Split Payment Amounts
+        </Typography>
+        <div className="space-y-3">
+          {splitPaymentDetails.map((detail, index) => {
+            const isWalletMode = detail.mode === "wallet";
+            const currentWalletBalance =
+              wallets.find((w) => w.id === selectedWallet)
+                ?.remaining_price_benefits || 0;
+
+            return (
+              <div key={index} className="flex items-center gap-3">
+                <div className="w-1/3">
+                  <TextField
+                    label={`${detail.mode} Amount${
+                      isWalletMode
+                        ? ` (Max: ₹${Math.round(currentWalletBalance * 100) / 100})`
+                        : ""
+                    }`}
+                    type="number"
+                    variant="standard"
+                    fullWidth
+                    value={detail.amount}
+                    onChange={(e) => {
+                      const newAmount = parseFloat(e.target.value) || 0;
+                      const roundedAmount = Math.round(newAmount * 100) / 100;
+                      const totalAmount = Math.round((finalTotalAppointmentAmountAfterTaxDiscount + finalTotalProductSellAmountAfterDiscountTax) * 100) / 100;
+
+                      // Special validation for wallet mode
+                      if (
+                        isWalletMode &&
+                        roundedAmount > currentWalletBalance
+                      ) {
+                        return;
+                      }
+
+                      // Validate that the amount doesn't exceed total
+                      if (roundedAmount > totalAmount) {
+                        return;
+                      }
+
+                      const updatedDetails = [...splitPaymentDetails];
+                      updatedDetails[index].amount = roundedAmount;
+
+                      // Auto-fill remaining amount to other modes if this is not the last field
+                      const filledAmount = updatedDetails.reduce(
+                        (sum, d) => sum + d.amount,
+                        0
+                      );
+                      const remainingAmount =
+                        totalAmount - filledAmount;
+
+                      // If there's exactly one remaining unfilled field, auto-fill it
+                      const unfilledFields = updatedDetails.filter(
+                        (d, i) => i !== index && d.amount === 0
+                      );
+
+                      if (
+                        unfilledFields.length === 1 &&
+                        remainingAmount > 0
+                      ) {
+                        const remainingIndex = updatedDetails.findIndex(
+                          (d, i) => i !== index && d.amount === 0
+                        );
+                        if (remainingIndex !== -1) {
+                          // For wallet, ensure we don't exceed balance
+                          const remainingDetail =
+                            updatedDetails[remainingIndex];
+                          if (remainingDetail.mode === "wallet") {
+                            updatedDetails[remainingIndex].amount =
+                              Math.round(
+                                Math.min(
+                                  remainingAmount,
+                                  currentWalletBalance
+                                ) * 100
+                              ) / 100;
+                          } else {
+                            updatedDetails[remainingIndex].amount =
+                              Math.round(remainingAmount * 100) / 100;
+                          }
+                        }
+                      }
+
+                      setSplitPaymentDetails(updatedDetails);
+
+                      // Calculate total amount paid
+                      const totalPaid = updatedDetails.reduce(
+                        (sum, d) => sum + d.amount,
+                        0
+                      );
+                      setAmountPaid(Math.round(totalPaid * 100) / 100);
+
+                      // Update payment status based on total
+                      if (totalPaid >= totalAmount) {
+                        setPaymentStatus("paid");
+                      } else if (
+                        totalPaid > 0 &&
+                        totalPaid < totalAmount
+                      ) {
+                        setPaymentStatus("partial");
+                      } else if (totalPaid === 0 && totalAmount > 0) {
+                        setPaymentStatus("unpaid");
+                      }
+                    }}
+                    onBlur={(e) => {
+                      const newAmount = parseFloat(e.target.value) || 0;
+                      const roundedAmount = Math.round(newAmount * 100) / 100;
+                      const updatedDetails = [...splitPaymentDetails];
+                      updatedDetails[index].amount = roundedAmount;
+                      setSplitPaymentDetails(updatedDetails);
+                    }}
+                    inputProps={{
+                      min: 0,
+                      max: isWalletMode
+                        ? Math.min(
+                            Math.round((finalTotalAppointmentAmountAfterTaxDiscount + finalTotalProductSellAmountAfterDiscountTax) * 100) / 100,
+                            currentWalletBalance
+                          )
+                        : Math.round((finalTotalAppointmentAmountAfterTaxDiscount + finalTotalProductSellAmountAfterDiscountTax) * 100) / 100,
+                      step: 0.01,
+                    }}
+                    error={
+                      isWalletMode
+                        ? detail.amount > currentWalletBalance
+                        : false
+                    }
+                    helperText={
+                      isWalletMode &&
+                      detail.amount > currentWalletBalance
+                        ? `Exceeds wallet balance (₹${Math.round(currentWalletBalance * 100) / 100})`
+                        : ""
+                    }
+                  />
+                </div>
+                <Typography
+                  variant="body2"
+                  className="text-gray-600 capitalize"
+                >
+                  {detail.mode}
+                  {isWalletMode &&
+                    ` (Balance: ₹${Math.round(currentWalletBalance * 100) / 100})`}
+                </Typography>
+
+                {/* Auto-fill buttons */}
+                {index === splitPaymentDetails.length - 1 &&
+                  splitPaymentDetails.length > 1 && (
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => {
+                        const totalAmount = Math.round((finalTotalAppointmentAmountAfterTaxDiscount + finalTotalProductSellAmountAfterDiscountTax) * 100) / 100;
+                        const currentTotal = splitPaymentDetails.reduce(
+                          (sum, d) => sum + d.amount,
+                          0
+                        );
+                        const remainingAmount =
+                          totalAmount - currentTotal;
+
+                        if (remainingAmount > 0) {
+                          const updatedDetails = [
+                            ...splitPaymentDetails,
+                          ];
+                          // For wallet mode, don't exceed balance
+                          if (isWalletMode) {
+                            updatedDetails[index].amount = Math.round(
+                              Math.min(
+                                updatedDetails[index].amount +
+                                  remainingAmount,
+                                currentWalletBalance
+                              ) * 100
+                            ) / 100;
+                          } else {
+                            updatedDetails[index].amount = Math.round(
+                              (
+                                updatedDetails[index].amount +
+                                remainingAmount
+                              ) * 100
+                            ) / 100;
+                          }
+                          setSplitPaymentDetails(updatedDetails);
+
+                          const totalPaid = updatedDetails.reduce(
+                            (sum, d) => sum + d.amount,
+                            0
+                          );
+                          setAmountPaid(Math.round(totalPaid * 100) / 100);
+                          if (totalPaid >= totalAmount) {
+                            setPaymentStatus("paid");
+                          }
+                        }
+                      }}
+                      disabled={
+                        splitPaymentDetails.reduce(
+                          (sum, d) => sum + d.amount,
+                          0
+                        ) >= Math.round((finalTotalAppointmentAmountAfterTaxDiscount + finalTotalProductSellAmountAfterDiscountTax) * 100) / 100 ||
+                        (isWalletMode && currentWalletBalance <= 0)
+                      }
+                    >
+                      Auto-fill Remaining
+                    </Button>
+                  )}
+              </div>
+            );
+          })}
+
+          {/* Enhanced validation summary with wallet info */}
+          {splitPaymentDetails.length > 0 && (
+            <div className="mt-2 p-2 bg-gray-50 rounded">
+              <div className="flex justify-between text-sm">
+                <span>Total Split Amount:</span>
+                <span className="font-semibold">
+                  ₹
+                  {Math.round(
+                    splitPaymentDetails.reduce((sum, d) => sum + d.amount, 0) * 100
+                  ) / 100}
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Final Amount:</span>
+                <span className="font-semibold">
+                  ₹{Math.round((finalTotalAppointmentAmountAfterTaxDiscount + finalTotalProductSellAmountAfterDiscountTax) * 100) / 100}
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Remaining Amount:</span>
+                <span className="font-semibold">
+                  ₹
+                  {Math.round((
+                    Math.round((finalTotalAppointmentAmountAfterTaxDiscount + finalTotalProductSellAmountAfterDiscountTax) * 100) / 100 -
+                    splitPaymentDetails.reduce(
+                      (sum, d) => sum + d.amount,
+                      0
+                    )
+                  ) * 100) / 100}
+                </span>
+              </div>
+
+              {/* Wallet balance info */}
+              {isWalletApplied && selectedWallet && (
+                <div className="flex justify-between text-sm mt-1">
+                  <span>Wallet Balance:</span>
+                  <span className="font-semibold text-green-600">
+                    ₹
+                    {Math.round(
+                      (wallets.find((w) => w.id === selectedWallet)
+                        ?.remaining_price_benefits || 0) * 100
+                    ) / 100}
+                  </span>
+                </div>
+              )}
+
+              {splitPaymentDetails.reduce(
+                (sum, d) => sum + d.amount,
+                0
+              ) > Math.round((finalTotalAppointmentAmountAfterTaxDiscount + finalTotalProductSellAmountAfterDiscountTax) * 100) / 100 && (
+                <Alert severity="error" className="mt-1">
+                  Total split amount exceeds final amount! Please adjust
+                  the amounts.
+                </Alert>
+              )}
+
+              {splitPaymentDetails.reduce(
+                (sum, d) => sum + d.amount,
+                0
+              ) < Math.round((finalTotalAppointmentAmountAfterTaxDiscount + finalTotalProductSellAmountAfterDiscountTax) * 100) / 100 && (
+                <Alert severity="info" className="mt-1">
+                  Amount not fully allocated. Remaining amount will be
+                  added to due.
+                </Alert>
+              )}
+
+              {Math.abs(
+                splitPaymentDetails.reduce(
+                  (sum, d) => sum + d.amount,
+                  0
+                ) - Math.round((finalTotalAppointmentAmountAfterTaxDiscount + finalTotalProductSellAmountAfterDiscountTax) * 100) / 100
+              ) < 0.01 && (
+                <Alert severity="success" className="mt-1">
+                  Amount fully allocated!
+                </Alert>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Quick Action Buttons with wallet consideration */}
+        {splitPaymentDetails.length > 1 && (
+          <div className="mt-3 flex gap-2">
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={() => {
+                // Equal distribution considering wallet limits
+                const totalAmount = Math.round((finalTotalAppointmentAmountAfterTaxDiscount + finalTotalProductSellAmountAfterDiscountTax) * 100) / 100;
+                const equalAmount =
+                  totalAmount / splitPaymentDetails.length;
+                const updatedDetails = splitPaymentDetails.map(
+                  (detail) => {
+                    if (detail.mode === "wallet") {
+                      const walletBalance =
+                        wallets.find((w) => w.id === selectedWallet)
+                          ?.remaining_price_benefits || 0;
+                      return {
+                        ...detail,
+                        amount: Math.round(
+                          Math.min(equalAmount, walletBalance) * 100
+                        ) / 100,
+                      };
+                    }
+                    return {
+                      ...detail,
+                      amount: Math.round(equalAmount * 100) / 100,
+                    };
+                  }
+                );
+
+                // Adjust for rounding errors and wallet limits
+                const totalDistributed = updatedDetails.reduce(
+                  (sum, d) => sum + d.amount,
+                  0
+                );
+                if (totalDistributed < totalAmount) {
+                  // Distribute remaining to non-wallet modes
+                  const remaining = totalAmount - totalDistributed;
+                  const nonWalletModes = updatedDetails.filter(
+                    (d) => d.mode !== "wallet"
+                  );
+                  if (nonWalletModes.length > 0) {
+                    const perMode = remaining / nonWalletModes.length;
+                    nonWalletModes.forEach((_, idx) => {
+                      const detailIndex = updatedDetails.findIndex(
+                        (d) => d.mode !== "wallet"
+                      );
+                      if (detailIndex !== -1) {
+                        updatedDetails[detailIndex].amount = Math.round(
+                          (
+                            updatedDetails[detailIndex].amount + perMode
+                          ) * 100
+                        ) / 100;
+                      }
+                    });
+                  }
+                }
+
+                setSplitPaymentDetails(updatedDetails);
+                const finalTotal = updatedDetails.reduce(
+                  (sum, d) => sum + d.amount,
+                  0
+                );
+                setAmountPaid(Math.round(finalTotal * 100) / 100);
+                setPaymentStatus(
+                  finalTotal >= totalAmount ? "paid" : "partial"
+                );
+              }}
+            >
+              Distribute Equally
+            </Button>
+
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={() => {
+                // Use maximum available from wallet first
+                if (isWalletApplied && selectedWallet) {
+                  const walletBalance =
+                    wallets.find((w) => w.id === selectedWallet)
+                      ?.remaining_price_benefits || 0;
+                  const totalAmount =
+                    Math.round((finalTotalAppointmentAmountAfterTaxDiscount + finalTotalProductSellAmountAfterDiscountTax) * 100) / 100;
+                  const walletAmount = Math.min(
+                    walletBalance,
+                    totalAmount
+                  );
+
+                  const updatedDetails = splitPaymentDetails.map(
+                    (detail) => ({
+                      ...detail,
+                      amount:
+                        detail.mode === "wallet" ? Math.round(walletAmount * 100) / 100 : 0,
+                    })
+                  );
+
+                  setSplitPaymentDetails(updatedDetails);
+                  setAmountPaid(Math.round(walletAmount * 100) / 100);
+                  setPaymentStatus(
+                    walletAmount >= totalAmount ? "paid" : "partial"
+                  );
+                } else {
+                  // Clear all amounts
+                  const updatedDetails = splitPaymentDetails.map(
+                    (detail) => ({
+                      ...detail,
+                      amount: 0,
+                    })
+                  );
+                  setSplitPaymentDetails(updatedDetails);
+                  setAmountPaid(0);
+                  setPaymentStatus("unpaid");
+                }
+              }}
+            >
+              {isWalletApplied ? "Use Max Wallet" : "Clear All"}
+            </Button>
+          </div>
+        )}
+      </div>
+    )}
+
+    {/* Wallet information alert */}
+    {isWalletApplied && selectedWallet && (
+      <div className="w-full col-span-2">
+        <Alert
+          severity={
+            wallets.find((w) => w.id === selectedWallet)
+              ?.remaining_price_benefits === 0
+              ? "error"
+              : "info"
+          }
+          className="mt-2"
+        >
+          {wallets.find((w) => w.id === selectedWallet)
+            ?.remaining_price_benefits === 0
+            ? "Your wallet balance is 0 rupees. Please recharge your wallet to make payment."
+            : `Available wallet balance: ₹${Math.round(
+                (wallets.find((w) => w.id === selectedWallet)
+                  ?.remaining_price_benefits || 0) * 100
+              ) / 100}. ${
+                splitPaymentMode
+                  ? `Wallet will be used for partial payment as configured above.`
+                  : `You can use split payment to use wallet partially with other methods.`
+              }`}
+        </Alert>
+      </div>
+    )}
+  </>
+)}

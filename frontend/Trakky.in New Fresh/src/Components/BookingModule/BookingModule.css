@@ -1,0 +1,485 @@
+/* Base styles (mobile-first approach) */
+*{
+  z-index: 999 !important;
+}
+.booking-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.booking-sidebar::-webkit-scrollbar-track {
+  background: #f9fafb;
+  border-radius: 10px;
+}
+
+.booking-sidebar::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 10px;
+}
+
+.booking-sidebar::-webkit-scrollbar-thumb:hover {
+  background: #c4b5fd;
+}
+
+.gradient-text {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, #8b5cf6, #6d28d9);
+}
+
+.service-card {
+  transition: all 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover:after {
+  height: 100%;
+}
+
+.btn-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-loading:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.slide-in {
+  animation: slideIn 0.5s ease-in-out;
+}
+
+.service-card {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.time-btn {
+  transition: all 0.2s ease;
+}
+
+.time-btn.selected {
+  transform: scale(1.05);
+}
+
+.empty-cart-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(124, 58, 237, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0); }
+}
+
+.pulse-button {
+  animation: pulse 2s infinite;
+}
+
+.coupon-field:focus {
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+}
+
+/* Mobile styles (up to 640px) */
+@media (max-width: 640px) {
+  .booking-sidebar {
+    width: 100%;
+    max-width: none;
+    border-radius: 0;
+  }
+  
+  .booking-summary-container {
+    padding: 12px;
+  }
+  
+  .service-item {
+    flex-direction: column;
+  }
+  
+  .service-image {
+    width: 100%;
+    height: 120px;
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
+  
+  .time-slots-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .time-slot-btn {
+    padding: 8px 4px;
+    font-size: 14px;
+  }
+  
+  .booking-type-btn {
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  .coupon-modal-content {
+    max-height: 90vh;
+    padding: 16px;
+  }
+  
+  .booking-type-selector {
+    margin-bottom: 12px;
+  }
+  
+  .instant-booking-time {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
+
+/* Tablet styles (641px to 768px) */
+@media (min-width: 641px) and (max-width: 768px) {
+  .time-slots-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .time-slot-btn {
+    padding: 8px 12px;
+    font-size: 15px;
+  }
+  
+  .booking-type-btn {
+    padding: 12px;
+    font-size: 15px;
+  }
+  
+  .service-image {
+    width: 120px;
+    height: 120px;
+    margin-right: 16px;
+    margin-bottom: 0;
+  }
+}
+
+/* Small desktop styles (769px to 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .booking-sidebar {
+    width: 350px;
+  }
+  
+  .time-slots-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  
+  .service-item {
+    flex-direction: row;
+  }
+  
+  .service-image {
+    width: 140px;
+    height: 140px;
+  }
+}
+
+/* Large desktop styles (1025px to 1080px) */
+@media (min-width: 1025px) and (max-width: 1080px) {
+  .booking-sidebar {
+    width: 380px;
+  }
+  
+  .time-slots-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  
+  .service-image {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+/* Above 1080px styles */
+@media (min-width: 1081px) {
+  .booking-sidebar {
+    width: 400px;
+  }
+  
+  .time-slots-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  
+  .time-slot-btn {
+    padding: 10px 16px;
+    font-size: 16px;
+  }
+  
+  .booking-type-btn {
+    padding: 14px;
+    font-size: 16px;
+  }
+}
+
+/* Common responsive components */
+.booking-type-selector {
+  display: flex;
+  border-radius: 12px;
+  overflow: hidden;
+  /* margin-bottom: 16px; */
+  border: 1px solid #e5e7eb;
+  /* justify-content: center;
+  align-items: center; */
+  /* background: linear-gradient(to right, #9E70FF , #512DC8); */
+}
+
+.booking-type-btn {
+  flex: 1;
+  padding: 12px;
+  text-align: center;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(to right, #9E70FF , #512DC8);
+  color: #6b7280;
+  border: none;
+}
+
+/* .booking-type-btn.active {
+  background: linear-gradient(to right, #9E70FF , #512DC8);
+  color: white;
+} */
+
+.booking-type-btn:first-child {
+  border-right: 1px solid #e5e7eb;
+}
+
+.instant-booking-time {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.instant-booking-time svg {
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.coupon-section {
+  margin: 16px 0;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.coupon-input-container {
+  display: flex;
+  margin-top: 8px;
+}
+
+.coupon-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px 0 0 8px;
+  outline: none;
+  width:34vh;
+}
+
+.coupon-input:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+}
+
+.apply-coupon-btn {
+  padding: 10px 16px;
+  background: #7c3aed;
+  color: white;
+  border: none;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.apply-coupon-btn:hover {
+  background: #6d28d9;
+}
+
+.coupon-applied {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.coupon-applied-text {
+  font-weight: 500;
+}
+
+.coupon-saved {
+  font-weight: bold;
+  color: #166534;
+}
+
+.coupon-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.coupon-modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 20px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.coupon-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.coupon-item:hover {
+  border-color: #8b5cf6;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.1);
+}
+
+.coupon-code {
+  font-weight: bold;
+  color: #7c3aed;
+  margin-bottom: 8px;
+}
+
+.coupon-desc {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.coupon-validity {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.time-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.time-slot-btn {
+  padding: 8px 12px;
+  border: 1px solid #7426bc;
+  border-radius: 9999px;
+  text-align: center;
+  transition: all 0.2s;
+  font-size: 14px;
+  white-space: nowrap;
+  background: white;
+}
+
+/* .time-slot-btn:hover {
+  border-color: #7c3aed;
+} */
+
+.time-slot-btn.selected {
+  background: #7c3aed;
+  color: white;
+  border-color: #7c3aed;
+}
+
+.time-slot-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}

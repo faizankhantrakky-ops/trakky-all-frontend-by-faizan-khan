@@ -1,0 +1,60 @@
+.contactus_title_main{
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+  align-items: center;
+  width: 100%;
+  height: 60vh;
+  position: relative;
+  font-weight: 700;
+  color: white;
+  text-align: center; /* Center text */
+  padding: 50px 20px;
+  overflow: hidden;
+  font-family: 'Julius Sans One';
+  width: 100%;
+  background-repeat: no-repeat;
+  background-image: url('../../Assets/images/contactus/300prof.png');
+}
+
+.contactus_title_main::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); 
+  z-index: 1;
+}
+
+.contactus_title_hero_section {
+  position: relative;
+  z-index: 3;
+  max-width: 800px;
+  padding: 20px;
+  text-align: center;
+}
+.contactus_title_title
+{
+  font-size: 3rem; 
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    .contactus_title_main{
+      background-image: url('../../Assets/images/contactus/1024img.png');
+    }
+  }
+  @media screen and (min-width: 500px) and (max-width: 768px) {
+    .contactus_title_main{
+      background-image: url(../../Assets/images/contactus/768.png);
+    }
+}
+@media screen and (max-width: 500px){
+    .contactus_title_main{
+        background-image: url('../../Assets/images/contactus/500.png');
+    }
+}

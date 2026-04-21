@@ -1,0 +1,375 @@
+/* SalonCard css starts */
+.salon_card {
+    position: relative;
+    width: 100%;
+    height: 14rem;
+    display: flex;
+    color: #6B7280;
+    margin: 1rem 0;
+    border: 2px solid #DFDFDF;
+    border-radius: 15px;
+}
+
+.salon_information__container {
+    width: 65%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    padding: 1rem 2rem 1rem 1rem;
+}
+.row1,
+.row2,
+.row3 {
+    display: flex;
+    justify-content: space-between;
+}
+
+.row3 {
+    align-items: flex-end;
+}
+.salon_name {
+    justify-self: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    row-gap: 3px;
+    width: 90%;
+}
+.salon_name h2 a {
+    color: #374151;
+}
+
+.salon_name h2:first-child{
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.salon_icon__box {
+    justify-self: start;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    /* width: 100%; */
+    min-height: 2rem;
+}
+.salon_icon__box img {
+    width: 100%;
+    max-width: 12rem;
+    min-height: 2rem;
+    max-height: 2rem;
+    padding-inline: 8px;
+}
+
+.salon_rating__box {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 40%;
+    line-height: 25px;
+}
+.salon_rating__box img {
+    width: 1rem;
+}
+
+.salon_contact__container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    padding: 1rem;
+}
+.salon_contact__container img {
+    width: 1.5rem;
+}
+
+.salon_offer_tag__box {
+    display: flex;
+    width: 10%;
+    justify-content: flex-end;
+    align-items: center;
+}
+.salon_offer_tag__box img {
+    width: 1.5rem;
+}
+
+.salon_contact__box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+    row-gap: 2rem;
+}
+
+.time_tag {
+    background-color: #eeeeee;
+    padding: 2px 0.7rem;
+    border-radius: 5px;
+    /* margin: 0.7rem 0; */
+}
+
+.salon_price_tag {
+    display: flex;
+    align-items: center;
+    width: 50%;
+    justify-content: flex-end;
+}
+.salon_price_tag img {
+    width: 1.5rem;
+}
+
+.salon_booking_buttons {
+    align-items: center;
+    display: flex;
+    column-gap: 1rem;
+    width: 60%;
+    justify-content: flex-end;
+}
+.salon_booking_buttons a {
+    color: white;
+    background-color: #2D3134;
+    padding: 0.4rem 0.6rem;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.view_more__button {
+    width: 100%;
+    text-align: center;
+    margin-top: 3rem;
+}
+.view_more__button button {
+    background-color: transparent;
+    padding: 0.5rem 2rem;
+    color: #000;
+    font-size: larger;
+    border: 1px solid #000;
+    border-radius: 46px;
+}
+
+@media screen and (max-width: 850px) {
+    .salon_card {
+        font-size: smaller;
+    }
+}
+
+@media screen and (max-width: 1150px) {
+    .salon_information__container {
+        padding: 0 1rem 0 1rem;
+    }
+    .row3 {
+        align-items:normal;
+    }
+    .salon_booking_buttons a{
+        font-size: 14px;
+    }
+    .salon_icon__box img{
+        max-height: 2rem;
+        padding-inline: 5px;
+    }
+}
+
+/* SalonCard css ends  */
+
+/* Mini salon card starts */
+.mini_salon_card {
+    position: relative;
+    width: 96%;
+    margin: 3rem 2%;
+    border: 2px solid #DFDFDF;
+    border-radius: 12px;
+    font-size: 10px;
+}
+
+.main_mini_salon__container {
+    display: flex;
+    max-height: 10rem;
+}
+
+.image__container {
+    width: 40%;
+    /* height: 13rem; */
+    text-align: center;
+    position: relative;
+}
+.image__container img {
+    width: 100%;
+    border-radius: 15px;
+    height: 100%;
+    object-fit: cover;
+}
+.mini_salon_image__container {
+    width: 50%;
+    min-height: 8rem;
+    text-align: center;
+    position: relative;
+    /* max-height: 133px; */
+    /* min-height: 133px; */
+}
+.mini_salon_image__container img {
+    width: 98%;
+    border-radius: 12px;
+    height: 98%;
+    margin: 1%;
+    /* TODO  Card is not perfect*/
+    overflow: hidden;
+    object-fit: cover;
+    aspect-ratio: 1;
+}
+.salon_offer_tag {
+    color: #FFF;
+    background-color: #562DA6;
+    padding: 5px 1em;
+    width: 100%;
+    font-weight: 200;
+    border-radius: 20px;
+    text-align: center;
+    position: absolute;
+    text-transform: uppercase;
+    bottom: 0;
+    font-size: smaller;
+}
+.salon_tag {
+    position: absolute;
+    color: #FFF;
+    background-color: #023760;
+    padding: 0.2rem;
+    width: fit-content;
+    font-weight: 200;
+    border-radius: 2px;
+    text-align: center;
+    top: 12px;
+    left: 12px;
+    font-size: smaller;
+}
+.mini_salon_information__container {
+    width: 60%;
+    padding: 5px 5px 5px 1rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, auto);
+    row-gap: 0.3rem;
+}
+
+.mini_salon_rating__box {
+    width: 100%;
+} 
+.mini_salon_price__box {
+    display: flex;
+
+}
+.mini_salon_price_tag {
+    width: 80%;
+}
+.mini_salon_price_tag img,
+.mini_salon_price_tag p {
+    display: inline-block;
+}
+.mini_salon_price_tag img {
+    width: 1rem;
+}
+
+.salon_like__box {
+    width: 20%;
+    text-align: end;
+    /* right: 5px; */
+    bottom: 15px;
+    display: flex;
+    align-items: flex-end;
+    position: relative;
+
+}
+.salon_like__box img {
+    width: 1.2rem;
+}
+
+.mini_salon_buttons {
+    width: 100%;
+    text-align: center;
+    background-color: #F8F8F8;
+    display: flex;
+    border-radius: 0 0 12px 12px;
+}
+.mini_salon_buttons a {
+    color: #2D3134;
+    font-size: larger;
+    font-weight: 600;
+}
+.mini_salon_buttons div {
+    width: 50%;
+    text-align: center;
+    line-height: 2rem;
+}
+
+@media screen and (min-width: 430px) {
+    .mini_salon_card {
+        font-size: 12px;
+        /* max-height: 176px; */
+    }
+}
+
+@media screen and (max-width: 530px) {
+    .mini_salon_card {
+        margin: 1rem 2%;
+        width: 96%;
+    }
+}
+
+@media screen and (min-width: 530px) {
+    .mini_salon_card {
+        margin: 2rem 3%;
+        width: 94%;
+        max-height: 176px;
+    }
+    .mini_salon_card {
+        font-size: 12px;
+    }
+}
+/* Mini salon card css ends  */
+
+
+/* prmium div animation */
+.premium_div_anim
+ {
+  
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    overflow: hidden;
+    background-color: rgb(45, 49, 52);
+    padding: auto;
+    z-index: 20;
+
+    width: 64px;
+   text-align: center;/* Add padding to adjust the size of the box */
+    border-radius: 5px; /* Add border radius for rounded corners */
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        transform: translateX(-100%);
+        background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+);
+        animation: shimmer 2s infinite;
+    }
+}
+.premium_text {
+    color: white;
+    font-size: 13px;
+    font-weight: 300;
+    margin: 3px;
+}
+
+@keyframes shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}

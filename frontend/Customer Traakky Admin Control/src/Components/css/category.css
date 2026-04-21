@@ -1,0 +1,26 @@
+.RI-modal-salon-dht{
+    padding-block: 8px;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.RI-modal-salon-table{
+    padding: 4px;
+    padding-left: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.RI-modal-salon-table-td{
+    padding: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+
+

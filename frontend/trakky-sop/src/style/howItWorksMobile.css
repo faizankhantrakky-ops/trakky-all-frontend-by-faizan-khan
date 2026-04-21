@@ -1,0 +1,13 @@
+.swiper-pagination-progressbar {
+    background: #e0e7ff;
+    height: 7px;
+    border-radius: 30px;
+    margin-bottom: 16px;
+}
+
+.swiper-pagination-progressbar-fill {
+    background: linear-gradient(90deg, #6366f1 0%, #818cf8 100%);
+    border-radius: 30px;
+    height: 100%;
+    transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}

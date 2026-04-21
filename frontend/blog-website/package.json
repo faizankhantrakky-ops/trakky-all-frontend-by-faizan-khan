@@ -1,0 +1,29 @@
+{
+  "name": "locofy-react-nextjs-project",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.1.1",
+    "locofy-react-nextjs-project": "file:",
+    "next": "^14.0.4",
+    "next-cloudinary": "^5.18.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.2.1",
+    "remark": "^12.0.1",
+    "remark-html": "^14.0.1",
+    "swiper": "^11.0.6"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.8",
+    "postcss": "^8.4.16",
+    "tailwindcss": "^3.1.8"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  }
+}

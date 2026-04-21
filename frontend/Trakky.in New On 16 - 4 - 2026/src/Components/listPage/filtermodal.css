@@ -1,0 +1,185 @@
+.N-filter-modal-container {
+    position: absolute;
+    background: white;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    bottom: 0;
+    left: 0;
+    width: 100%; 
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    height: 85vh;
+    overflow: scroll;
+}
+
+.N-filter-m-header {
+    display: flex;
+    padding: 10px 20px;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: fit-content;
+    border-bottom: 1px solid #00000010;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    height: 50px;
+    background-color: white;
+}
+.N-filter-m-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #000000;
+}
+.N-filter-m-header img {
+    cursor: pointer;
+    height: 30px;
+    width: 30px;
+    border: 1px solid #00000010;
+    padding: 5px;
+    border-radius: 50%;
+}
+.N-filter-option-n-value {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    height: calc(85vh - 140px);
+    overflow: scroll;
+}
+.N-filter-option-cat {
+    width: auto;
+    /* height: calc(85vh - 140px); */
+    height: 100%;
+    border-right: 1px solid #00000010;
+    max-width: 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    /* max-height: calc(85vh - 140px); */
+    overflow: scroll;
+    position: sticky;
+    top: 0;
+}
+
+.N-filter-option-cat-item {
+    padding-block: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 15px;
+    display: flex;
+    height: 46px;
+    padding-right: 15px;
+    align-items: center;
+
+}
+
+.N-filter-option-cat-item:first-child {
+    margin-top: 10px;
+}
+
+.N-filter-option-cat-item.active {
+    color: #512DC8;
+}
+
+.N-filter-option-cat-item span:last-child {
+    margin-left: 15px;
+}
+
+.N-filter-active-option {
+    position: absolute;
+    width: 5px;
+    height: 100%;
+    top: 0;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #512DC8;
+}
+
+.N-filter-options {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    flex: 1;
+
+}
+.N-filter-option-item-checkbox ,
+.N-filter-option-item-radio {
+    display: flex;
+    gap: 10px;
+    accent-color: #512DC8;
+    align-items: center;
+}
+
+.N-filter-option-item-checkbox label,
+.N-filter-option-item-radio label {
+    font-size: 15px;
+    font-weight: 400;
+    color: gray;
+}
+.N-filter-option-item-checkbox input,
+.N-filter-option-item-radio input {
+    width: 13px;
+    height: 13px;
+    accent-color: #512DC8;
+}
+.N-filter-reset-submit-btn {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 20px;
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    background-color: white;
+}
+.N-filter-reset-submit-btn .reset{
+    color: #512DC8;
+    font-weight: 500;
+}
+.N-filter-reset-submit-btn .submit{
+    color: white;
+    font-weight: 500;
+    background: linear-gradient(to right , #512DC8, #512DC8);
+    padding: 7px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 140px;
+}
+
+@media screen and (min-width : 768px) {
+    .N-filter-modal-container {
+        width: 600px;
+        left: 50%;
+        height: auto;
+
+        max-height: 70vh;
+        bottom: auto;
+        top: 50%;
+        transform: translate(-50% , -50%);
+        border-radius: 15px;
+    }
+    /* .N-filter-m-header {
+        padding: 15px 20px;
+    } */
+    .N-filter-option-n-value {
+        max-height: 70vh;
+        overflow: hidden;
+    }
+    .N-filter-option-cat {
+        max-width: 160px;
+        width: 160px;
+        overflow: scroll;
+        height: auto;
+        max-height: none;
+        
+    }
+    .N-filter-reset-submit-btn {
+        margin-left: 160px;
+        width: calc(100% - 160px);
+    }
+}

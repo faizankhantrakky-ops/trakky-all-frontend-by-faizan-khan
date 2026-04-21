@@ -1,0 +1,337 @@
+.SP-about-us-container {
+    background-color: white;
+    width: min(300px, 90%);
+    margin: auto;
+    height: auto;
+    padding: 20px 15px;
+    border-radius: 15px;
+    /* margin-top: 45px; */
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    max-height: 90vh;
+    overflow: auto;
+}
+
+.SP-salon-facilities-close {
+    display: flex;
+    gap: 7px;
+}
+
+.SP-salon-faci {
+    width: 100%;
+    flex-grow: 1;
+    flex-shrink: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.SP-salon-close-btn {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: #D9D9D9;
+    font-size: 16px;
+}
+
+.SP-salon-faci-item {
+    display: flex;
+    gap: 15px;
+}
+
+.SP-salon-faci-item span {
+    font-size: 16px;
+    font-weight: 500;
+
+}
+
+.SP-salon-faci-item img {
+    width: 30px;
+    height: 30px;
+}
+
+.SP-salon-about-us-m {
+    padding-top: 17px;
+}
+
+.SP-salon-about-us-m h2 {
+    font-size: 16px;
+    font-weight: 500;
+
+}
+
+.SP-salon-about-us-m p {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgb(100, 100, 100);
+}
+
+
+.TPM-trakky-promises ul {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.TPM-trakky-promises ul li {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgb(100, 100, 100);
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    /* height: 28px; */
+    line-height: 18px;
+    padding-left: 5px;
+}
+
+.TPM-trakky-promises ul li::before {
+    content: '';
+    height: 13px;
+    background: url("./../../../Assets//images/icons//tickmark_svg.svg");
+    width: 20px;
+    background-repeat: no-repeat;
+    display: block;
+}
+
+
+.SPO-M-Modal-main-container,
+.package-Modal-main-container {
+    background-color: white;
+    height: auto;
+    width: 100%;
+    position: absolute;
+    min-height: 265px;
+    bottom: 0;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    max-height: 70vh;
+    padding: 10px 0;
+}
+
+.SPO-M-close-btn .button,
+.package-close-btn .button {
+    background-color: #00000070;
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: -50px;
+    z-index: 13;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    font-weight: 500;
+    box-shadow: 1px 1px 5px #ffffff40;
+
+}
+
+
+.GPM-service-desc-details {
+    padding-inline: 15px;
+    max-height: calc(70vh - 60px);
+    overflow: scroll;
+}
+
+.GPM-service-pac-meta-d {
+    border-bottom: 1px solid #00000020;
+    padding-block: 15px 5px;
+    display: flex;
+    gap: 7px;
+    flex-direction: column;
+}
+
+.GP-package-service-item-list {
+    padding-left: 10px;
+}
+
+.GP-package-service-item-tag {
+    font-size: 16px;
+    font-weight: 500;
+    padding-top: 7px;
+}
+
+
+.SPO-Title-header,
+.GPM-Title-header {
+    font-size: 18px;
+    font-weight: 500;
+    border-bottom: 1px solid #00000020;
+    padding: 5px 15px;
+}
+
+.SPO-SPO-M-meta-info {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-bottom: 1px solid #00000020;
+}
+
+.SPO-Mm-info-offer {
+    padding-block: 5px;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.SPO-Mm-info-offer h4 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #00000090;
+}
+
+.SPO-Mm-info-offer h3 {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+
+.SPO-Mm-btn button,
+.OSM-price-cart button {
+    background: linear-gradient(to right, #9D6FFE, #532FCA);
+    color: white;
+    padding: 7px 10px;
+    border-radius: 7px;
+    font-size: 14px;
+}
+
+.OSM-price-cart button {
+    padding: 10px;
+    min-width: max-content;
+    height: fit-content;
+}
+
+.OSM-price-cart {
+    align-items: center;
+
+    del {
+        color: gray;
+        text-decoration: none;
+        position: relative;
+        margin-inline: 5px;
+
+        &:before {
+            content: " ";
+            display: block;
+            width: 100%;
+            border-top: 2px solid gray;
+            height: 10px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            transform: rotate(-10deg);
+        }
+    }
+}
+
+.SPO-offer-desc {
+    padding: 15px;
+}
+
+.SPO-offer-desc ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.SPO-offer-desc ul li {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgb(100, 100, 100);
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 26px;
+}
+
+.SPO-offer-desc ul li::before {
+    content: '';
+    height: 21px;
+    background: url("./../../../Assets//images//icons/marker_svg.svg");
+    width: 20px;
+    background-repeat: no-repeat;
+    display: block;
+}
+
+
+.SPO-service-desc-details {
+    padding-inline: 15px;
+    max-height: calc(70vh - 60px);
+    overflow: scroll;
+}
+
+.package-Modal-main-container {
+    max-height: 70vh;
+}
+
+
+@media screen and (min-width : 768px) {
+
+    .SPO-M-Modal-main-container,
+    .package-Modal-main-container {
+        max-width: max(550px, 50%);
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .SPO-M-close-btn .button,
+    .package-close-btn .button {
+        left: auto;
+        right: 5px;
+    }
+
+    .SPO-M-close-btn .button,
+    .package-close-btn .button {
+        left: auto;
+        right: 5px;
+    }
+}
+
+@media screen and (min-width : 1024px) {
+
+    .SPO-M-Modal-main-container,
+    .package-Modal-main-container {
+        max-width: 600px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .SPO-M-Modal-main-container {
+        height: auto;
+        min-height: 265px;
+        bottom: auto;
+        top: 50%;
+        border-radius: 15px;
+        max-height: 70vh;
+        padding: 10px 0;
+        transform: translate(-50%, -50%);
+    }
+
+
+.SPO-M-close-btn .button,
+.package-close-btn .button {
+    left: auto;
+    transform: none;
+    right: 10px;
+    background: white;
+    color: black;
+}
+
+
+
+}

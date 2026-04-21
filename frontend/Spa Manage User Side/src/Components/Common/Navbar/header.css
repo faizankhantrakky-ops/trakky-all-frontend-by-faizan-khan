@@ -1,0 +1,339 @@
+.N-header-container {
+    background: transparent;
+    width: 100%;
+    padding: 15px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.N-header-logo-links {
+    width: 100%;
+    height: auto;
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.N-header-search-bar {
+    width: 100%;
+    height: 50px;
+}
+
+.N-header-logo-area {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.N-header-logo-area img {
+    width: 100px;
+    height: 30px;
+    object-fit: contain;
+}
+
+.N-header-area-city {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+}
+
+.N-header-area-city .area {
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.N-header-area-city .area::after {
+    content: ",";
+    font-weight: 600;
+}
+
+.N-header-area-city .city {
+    font-weight: 300;
+    font-size: 14px;
+}
+
+.N-header-area-city span:first-child {
+    font-weight: 600;
+}
+
+.N-header-area-city img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.N-profile-book-btn {
+    display: flex;
+    gap: 7px;
+    /* margin-top: 7px; */
+}
+
+.N-header-profile-btn {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background-color: white;
+}
+
+.N-header-profile-btn>div {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.N-header-profile-btn svg {
+    width: 25px;
+    flex-shrink: 0;
+    height: 25px;
+}
+
+.N-header-book-btn {
+    background: white;
+    height: 35px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: 10px;
+    font-size: 19px;
+    font-weight: 800;
+    color: #512DC8;
+    line-height: 19px;
+}
+
+.N-header-book-btn .top {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -40%);
+    top: 0;
+    font-size: 13px;
+    -webkit-text-stroke: .5px white;
+    font-weight: 900;
+    color: #000;
+}
+
+.N-header-search-bar input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    padding: 5px 10px 5px 42px;
+    font-size: 15px;
+    font-weight: 400;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.N-header-search-bar input::placeholder {
+    font-size: 15px;
+    font-weight: 300;
+    width: 100%;
+}
+.N-header-search-bar img {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}
+.PPH-contaienr {
+    display: flex;
+    gap: 10px;
+    padding: 15px 15px;
+    width: 100%;
+    align-items: center;
+}
+
+.PPH-contaienr .trakky-logo {
+    height: 25px;
+    width: auto;
+    flex-grow: 0;
+    align-items: center;
+}
+.PPH-contaienr .trakky-logo img {
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+}
+.PPH-contaienr .back-icon {
+    width: 20px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.PPH-contaienr .profile-page-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: auto;
+
+}
+
+.PPH-contaienr .profile-page-icon svg{
+    width: 28px;
+    height: 28px;
+}
+
+.Header-search-result {
+    position: absolute;
+    background: white;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: scroll;
+    /* border-bottom-left-radius: 10px; */
+    /* border-bottom-right-radius: 10px; */
+    border-radius: 10px;
+    margin-top: 1px;
+    box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    left: 0;
+    top: 100%;
+}
+.Header-search-result-item {
+    height: 85px;
+    width: 100% ;
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    cursor: pointer;
+    max-width: 100%;
+}
+
+.Header-search-result-item:hover ,
+.Header-search-result-item:focus {
+    background: #F0EDFB;
+}
+
+.Header-search-result-item-image {
+    width: 65px;
+    height: 65px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    background-color: rgba(128, 128, 128, 0.211);
+}
+.Header-search-result-item-image img {
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    object-fit: cover;
+
+}
+.Header-search-result-item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    overflow: hidden;
+}
+.Header-search-result-item-name {
+    font-size: 18px;
+    width: 100%;
+    font-weight: 600;
+    color: #000;
+    line-height: 21px;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+.Header-search-result-item-location {
+    line-height: 17px;
+    font-size: 15px;
+    font-weight: 300;
+    color: #000;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.Header-search-result-offer-score {
+    line-height: 17px;
+    font-size: 15px;
+    font-weight: 400;
+    color: #000;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: flex;
+    gap: 5px;
+}
+.Header-search-result-offer-score span:first-child {
+    display: flex;
+    align-items: center;
+    gap: 5px;    
+}
+.Header-search-result-offer-score img {
+    width: 12px;
+    height: 12px;
+    object-fit: contain;
+    /* filter: invert(1); */
+
+}
+
+@media screen and (min-width : 768px) {
+    .N-header-logo-area {
+        flex-direction: row;
+    }
+    .N-header-container {
+        gap: 40px;
+    }
+    .N-header-search-bar {
+        width: max(75%, 600px);
+        margin: auto;
+    }
+    .N-header-search-bar input{
+        padding: 5px 42px 5px 15px;
+    }
+    .N-header-search-bar img {
+        left: auto;
+        right: 13px;
+        
+    }
+    .N-header-container {
+        padding: 20px 40px;
+    }
+    .PPH-contaienr .back-icon {
+        display: none;
+    }
+    .PPH-contaienr {
+        padding: 15px 20px 10px;
+    }
+   
+}
+
+@media screen and (min-width : 1024px)
+{
+ 
+    .PPH-contaienr {
+        padding: 20px 40px 10px;
+        background: #F6F1FF;
+    }
+    .PPH-contaienr .profile-page-icon {
+        background-color: white !important;
+        margin-right: 10px;
+        border-radius: 50%;
+    }
+    .PPH-contaienr .profile-page-icon svg {
+        height: 22px;
+        width: 22px;
+    }
+    
+}

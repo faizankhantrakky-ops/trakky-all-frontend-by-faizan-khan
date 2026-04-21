@@ -1,0 +1,190 @@
+.toggle-buttons {
+  margin: 0;
+  padding: 0;
+  border: 1px solid #d1d5db; /* Light gray for a subtle border */
+  border-radius: 12px; /* Slightly larger border radius for smoother look */
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Soft shadow for better depth */
+}
+
+.toggle-buttons button {
+  width: 50%;
+  height: 42px; /* Slightly increased for better click area */
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-weight: 500; /* Adds some weight to the font */
+  color: #4b5563; /* A darker gray for inactive buttons */
+}
+
+.toggle-buttons .active {
+  background-color: #6B45BC; /* Keeps your active color */
+  color: white;
+  font-weight: 600; /* Slightly bolder to highlight the active state */
+}
+
+.innerBoxCB{
+
+  box-shadow: 0px 0px 10.62px #00000041;
+  border-radius: 26.54px;
+  width: 280px;
+}
+.containerBooking{
+  top: -50px;
+  position: relative;
+  gap: 2px;
+  align-items: center;
+  flex-flow: column;
+  display: flex;
+  /* border: 1px solid rgba(71, 69, 69, 0.51); */
+}
+.bookingIMGCard{
+  width: 90px;
+  height: 88px;
+  border-radius: 10px;
+
+}
+.containerBooking h1{
+  font-size: 18px
+}
+.containerBooking span{
+  color: #858383;
+  font-size: 14px;
+}
+.booking-cards-container{
+  padding: 20px;
+    /* border-radius: 20px;
+    border: 1px solid #dedede; */
+    overflow-y: auto;
+    max-height: 850px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    justify-content: center;
+    align-items: center;
+}
+.outerBoxCB{
+  padding-top: 40px;
+}
+.dottedlineBooking{
+  border-bottom: 3px dotted rgb(125, 121, 121);
+  width: 250px;
+}
+.orderBookingPP{
+  align-items: center;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  padding: 0 10px;
+}
+.orderImagePP{
+  padding-top: 4px;
+  border-radius: 8px;
+    width: 50px;
+}
+.categoryservicePP{
+  padding-left: 15px;
+  display: flex;
+  flex-flow: column;
+}
+.orderIDPP{
+  padding: 0 10px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.btnrescan{
+  position: relative;
+  top: 20px;
+  padding-top: 4px;
+  gap: 5px;
+  display: flex;
+}
+.btnrescan div{
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  padding: 5px 0;
+  width: 100px;
+}
+.ReschedulePP{
+  color: white;
+  background-image: linear-gradient(to right, #9D6FFE, #5430CA);
+  border-top-left-radius:10px ;
+  border-bottom-left-radius:10px;
+}
+.CancelPP{
+  color:#FF0000;
+  background-color: #FFBCBC;
+  border-top-right-radius:10px ;
+  border-bottom-right-radius:10px;
+}
+.HistCardPP{
+  gap: 15px;
+  display: flex;
+}
+.SalonNameHist{
+  font-size: 18px;
+  font-weight: bold;
+}
+.salondetailHist{
+  gap: 15px;
+  display: flex;
+  flex-flow: column;
+}
+.SalonPackageHist{
+  color: #827b7b;
+}
+.HLHist{
+  height: 0.2px;
+  width: 100%;
+  background-color: black;
+}
+.OuterBoxHist{
+  padding: 20px;
+    border-radius: 20px;
+    border: 1px solid #dedede;
+  gap: 5px;
+  display: flex;
+  flex-flow: column;
+}
+@media screen and (max-width: 499px) {
+  .HistCardPP img{
+    width: 100px;
+    height: 130px ;
+  }
+  .Histamtpaid{
+ 
+    font-size: 10px !important;
+  }
+  .SalonNameHist{
+    font-size: 16px;
+  }
+  .SalonPackageHist{
+    font-size: 14px;
+  }
+  .salondetailHist{
+    gap: 8px;
+  } 
+  .OuterBoxHist {
+    padding: 20px 10px;
+    width: 300px;
+  }
+  .edit-Profile-container{
+    justify-content: center;
+  }
+  .AddressHist{
+    width: min-content;
+  }
+  .appreciateHist{
+    font-size: 14px;
+  }
+  .booking-cards-container{
+    gap: 30px;
+  }
+}

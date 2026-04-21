@@ -1,0 +1,2605 @@
+import React, { useState, useEffect, useContext } from "react";
+import {
+  Add as AddIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Warning as WarningIcon,
+  CalendarMonth,
+  FilterList,
+  Close,
+  Message,
+  // Visibility as ViewIcon,
+  Search as SearchIcon,
+  Refresh as RefreshIcon,
+  WhatsApp,
+  Visibility as ViewIcon,
+  TrendingUp,
+  BusinessCenter,
+  LocationOn,
+  Schedule,
+  Analytics,
+  CheckBoxOutlineBlank,
+  CheckBox,
+  PlaylistAddCheck,
+  Person,
+  Phone,
+  Event,
+  Category,
+  Cancel,
+  Note,
+  History,
+  Send,
+} from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  FormControl,
+  Grid,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  TextField,
+  Typography,
+  Tooltip,
+  Avatar,
+  LinearProgress,
+  Alert,
+  Checkbox,
+  Badge,
+  Popover,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  styled,
+  alpha,
+  ToggleButton,
+  ToggleButtonGroup,
+} from "@mui/material";
+import AuthContext from "../Context/AuthContext";
+import toast, { Toaster } from "react-hot-toast";
+import DateRange from "./DateRange/CustomDateRange";
+import { formatDate } from "./DateRange/formatDate";
+import GeneralModal from "./generalModal/GeneralModal";
+import ConvertedLeadForm from "./Forms/ConvertedLeadForm";
+import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
+
+// Styled Components (same as CollaboratedSalons)
+const StyledContainer = styled(Container)(({ theme }) => ({
+  paddingTop: theme.spacing(3),
+  paddingBottom: theme.spacing(3),
+  minHeight: "100vh",
+  backgroundColor: "#f8fafc",
+}));
+
+const HeaderCard = styled(Card)(({ theme }) => ({
+  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+  color: "white",
+  marginBottom: theme.spacing(3),
+  borderRadius: "16px",
+  boxShadow: "0 8px 32px rgba(102, 126, 234, 0.3)",
+}));
+
+const StatsCard = styled(Card)(({ theme }) => ({
+  height: "100%",
+  borderRadius: "12px",
+  transition: "all 0.3s ease-in-out",
+  "&:hover": {
+    transform: "translateY(-4px)",
+    boxShadow: "0 12px 40px rgba(0,0,0,0.1)",
+  },
+}));
+
+const FilterCard = styled(Card)(({ theme }) => ({
+  marginBottom: theme.spacing(3),
+  borderRadius: "12px",
+  boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+}));
+
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+  borderRadius: "12px",
+  boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+  "& .MuiTable-root": {
+    minWidth: 1200,
+  },
+}));
+
+const StyledTableHead = styled(TableHead)(({ theme }) => ({
+  "& .MuiTableCell-head": {
+    background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
+    fontWeight: 600,
+    fontSize: "0.875rem",
+    color: "#475569",
+    borderBottom: "2px solid #e2e8f0",
+    textTransform: "uppercase",
+    letterSpacing: "0.05em",
+  },
+}));
+
+const StatusChip = styled(Chip)(({ theme, status }) => {
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "cancelled":
+        return { bg: "#fee2e2", color: "#dc2626", border: "#fecaca" };
+      case "pending":
+        return { bg: "#fef3c7", color: "#d97706", border: "#fde68a" };
+      default:
+        return { bg: "#dcfce7", color: "#16a34a", border: "#bbf7d0" };
+    }
+  };
+
+  const colors = getStatusColor(status);
+  return {
+    backgroundColor: colors.bg,
+    color: colors.color,
+    border: `1px solid ${colors.border}`,
+    fontWeight: 600,
+    fontSize: "0.75rem",
+    "&:hover": {
+      backgroundColor: colors.bg,
+    },
+  };
+});
+
+const SourceChip = styled(Chip)(({ theme, source }) => {
+  const getSourceColor = (source) => {
+    switch (source) {
+      case "ads":
+        return { bg: "#dbeafe", color: "#1d4ed8", border: "#bfdbfe" };
+      case "whatsapp":
+        return { bg: "#dcfce7", color: "#166534", border: "#bbf7d0" };
+      case "website":
+        return { bg: "#f0fdf4", color: "#15803d", border: "#dcfce7" };
+      case "retargeting":
+        return { bg: "#fef3c7", color: "#92400e", border: "#fde68a" };
+      default:
+        return { bg: "#e2e8f0", color: "#475569", border: "#cbd5e1" };
+    }
+  };
+
+  const colors = getSourceColor(source);
+  return {
+    backgroundColor: colors.bg,
+    color: colors.color,
+    border: `1px solid ${colors.border}`,
+    fontWeight: 500,
+    fontSize: "0.75rem",
+    textTransform: "capitalize",
+    "&:hover": {
+      backgroundColor: colors.bg,
+    },
+  };
+});
+
+const ActionButton = styled(IconButton)(({ theme, variant = "default" }) => {
+  const getVariantStyles = (variant) => {
+    switch (variant) {
+      case "edit":
+        return {
+          color: "#0ea5e9",
+          "&:hover": { backgroundColor: alpha("#0ea5e9", 0.1) },
+        };
+      case "delete":
+        return {
+          color: "#ef4444",
+          "&:hover": { backgroundColor: alpha("#ef4444", 0.1) },
+        };
+      case "alert":
+        return {
+          color: "#f59e0b",
+          "&:hover": { backgroundColor: alpha("#f59e0b", 0.1) },
+        };
+      default:
+        return {
+          color: "#6b7280",
+          "&:hover": { backgroundColor: alpha("#6b7280", 0.1) },
+        };
+    }
+  };
+
+  return {
+    ...getVariantStyles(variant),
+    transition: "all 0.2s ease-in-out",
+    "&:hover": {
+      ...getVariantStyles(variant)["&:hover"],
+      transform: "scale(1.1)",
+    },
+  };
+});
+
+const BulkMessageModal = ({
+  open,
+  onClose,
+  phoneNumbers,
+  salonName = "our salon",
+  salonCity = "your city",
+  salonArea = "your area",
+}) => {
+  const [selectedMessageType, setSelectedMessageType] = useState(null);
+  const [editedMessage, setEditedMessage] = useState("");
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [messageHistory, setMessageHistory] = useState([]);
+  const [showHistoryDropdown, setShowHistoryDropdown] = useState(false);
+
+  const toggleMessageType = (type) => {
+    if (selectedMessageType === type) {
+      setSelectedMessageType(null);
+      setEditedMessage("");
+    } else {
+      setSelectedMessageType(type);
+      setEditedMessage(predefinedMessages[type].message);
+    }
+  };
+
+  const toggleHistoryDropdown = () => {
+    setShowHistoryDropdown(!showHistoryDropdown);
+  };
+
+  const closeAll = () => {
+    setSelectedMessageType(null);
+    setShowHistoryDropdown(false);
+    setEditedMessage("");
+  };
+
+  // Predefined messages
+  const predefinedMessages = {
+    feedback: {
+      title: "Feedback Request",
+      message: `Hi there! 👋 We hope you enjoyed your recent visit to ${salonName}. Could you spare a moment to share your feedback? Your opinion helps us serve you better! 💖\n\nPlease rate your experience from 1-5 stars. ⭐⭐⭐⭐⭐\n\nThank you! 😊`,
+    },
+    offer: {
+      title: "Exclusive Offer",
+      message: `🌟 Exclusive Offer Just For You! 🌟\n\nEnjoy 20% OFF on your next visit to ${salonName}! 💇‍♀️💅\n\nUse code: GLOW20\n\nBook now: https://trakky.in/ahmedabad/offerpage\n\nPamper yourself with our premium services! 💖\n\nOffer valid until ${new Date(
+        Date.now() + 7 * 24 * 60 * 60 * 1000
+      ).toLocaleDateString()}.`,
+    },
+    retargeting: {
+      title: "We Miss You!",
+      message: `Hello valued customer! 💕 It's been a while since we've seen you at ${salonName}. We've got some exciting new services you'll love! ✨\n\nHow about treating yourself to a refreshing makeover this week? Book now and get 15% OFF as our welcome back gift! 🎁\n\nSpecial offers: https://trakky.in/ahmedabad/offerpage\n\nWe can't wait to serve you again! 😊`,
+    },
+    reschedule: {
+      title: "Reschedule Reminder",
+      message: `Hi there! 👋 We noticed you have an upcoming appointment with ${salonName}. Need to reschedule? No problem!\n\nWe're happy to find a time that works better for you. Please let us know your preferred date/time. 📅\n\nLooking forward to serving you! 💖`,
+    },
+    reminder: {
+      title: "Appointment Reminder",
+      message: `💅✨ Reminder: Your appointment at ${salonName} (${salonCity}, ${salonArea}) is coming up!\n\n📅 Date: soon\n\nPlease arrive 10 minutes early to enjoy:\n• Complimentary beverage ☕\n• Relaxing welcome massage 💆‍♀️\n• Special consultation with our stylist 💫\n\nSee you soon! Can't wait to make you look fabulous! 😊`,
+    },
+  };
+
+  const handleSendMessage = () => {
+    setShowConfirmation(true);
+  };
+
+  const confirmSendMessage = () => {
+    // Add to message history
+    setMessageHistory((prev) => [
+      {
+        type: selectedMessageType,
+        message: editedMessage,
+        timestamp: new Date().toISOString(),
+      },
+      ...prev,
+    ]);
+
+    // Send to all phone numbers
+    phoneNumbers.forEach((phoneNumber) => {
+      const encodedMessage = encodeURIComponent(editedMessage);
+      window.open(
+        `https://wa.me/${phoneNumber}?text=${encodedMessage}`,
+        "_blank"
+      );
+    });
+
+    setShowConfirmation(false);
+    onClose();
+    toast.success(`Message sent to ${phoneNumbers.length} customers`);
+  };
+
+  const selectFromHistory = (historyItem) => {
+    setEditedMessage(historyItem.message);
+    setSelectedMessageType(historyItem.type);
+    setShowHistoryDropdown(false);
+  };
+
+  const filteredHistory = selectedMessageType
+    ? messageHistory.filter((item) => item.type === selectedMessageType)
+    : [];
+
+  return (
+    <Dialog
+      open={open}
+      onClose={() => {
+        onClose();
+        closeAll();
+      }}
+      maxWidth="lg"
+      fullWidth
+    >
+      <DialogTitle>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box>
+            <Typography variant="h6">
+              Bulk Message to {phoneNumbers.length} Customers
+            </Typography>
+            <Typography variant="subtitle1" color="textSecondary">
+              This message will be sent to all selected customers via WhatsApp
+            </Typography>
+          </Box>
+          <IconButton
+            onClick={() => {
+              onClose();
+              closeAll();
+            }}
+          >
+            <Close />
+          </IconButton>
+        </Box>
+      </DialogTitle>
+
+      <DialogContent>
+        {/* Message Type Selection */}
+        <Box mb={3}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="subtitle2" gutterBottom>
+              Select Message Type:
+            </Typography>
+            {selectedMessageType && (
+              <Button
+                size="small"
+                onClick={closeAll}
+                startIcon={<Close fontSize="small" />}
+              >
+                Close All
+              </Button>
+            )}
+          </Box>
+          <Stack direction="row" spacing={2} sx={{ overflowX: "auto", py: 1 }}>
+            {Object.entries(predefinedMessages).map(([key, value]) => (
+              <Button
+                key={key}
+                variant={selectedMessageType === key ? "contained" : "outlined"}
+                startIcon={<WhatsApp />}
+                onClick={() => toggleMessageType(key)}
+                sx={{
+                  textTransform: "capitalize",
+                  minWidth: "max-content",
+                  backgroundColor:
+                    selectedMessageType === key ? "#25D366" : "transparent",
+                  color: selectedMessageType === key ? "#fff" : "#075E54",
+                  borderColor: "#25D366",
+                  "&:hover": {
+                    backgroundColor:
+                      selectedMessageType === key
+                        ? "#128C7E"
+                        : alpha("#25D366", 0.1),
+                  },
+                }}
+              >
+                {value.title}
+                {selectedMessageType === key && (
+                  <Close fontSize="small" sx={{ ml: 1 }} />
+                )}
+              </Button>
+            ))}
+          </Stack>
+        </Box>
+
+        {selectedMessageType && (
+          <Box
+            id="message-note"
+            sx={{
+              p: 3,
+              mb: 3,
+              borderLeft: "4px solid #25D366",
+              backgroundColor: "#f5f5f5",
+              borderRadius: "4px",
+              position: "relative",
+              transition: "all 0.3s ease",
+              transform: "translateY(0)",
+              opacity: 1,
+              "&:before": {
+                content: '""',
+                position: "absolute",
+                top: "-10px",
+                left: "20px",
+                width: 0,
+                height: 0,
+                borderLeft: "10px solid transparent",
+                borderRight: "10px solid transparent",
+                borderBottom: "10px solid #f5f5f5",
+              },
+            }}
+          >
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Box display="flex" alignItems="center">
+                <Typography variant="subtitle2" fontWeight={600}>
+                  {predefinedMessages[selectedMessageType].title}
+                </Typography>
+                <IconButton
+                  size="small"
+                  onClick={toggleHistoryDropdown}
+                  sx={{ color: "#075E54", ml: 1 }}
+                >
+                  <History fontSize="small" />
+                </IconButton>
+              </Box>
+              <IconButton
+                size="small"
+                onClick={() => {
+                  setSelectedMessageType(null);
+                  setEditedMessage("");
+                }}
+              >
+                <Close fontSize="small" />
+              </IconButton>
+            </Box>
+
+            {showHistoryDropdown && (
+              <Paper
+                sx={{
+                  position: "absolute",
+                  right: 0,
+                  top: "100%",
+                  zIndex: 1,
+                  width: "300px",
+                  maxHeight: "300px",
+                  overflow: "auto",
+                  boxShadow: 3,
+                  mt: 1,
+                }}
+              >
+                <Box display="flex" justifyContent="flex-end" p={1}>
+                  <IconButton size="small" onClick={toggleHistoryDropdown}>
+                    <Close fontSize="small" />
+                  </IconButton>
+                </Box>
+                <List dense>
+                  {filteredHistory.map((item, index) => (
+                    <ListItem
+                      key={index}
+                      button
+                      onClick={() => selectFromHistory(item)}
+                      sx={{
+                        "&:hover": { backgroundColor: "#f5f5f5" },
+                        borderBottom: "1px solid #eee",
+                      }}
+                    >
+                      <ListItemText
+                        primary={
+                          predefinedMessages[item.type]?.title ||
+                          "Custom Message"
+                        }
+                        secondary={item.message.substring(0, 50) + "..."}
+                        secondaryTypographyProps={{ noWrap: true }}
+                      />
+                      <Typography variant="caption" color="textSecondary">
+                        {new Date(item.timestamp).toLocaleTimeString()}
+                      </Typography>
+                    </ListItem>
+                  ))}
+                </List>
+              </Paper>
+            )}
+
+            <TextField
+              fullWidth
+              multiline
+              rows={6}
+              value={editedMessage}
+              onChange={(e) => setEditedMessage(e.target.value)}
+              variant="outlined"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  backgroundColor: "#fff",
+                },
+              }}
+            />
+
+            <Box display="flex" justifyContent="flex-end" mt={2}>
+              <Button
+                variant="contained"
+                color="success"
+                startIcon={<Send />}
+                onClick={handleSendMessage}
+                sx={{
+                  backgroundColor: "#25D366",
+                  "&:hover": { backgroundColor: "#128C7E" },
+                }}
+              >
+                Send to {phoneNumbers.length} Customers
+              </Button>
+            </Box>
+          </Box>
+        )}
+
+        <Box mt={3}>
+          <Typography variant="subtitle2" gutterBottom>
+            Customers who will receive this message:
+          </Typography>
+          <Paper
+            variant="outlined"
+            sx={{ p: 2, maxHeight: 200, overflow: "auto" }}
+          >
+            <List dense>
+              {phoneNumbers.map((number, index) => (
+                <ListItem key={index}>
+                  <ListItemText primary={number} />
+                </ListItem>
+              ))}
+            </List>
+          </Paper>
+        </Box>
+      </DialogContent>
+
+      {/* Confirmation Dialog */}
+      <Dialog
+        open={showConfirmation}
+        onClose={() => setShowConfirmation(false)}
+      >
+        <DialogTitle>Confirm Bulk Message</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to send this message to {phoneNumbers.length}{" "}
+            customers?
+          </Typography>
+          <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+            Note: This will open {phoneNumbers.length} WhatsApp tabs/windows.
+          </Typography>
+          <Paper sx={{ p: 2, mt: 2, backgroundColor: "#f5f5f5" }}>
+            <Typography variant="body2" whiteSpace="pre-wrap">
+              {editedMessage}
+            </Typography>
+          </Paper>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowConfirmation(false)}>Cancel</Button>
+          <Button
+            onClick={confirmSendMessage}
+            color="success"
+            variant="contained"
+            startIcon={<WhatsApp />}
+          >
+            Send to {phoneNumbers.length} Customers
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Dialog>
+  );
+};
+
+const CustomerDetailsModal = ({
+  open,
+  onClose,
+  customerData,
+  phoneNumber,
+  onEdit,
+  onDelete,
+}) => {
+  const [selectedMessageType, setSelectedMessageType] = useState(null);
+  const [editedMessage, setEditedMessage] = useState("");
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [messageHistory, setMessageHistory] = useState([]);
+  const [showHistoryDropdown, setShowHistoryDropdown] = useState(false);
+
+  // Toggle message type selection
+  const toggleMessageType = (type) => {
+    if (selectedMessageType === type) {
+      setSelectedMessageType(null);
+      setEditedMessage("");
+    } else {
+      setSelectedMessageType(type);
+      setEditedMessage(predefinedMessages[type].message);
+      animateNote();
+    }
+  };
+
+  // Toggle history dropdown
+  const toggleHistoryDropdown = () => {
+    setShowHistoryDropdown(!showHistoryDropdown);
+  };
+
+  // Close all open elements
+  const closeAll = () => {
+    setSelectedMessageType(null);
+    setShowHistoryDropdown(false);
+    setEditedMessage("");
+  };
+
+  const animateNote = () => {
+    const noteElement = document.getElementById("message-note");
+    if (noteElement) {
+      noteElement.style.transform = "translateY(-20px)";
+      noteElement.style.opacity = "0";
+      setTimeout(() => {
+        noteElement.style.transform = "translateY(0)";
+        noteElement.style.opacity = "1";
+      }, 50);
+    }
+  };
+
+  // Get salon details
+  const salonName = customerData[0]?.salon_info?.name || "our salon";
+  const salonCity = customerData[0]?.salon_info?.city || "your city";
+  const salonArea = customerData[0]?.salon_info?.area || "your area";
+  const nextAppointment = customerData.find(
+    (lead) => lead.appointment_date
+  )?.appointment_date;
+
+  // Predefined messages
+  const predefinedMessages = {
+    feedback: {
+      title: "Feedback Request",
+      message: `Hi there! 👋 We hope you enjoyed your recent visit to ${salonName}. Could you spare a moment to share your feedback? Your opinion helps us serve you better! 💖\n\nPlease rate your experience from 1-5 stars. ⭐⭐⭐⭐⭐\n\nThank you! 😊`,
+    },
+    offer: {
+      title: "Exclusive Offer",
+      message: `🌟 Exclusive Offer Just For You! 🌟\n\nEnjoy 20% OFF on your next visit to ${salonName}! 💇‍♀️💅\n\nUse code: GLOW20\n\nBook now: https://trakky.in/ahmedabad/offerpage\n\nPamper yourself with our premium services! 💖\n\nOffer valid until ${new Date(
+        Date.now() + 7 * 24 * 60 * 60 * 1000
+      ).toLocaleDateString()}.`,
+    },
+    retargeting: {
+      title: "We Miss You!",
+      message: `Hello valued customer! 💕 It's been a while since we've seen you at ${salonName}. We've got some exciting new services you'll love! ✨\n\nHow about treating yourself to a refreshing makeover this week? Book now and get 15% OFF as our welcome back gift! 🎁\n\nSpecial offers: https://trakky.in/ahmedabad/offerpage\n\nWe can't wait to serve you again! 😊`,
+    },
+    reschedule: {
+      title: "Reschedule Reminder",
+      message: `Hi there! 👋 We noticed you have an upcoming appointment with ${salonName}. Need to reschedule? No problem!\n\nWe're happy to find a time that works better for you. Please let us know your preferred date/time. 📅\n\nLooking forward to serving you! 💖`,
+    },
+    reminder: {
+      title: "Appointment Reminder",
+      message: `💅✨ Reminder: Your appointment at ${salonName} (${salonCity}, ${salonArea}) is coming up!\n\n📅 Date: ${
+        nextAppointment ? formatDate(new Date(nextAppointment)) : "soon"
+      }\n\nPlease arrive 10 minutes early to enjoy:\n• Complimentary beverage ☕\n• Relaxing welcome massage 💆‍♀️\n• Special consultation with our stylist 💫\n\nSee you soon! Can't wait to make you look fabulous! 😊`,
+    },
+  };
+
+  const handleMessageTypeClick = (type) => {
+    setSelectedMessageType(type);
+    setEditedMessage(predefinedMessages[type].message);
+
+    // Animation effect
+    const noteElement = document.getElementById("message-note");
+    if (noteElement) {
+      noteElement.style.transform = "translateY(-20px)";
+      noteElement.style.opacity = "0";
+      setTimeout(() => {
+        noteElement.style.transform = "translateY(0)";
+        noteElement.style.opacity = "1";
+      }, 50);
+    }
+  };
+
+  const handleSendMessage = () => {
+    setShowConfirmation(true);
+  };
+
+  const confirmSendMessage = () => {
+    // Add to message history
+    setMessageHistory((prev) => [
+      {
+        type: selectedMessageType,
+        message: editedMessage,
+        timestamp: new Date().toISOString(),
+      },
+      ...prev,
+    ]);
+
+    const encodedMessage = encodeURIComponent(editedMessage);
+    window.open(
+      `https://wa.me/${phoneNumber}?text=${encodedMessage}`,
+      "_blank"
+    );
+    setShowConfirmation(false);
+  };
+
+  const selectFromHistory = (historyItem) => {
+    setEditedMessage(historyItem.message);
+    setSelectedMessageType(historyItem.type);
+    setShowHistoryDropdown(false);
+  };
+
+  const filteredHistory = selectedMessageType
+    ? messageHistory.filter((item) => item.type === selectedMessageType)
+    : [];
+
+  return (
+    <Dialog
+      open={open}
+      onClose={() => {
+        onClose();
+        closeAll();
+      }}
+      maxWidth="xl"
+      fullWidth
+    >
+      <DialogTitle>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box>
+            <Typography variant="h6">Customer Details</Typography>
+            <Typography variant="subtitle1" color="textSecondary">
+              Phone: {phoneNumber} | Total Appearances: {customerData.length}
+            </Typography>
+          </Box>
+          <IconButton
+            onClick={() => {
+              onClose();
+              closeAll();
+            }}
+          >
+            <Close />
+          </IconButton>
+        </Box>
+      </DialogTitle>
+
+      <DialogContent>
+        {/* Message Type Selection */}
+        <Box mb={3}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="subtitle2" gutterBottom>
+              Select Message Type:
+            </Typography>
+            {selectedMessageType && (
+              <Button
+                size="small"
+                onClick={closeAll}
+                startIcon={<Close fontSize="small" />}
+              >
+                Close All
+              </Button>
+            )}
+          </Box>
+          <Stack direction="row" spacing={2} sx={{ overflowX: "auto", py: 1 }}>
+            {Object.entries(predefinedMessages).map(([key, value]) => (
+              <Button
+                key={key}
+                variant={selectedMessageType === key ? "contained" : "outlined"}
+                startIcon={<WhatsApp />}
+                onClick={() => toggleMessageType(key)}
+                sx={{
+                  textTransform: "capitalize",
+                  minWidth: "max-content",
+                  backgroundColor:
+                    selectedMessageType === key ? "#25D366" : "transparent",
+                  color: selectedMessageType === key ? "#fff" : "#075E54",
+                  borderColor: "#25D366",
+                  "&:hover": {
+                    backgroundColor:
+                      selectedMessageType === key
+                        ? "#128C7E"
+                        : alpha("#25D366", 0.1),
+                  },
+                }}
+              >
+                {value.title}
+                {selectedMessageType === key && (
+                  <Close fontSize="small" sx={{ ml: 1 }} />
+                )}
+              </Button>
+            ))}
+          </Stack>
+        </Box>
+
+        {selectedMessageType && (
+          <Box
+            id="message-note"
+            sx={{
+              p: 3,
+              mb: 3,
+              borderLeft: "4px solid #25D366",
+              backgroundColor: "#f5f5f5",
+              borderRadius: "4px",
+              position: "relative",
+              transition: "all 0.3s ease",
+              transform: "translateY(0)",
+              opacity: 1,
+              "&:before": {
+                content: '""',
+                position: "absolute",
+                top: "-10px",
+                left: "20px",
+                width: 0,
+                height: 0,
+                borderLeft: "10px solid transparent",
+                borderRight: "10px solid transparent",
+                borderBottom: "10px solid #f5f5f5",
+              },
+            }}
+          >
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Box display="flex" alignItems="center">
+                <Typography variant="subtitle2" fontWeight={600}>
+                  {predefinedMessages[selectedMessageType].title}
+                </Typography>
+                <IconButton
+                  size="small"
+                  onClick={toggleHistoryDropdown}
+                  sx={{ color: "#075E54", ml: 1 }}
+                >
+                  <History fontSize="small" />
+                </IconButton>
+              </Box>
+              <IconButton
+                size="small"
+                onClick={() => {
+                  setSelectedMessageType(null);
+                  setEditedMessage("");
+                }}
+              >
+                <Close fontSize="small" />
+              </IconButton>
+            </Box>
+
+            {showHistoryDropdown && (
+              <Paper
+                sx={{
+                  position: "absolute",
+                  right: 0,
+                  top: "100%",
+                  zIndex: 1,
+                  width: "300px",
+                  maxHeight: "300px",
+                  overflow: "auto",
+                  boxShadow: 3,
+                  mt: 1,
+                }}
+              >
+                <Box display="flex" justifyContent="flex-end" p={1}>
+                  <IconButton size="small" onClick={toggleHistoryDropdown}>
+                    <Close fontSize="small" />
+                  </IconButton>
+                </Box>
+                <List dense>
+                  {filteredHistory.map((item, index) => (
+                    <ListItem
+                      key={index}
+                      button
+                      onClick={() => selectFromHistory(item)}
+                      sx={{
+                        "&:hover": { backgroundColor: "#f5f5f5" },
+                        borderBottom: "1px solid #eee",
+                      }}
+                    >
+                      <ListItemText
+                        primary={
+                          predefinedMessages[item.type]?.title ||
+                          "Custom Message"
+                        }
+                        secondary={item.message.substring(0, 50) + "..."}
+                        secondaryTypographyProps={{ noWrap: true }}
+                      />
+                      <Typography variant="caption" color="textSecondary">
+                        {new Date(item.timestamp).toLocaleTimeString()}
+                      </Typography>
+                    </ListItem>
+                  ))}
+                </List>
+              </Paper>
+            )}
+
+            <TextField
+              fullWidth
+              multiline
+              rows={6}
+              value={editedMessage}
+              onChange={(e) => setEditedMessage(e.target.value)}
+              variant="outlined"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  backgroundColor: "#fff",
+                },
+              }}
+            />
+
+            <Box display="flex" justifyContent="flex-end" mt={2}>
+              <Button
+                variant="contained"
+                color="success"
+                startIcon={<Send />}
+                onClick={handleSendMessage}
+                sx={{
+                  backgroundColor: "#25D366",
+                  "&:hover": { backgroundColor: "#128C7E" },
+                }}
+              >
+                Send Message
+              </Button>
+            </Box>
+          </Box>
+        )}
+
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>No.</TableCell>
+                <TableCell>Salon Details</TableCell>
+                <TableCell>Dates</TableCell>
+                <TableCell>Appointment Booking Time</TableCell>
+                <TableCell>Services</TableCell>
+                <TableCell>Price</TableCell>
+                <TableCell>Source Of Lead</TableCell>
+                <TableCell>Campaign Name</TableCell>
+                <TableCell>Does Customer Visited The Salon</TableCell>
+                <TableCell>Reason For Not Visisted The Salon</TableCell>
+                <TableCell>Number OF Customers</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {customerData.map((lead, index) => (
+                <TableRow key={lead.id}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>
+                    <Typography variant="subtitle2" fontWeight={600}>
+                      {lead.salon_info?.name || "N/A"}
+                    </Typography>
+                    <Typography variant="caption" color="textSecondary">
+                      {lead.salon_info?.city || "N/A"},{" "}
+                      {lead.salon_info?.area || "N/A"}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2">
+                      Converted:{" "}
+                      {lead.converted_date
+                        ? formatDate(new Date(lead.converted_date))
+                        : "N/A"}
+                    </Typography>
+                    <Typography variant="body2">
+                      Appointment:{" "}
+                      {lead.appointment_date
+                        ? formatDate(new Date(lead.appointment_date))
+                        : "N/A"}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2">
+                      {lead.booking_time ? (
+                        <>
+                          {new Date(
+                            `1970-01-01T${lead.booking_time}`
+                          ).toLocaleTimeString("en-IN", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}
+                        </>
+                      ) : (
+                        "N/A"
+                      )}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      sx={{ flexWrap: "wrap" }}
+                    >
+                      {lead.masterservice_info?.map((service) => (
+                        <Chip
+                          key={service.id}
+                          label={`${service.service_name} (${service.category_name})`}
+                          size="small"
+                        />
+                      ))}
+                    </Stack>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2">
+                      {lead.price || "N/A"}
+                    </Typography>
+                  </TableCell>
+
+                  <TableCell>
+                    <Typography
+                      variant="body2"
+                      sx={{ textTransform: "capitalize" }}
+                    >
+                      {lead.source_of_lead || "N/A"}
+                    </Typography>
+                  </TableCell>
+
+                  <TableCell>
+                    <Typography variant="body2">
+                      {lead.campaign_name || "N/A"}
+                    </Typography>
+                  </TableCell>
+
+                  <TableCell>
+                    <Chip
+                      label={
+                        lead.does_customer_visited_the_salon ? "Yes" : "No"
+                      }
+                      color={
+                        lead.does_customer_visited_the_salon
+                          ? "success"
+                          : "error"
+                      }
+                      size="small"
+                      variant="outlined"
+                    />
+                  </TableCell>
+
+                  <TableCell>
+                    <Typography variant="body2">
+                      {lead.reason_for_not_visited_the_salon || "-"}
+                    </Typography>
+                  </TableCell>
+
+                  <TableCell>
+                    <Typography variant="body2">
+                      {lead.number_of_customers || "-"}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <StatusChip
+                      label={
+                        lead.choice
+                          ? lead.choice.charAt(0).toUpperCase() +
+                            lead.choice.slice(1)
+                          : "N/A"
+                      }
+                      status={lead.choice}
+                      size="small"
+                    />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Box display="flex" justifyContent="center" gap={0.5}>
+                      <Tooltip title="Edit Lead">
+                        <ActionButton
+                          variant="edit"
+                          size="small"
+                          onClick={() => {
+                            onClose();
+                            onEdit(lead);
+                          }}
+                        >
+                          <EditIcon fontSize="small" />
+                        </ActionButton>
+                      </Tooltip>
+                      <Tooltip title="Delete Lead">
+                        <ActionButton
+                          variant="delete"
+                          size="small"
+                          onClick={() => {
+                            onClose();
+                            onDelete(lead.id);
+                          }}
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </ActionButton>
+                      </Tooltip>
+                    </Box>
+                  </TableCell>
+                  {/* <TableCell>
+                                        <IconButton
+                                            size="small"
+                                            onClick={() => handleWhatsAppClick('reminder')}
+                                            color="success"
+                                        >
+                                            <WhatsApp fontSize="small" />
+                                        </IconButton>
+                                    </TableCell> */}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </DialogContent>
+
+      {/* Confirmation Dialog */}
+      <Dialog
+        open={showConfirmation}
+        onClose={() => setShowConfirmation(false)}
+      >
+        <DialogTitle>Confirm Message</DialogTitle>
+        <DialogContent>
+          <Typography>Are you sure you want to send this message?</Typography>
+          <Paper sx={{ p: 2, mt: 2, backgroundColor: "#f5f5f5" }}>
+            <Typography variant="body2" whiteSpace="pre-wrap">
+              {editedMessage}
+            </Typography>
+          </Paper>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowConfirmation(false)}>Cancel</Button>
+          <Button
+            onClick={confirmSendMessage}
+            color="success"
+            variant="contained"
+            startIcon={<WhatsApp />}
+          >
+            Send via WhatsApp
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Dialog>
+  );
+};
+
+const ConvertedLead = () => {
+  const { authTokens, logoutUser, user } = useContext(AuthContext);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
+  const [filters, setFilters] = useState({
+    search: "",
+    gender: "",
+    city: "",
+    area: "",
+    dateRange: [],
+  });
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [currentLead, setCurrentLead] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showDateSelectionModal, setShowDateSelectionModal] = useState(false);
+  const [dateState, setDateState] = useState([
+    {
+      startDate: null,
+      endDate: null,
+      key: "selection",
+    },
+  ]);
+  const [isDateFilterOn, setIsDateFilterOn] = useState(false);
+  const [searchOption, setSearchOption] = useState("customer_mobile_number");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedLeads, setSelectedLeads] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const isSelectionMode = selectedLeads.length > 0;
+  const [showSelectedOnly, setShowSelectedOnly] = useState(false);
+  const [customerDetailsModalOpen, setCustomerDetailsModalOpen] =
+    useState(false);
+  const [selectedCustomerData, setSelectedCustomerData] = useState([]);
+  const [selectedPhoneNumber, setSelectedPhoneNumber] = useState("");
+  const [bulkMessageModalOpen, setBulkMessageModalOpen] = useState(false);
+  const [selectedSalon, setSelectedSalon] = useState(null);
+  const navigate = useNavigate();
+  const handleBackToForm = () => {
+    navigate("/addconvertedlead");
+  };
+  const [dateFilterType, setDateFilterType] = useState("today");
+  const [customDateRange, setCustomDateRange] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+  });
+  const [showCustomDateModal, setShowCustomDateModal] = useState(false);
+
+  const dateFilterOptions = [
+    { value: "today", label: "Today" },
+    { value: "yesterday", label: "Yesterday" },
+    { value: "last3", label: "Last 3 Days" },
+    { value: "last7", label: "Last 7 Days" },
+    { value: "last15", label: "Last 15 Days" },
+    { value: "last30", label: "Last 30 Days" },
+    { value: "last45", label: "Last 45 Days" },
+    { value: "last60", label: "Last 60 Days" },
+    { value: "last90", label: "Last 90 Days" },
+    { value: "custom", label: "Custom Range" },
+    { value: "latest", label: "Latest Leads" },
+  ];
+
+  const searchOptions = [
+    { value: "salon_name", label: "Salon Name", icon: <BusinessCenter /> },
+    {
+      value: "customer_mobile_number",
+      label: "Mobile Number",
+      icon: <Phone />,
+    },
+    { value: "city", label: "City", icon: <LocationOn /> },
+    { value: "area", label: "Area", icon: <LocationOn /> },
+  ];
+
+  const genderOptions = [
+    { value: "male", label: "Male", icon: <Person /> },
+    { value: "female", label: "Female", icon: <Person /> },
+    { value: "unisex", label: "Unisex", icon: <Person /> },
+  ];
+
+  const handleViewCustomerDetails = (phoneNumber) => {
+    const customerData = data.filter(
+      (lead) => lead.customer_mobile_number === phoneNumber
+    );
+    setSelectedCustomerData(customerData);
+    setSelectedPhoneNumber(phoneNumber);
+    setCustomerDetailsModalOpen(true);
+  };
+
+  const getUniqueCustomerData = () => {
+    const uniqueCustomers = [];
+    const seenNumbers = new Set();
+
+    data.forEach((lead) => {
+      if (!seenNumbers.has(lead.customer_mobile_number)) {
+        seenNumbers.add(lead.customer_mobile_number);
+        uniqueCustomers.push(lead);
+      }
+    });
+
+    return uniqueCustomers;
+  };
+
+  // Extract unique cities and areas for filter
+  const uniqueCities = [
+    ...new Set(data.map((item) => item.salon_info?.city).filter(Boolean)),
+  ];
+  const uniqueAreas = [
+    ...new Set(data.map((item) => item.salon_info?.area).filter(Boolean)),
+  ];
+
+  const filteredData = (
+    showSelectedOnly
+      ? data.filter((lead) => selectedLeads.includes(lead.id))
+      : getUniqueCustomerData()
+  ).filter((lead) => {
+    // Search filter
+    const matchesSearch =
+      searchTerm === "" ||
+      (searchOption === "salon_name" &&
+        lead.salon_info?.name
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase())) ||
+      (searchOption === "customer_mobile_number" &&
+        lead.customer_mobile_number?.includes(searchTerm)) ||
+      (searchOption === "city" &&
+        lead.salon_info?.city
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase())) ||
+      (searchOption === "area" &&
+        lead.salon_info?.area
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()));
+
+    // Gender filter
+    const matchesGender =
+      filters.gender === "" || lead.gender === filters.gender;
+
+    // City filter
+    const matchesCity =
+      filters.city === "" || lead.salon_info?.city === filters.city;
+
+    // Area filter
+    const matchesArea =
+      filters.area === "" || lead.salon_info?.area === filters.area;
+
+    // Date filter
+    let matchesDate = true;
+    if (isDateFilterOn && dateState[0].startDate && dateState[0].endDate) {
+      const convertedDate = new Date(lead.converted_date);
+      const startDate = new Date(dateState[0].startDate);
+      const endDate = new Date(dateState[0].endDate);
+      matchesDate = convertedDate >= startDate && convertedDate <= endDate;
+    }
+
+    return (
+      matchesSearch &&
+      matchesGender &&
+      matchesCity &&
+      matchesArea &&
+      matchesDate
+    );
+  });
+
+  const paginatedData = filteredData.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  const getUniquePhoneNumbers = (data) => {
+    const phoneNumbers = [];
+    const seenNumbers = new Set();
+
+    data.forEach((lead) => {
+      if (
+        lead.customer_mobile_number &&
+        !seenNumbers.has(lead.customer_mobile_number)
+      ) {
+        seenNumbers.add(lead.customer_mobile_number);
+        phoneNumbers.push(lead.customer_mobile_number);
+      }
+    });
+
+    return phoneNumbers;
+  };
+
+  const getBulkMessagePhoneNumbers = () => {
+    if (isSelectionMode && showSelectedOnly) {
+      const selectedData = data.filter((lead) =>
+        selectedLeads.includes(lead.id)
+      );
+      return getUniquePhoneNumbers(selectedData);
+    } else if (isSelectionMode) {
+      const selectedData = paginatedData.filter((lead) =>
+        selectedLeads.includes(lead.id)
+      );
+      return getUniquePhoneNumbers(selectedData);
+    } else {
+      return getUniquePhoneNumbers(filteredData);
+    }
+  };
+
+  const handleBulkMessageClick = () => {
+    const phoneNumbers = getBulkMessagePhoneNumbers();
+    if (phoneNumbers.length === 0) {
+      toast.error("No customers selected or available to message");
+      return;
+    }
+
+    const firstLead = filteredData.find((lead) =>
+      phoneNumbers.includes(lead.customer_mobile_number)
+    );
+    if (firstLead) {
+      setSelectedSalon({
+        name: firstLead.salon_info?.name || "our salon",
+        city: firstLead.salon_info?.city || "your city",
+        area: firstLead.salon_info?.area || "your area",
+      });
+    }
+
+    setBulkMessageModalOpen(true);
+  };
+
+  // Selection handlers
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelected = paginatedData.map((lead) => lead.id);
+      setSelectedLeads(newSelected);
+      return;
+    }
+    setSelectedLeads([]);
+  };
+
+  const handleCheckboxClick = (event, id) => {
+    event.stopPropagation();
+    const selectedIndex = selectedLeads.indexOf(id);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selectedLeads, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selectedLeads.slice(1));
+    } else if (selectedIndex === selectedLeads.length - 1) {
+      newSelected = newSelected.concat(selectedLeads.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selectedLeads.slice(0, selectedIndex),
+        selectedLeads.slice(selectedIndex + 1)
+      );
+    }
+
+    setSelectedLeads(newSelected);
+  };
+
+  const isSelected = (id) => selectedLeads.indexOf(id) !== -1;
+
+  const handleSelectedClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleSelectedClose = () => {
+    setAnchorEl(null);
+  };
+
+  const clearSelection = () => {
+    setSelectedLeads([]);
+  };
+
+  // Calculate statistics
+  const getStatistics = () => {
+    const total = filteredData.length;
+    const cancelled = filteredData.filter(
+      (lead) => lead.choice === "cancelled"
+    ).length;
+    const completed = filteredData.filter(
+      (lead) => lead.choice === "completed"
+    ).length;
+    const pending = filteredData.filter(
+      (lead) => lead.choice === "pending"
+    ).length;
+    const cancellationRate =
+      total > 0 ? ((cancelled / total) * 100).toFixed(1) : 0;
+
+    return { total, cancelled, completed, pending, cancellationRate };
+  };
+
+  const stats = getStatistics();
+
+  const formatDateToAPI = (date) => {
+    return dayjs(date).format("YYYY-MM-DD");
+  };
+
+  // Helper function to get date ranges
+  const getDateRange = (type) => {
+    const today = new Date();
+    let startDate, endDate;
+
+    switch (type) {
+      case "today":
+        startDate = today;
+        endDate = today;
+        break;
+      case "yesterday":
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - 1);
+        endDate = new Date(startDate);
+        break;
+      case "last3":
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - 2);
+        endDate = today;
+        break;
+      case "last7":
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - 6);
+        endDate = today;
+        break;
+      case "last15":
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - 14);
+        endDate = today;
+        break;
+      case "last30":
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - 29);
+        endDate = today;
+        break;
+      case "last45":
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - 44);
+        endDate = today;
+        break;
+      case "last60":
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - 59);
+        endDate = today;
+        break;
+      case "last90":
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - 89);
+        endDate = today;
+        break;
+      case "latest":
+        // For latest leads, return null dates to indicate no date filtering
+        startDate = null;
+        endDate = null;
+        break;
+      default:
+        // Default to today if no type specified
+        startDate = today;
+        endDate = today;
+    }
+
+    return { startDate, endDate };
+  };
+  // Handler for date filter selection
+  const handleDateFilterChange = (event, newFilter) => {
+    if (newFilter === "custom") {
+      setShowCustomDateModal(true);
+    } else {
+      setDateFilterType(newFilter);
+      setCustomDateRange({ startDate: null, endDate: null });
+    }
+  };
+
+  // Handler for applying custom date range
+  const handleCustomDateApply = (startDate, endDate) => {
+    setCustomDateRange({ startDate, endDate });
+    setDateFilterType("custom");
+    setShowCustomDateModal(false);
+  };
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      let url = `http://20.193.149.47:2242/salons/convertedleads/`;
+
+      // For "latest" filter, apply ordering without date filtering
+      if (dateFilterType === "latest") {
+        url += `?ordering=-created_at`;
+      } else {
+        // Apply date filter for other filter types
+        const filterType = dateFilterType || "today";
+        const dates = getDateRange(filterType);
+
+        // Only add date filters if dates are not null (for latest filter)
+        if (dates.startDate && dates.endDate) {
+          url += `?appointment_date_from=${formatDateToAPI(
+            dates.startDate
+          )}&appointment_date_to=${formatDateToAPI(dates.endDate)}`;
+        } else {
+          // For latest filter, ensure we have at least one query parameter
+          url += `?`;
+        }
+      }
+
+      const response = await fetch(url, {
+        headers: {
+          Authorization: "Bearer " + String(authTokens?.access),
+        },
+      });
+
+      if (response.status === 200) {
+        const result = await response.json();
+        setData(result.results || []);
+        setPagination({
+          ...pagination,
+          total: result.count || 0,
+        });
+      } else if (response.status === 401) {
+        logoutUser();
+        toast.error("Unauthorized: Please log in again");
+      } else {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      toast.error("Failed to fetch leads. Please try again later");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (authTokens) {
+      fetchData();
+    }
+  }, [authTokens, dateFilterType, customDateRange]);
+
+  const handleEdit = (lead) => {
+    setCurrentLead(lead);
+    setEditModalVisible(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this lead?")) {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          `http://20.193.149.47:2242/salons/convertedleads/${id}/`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + String(authTokens?.access),
+            },
+          }
+        );
+
+        if (response.status === 204) {
+          fetchData();
+          toast.success("Lead deleted successfully");
+        } else if (response.status === 401) {
+          toast.error("Unauthorized: Please log in again");
+        } else {
+          throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
+      } catch (error) {
+        console.error("Error deleting lead:", error);
+        toast.error("Failed to delete lead. Please try again later");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleModalClose = () => {
+    setEditModalVisible(false);
+    setCurrentLead(null);
+  };
+
+  const handleUpdateSuccess = () => {
+    fetchData();
+    handleModalClose();
+  };
+
+  const handleSearch = () => {
+    setPage(0); // Reset to first page when searching
+  };
+
+  const handleGenderFilter = (value) => {
+    setFilters({ ...filters, gender: value });
+    setPage(0);
+  };
+
+  const handleCityFilter = (value) => {
+    setFilters({ ...filters, city: value });
+    setPage(0);
+  };
+
+  const handleAreaFilter = (value) => {
+    setFilters({ ...filters, area: value });
+    setPage(0);
+  };
+
+  const clearDateFilter = () => {
+    setDateState([{ startDate: null, endDate: null, key: "selection" }]);
+    setIsDateFilterOn(false);
+    setPage(0);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  return (
+    <StyledContainer maxWidth="xl">
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            borderRadius: "12px",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+          },
+        }}
+      />
+
+      {/* Header Section */}
+      <HeaderCard>
+        <CardContent sx={{ p: 4 }}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Box display="flex" alignItems="center" gap={3}>
+              <Box>
+                <Typography
+                  variant="h4"
+                  component="h1"
+                  gutterBottom
+                  sx={{ fontWeight: 700, mb: 1 }}
+                >
+                  Converted Leads
+                </Typography>
+                <Typography variant="subtitle1" sx={{ opacity: 0.9 }}>
+                  Manage and monitor your converted leads
+                </Typography>
+              </Box>
+
+              {isSelectionMode && (
+                <Badge
+                  badgeContent={selectedLeads.length}
+                  color="primary"
+                  sx={{ cursor: "pointer" }}
+                  onClick={handleSelectedClick}
+                >
+                  <Chip
+                    label="Selected"
+                    color="primary"
+                    variant="outlined"
+                    icon={<PlaylistAddCheck />}
+                    sx={{
+                      px: 2,
+                      "& .MuiChip-icon": { ml: 1 },
+                    }}
+                  />
+                </Badge>
+              )}
+            </Box>
+            <Button
+              variant="contained"
+              startIcon={<Message />}
+              onClick={handleBulkMessageClick}
+              sx={{
+                backgroundColor: "rgba(255,255,255,0.2)",
+                backdropFilter: "blur(10px)",
+                "&:hover": { backgroundColor: "rgba(255,255,255,0.3)" },
+              }}
+            >
+              Bulk Message
+            </Button>
+            <Box display="flex" gap={2}>
+              <Button
+                variant="contained"
+                startIcon={<RefreshIcon />}
+                onClick={() => fetchData()}
+                sx={{
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                  backdropFilter: "blur(10px)",
+                  "&:hover": { backgroundColor: "rgba(255,255,255,0.3)" },
+                }}
+              >
+                Refresh
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={handleBackToForm}
+                sx={{
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                  backdropFilter: "blur(10px)",
+                  "&:hover": { backgroundColor: "rgba(255,255,255,0.3)" },
+                }}
+              >
+                Add ConvertedLead
+              </Button>
+            </Box>
+          </Box>
+        </CardContent>
+      </HeaderCard>
+
+      {/* Selected Leads Popover */}
+      <Popover
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        onClose={handleSelectedClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        <Box sx={{ p: 2, width: 350 }}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={2}
+          >
+            <Typography variant="h6">
+              Selected Leads ({selectedLeads.length})
+            </Typography>
+            <Button size="small" onClick={clearSelection} color="error">
+              Clear
+            </Button>
+          </Box>
+
+          <List dense sx={{ maxHeight: 300, overflow: "auto" }}>
+            {selectedLeads.map((id) => {
+              const lead = data.find((l) => l.id === id);
+              return lead ? (
+                <ListItem key={id} sx={{ py: 0.5 }}>
+                  <ListItemIcon sx={{ minWidth: 32 }}>
+                    <Checkbox
+                      edge="start"
+                      checked
+                      tabIndex={-1}
+                      disableRipple
+                      size="small"
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={lead.salon_info?.name || "N/A"}
+                    secondary={`${lead.customer_mobile_number} - ${lead.choice}`}
+                  />
+                </ListItem>
+              ) : null;
+            })}
+          </List>
+
+          <Box display="flex" gap={1} mt={2}>
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<DeleteIcon />}
+              onClick={() => {
+                selectedLeads.forEach((id) => handleDelete(id));
+                handleSelectedClose();
+              }}
+              fullWidth
+            >
+              Delete
+            </Button>
+          </Box>
+        </Box>
+      </Popover>
+
+      {/* Statistics Cards */}
+      <Grid container spacing={3} sx={{ mb: 3 }}>
+        <Grid item xs={12} sm={6} md={3}>
+          <StatsCard>
+            <CardContent>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Box>
+                  <Typography
+                    color="textSecondary"
+                    gutterBottom
+                    variant="overline"
+                  >
+                    Total Converted Leads
+                  </Typography>
+                  <Typography
+                    variant="h4"
+                    component="div"
+                    sx={{ fontWeight: 700 }}
+                  >
+                    {stats.total}
+                  </Typography>
+                </Box>
+                <Avatar sx={{ bgcolor: "#3b82f6", width: 56, height: 56 }}>
+                  <TrendingUp />
+                </Avatar>
+              </Box>
+            </CardContent>
+          </StatsCard>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <StatsCard>
+            <CardContent>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Box>
+                  <Typography
+                    color="textSecondary"
+                    gutterBottom
+                    variant="overline"
+                  >
+                    Completed
+                  </Typography>
+                  <Typography
+                    variant="h4"
+                    component="div"
+                    sx={{ fontWeight: 700 }}
+                  >
+                    {stats.completed}
+                  </Typography>
+                </Box>
+                <Avatar sx={{ bgcolor: "#10b981", width: 56, height: 56 }}>
+                  <CheckBox />
+                </Avatar>
+              </Box>
+            </CardContent>
+          </StatsCard>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <StatsCard>
+            <CardContent>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Box>
+                  <Typography
+                    color="textSecondary"
+                    gutterBottom
+                    variant="overline"
+                  >
+                    Cancelled
+                  </Typography>
+                  <Typography
+                    variant="h4"
+                    component="div"
+                    sx={{ fontWeight: 700 }}
+                  >
+                    {stats.cancelled}
+                  </Typography>
+                </Box>
+                <Avatar sx={{ bgcolor: "#ef4444", width: 56, height: 56 }}>
+                  <Cancel />
+                </Avatar>
+              </Box>
+            </CardContent>
+          </StatsCard>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <StatsCard>
+            <CardContent>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Box>
+                  <Typography
+                    color="textSecondary"
+                    gutterBottom
+                    variant="overline"
+                  >
+                    Cancellation Rate
+                  </Typography>
+                  <Typography
+                    variant="h4"
+                    component="div"
+                    sx={{ fontWeight: 700 }}
+                  >
+                    {stats.cancellationRate}%
+                  </Typography>
+                </Box>
+                <Avatar sx={{ bgcolor: "#f59e0b", width: 56, height: 56 }}>
+                  <WarningIcon />
+                </Avatar>
+              </Box>
+            </CardContent>
+          </StatsCard>
+        </Grid>
+      </Grid>
+
+      {/* Filters Section */}
+      <FilterCard>
+        <CardContent>
+          <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+            Filters & Search
+          </Typography>
+
+          <Grid container spacing={3} alignItems="center">
+            <Grid item xs={12} md={2}>
+              <FormControl fullWidth size="small">
+                <InputLabel>Search By</InputLabel>
+                <Select
+                  value={searchOption}
+                  onChange={(e) => setSearchOption(e.target.value)}
+                  label="Search By"
+                >
+                  {searchOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        {option.icon}
+                        {option.label}
+                      </Box>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <TextField
+                fullWidth
+                size="small"
+                variant="outlined"
+                placeholder={`Search by ${
+                  searchOptions.find((o) => o.value === searchOption)?.label
+                }`}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon color="action" />
+                    </InputAdornment>
+                  ),
+                  endAdornment: searchTerm && (
+                    <InputAdornment position="end">
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          setSearchTerm("");
+                          handleSearch();
+                        }}
+                      >
+                        <Close fontSize="small" />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={2}>
+              <FormControl fullWidth size="small">
+                <InputLabel>Gender</InputLabel>
+                <Select
+                  value={filters.gender}
+                  onChange={(e) => handleGenderFilter(e.target.value)}
+                  label="Gender"
+                >
+                  <MenuItem value="">
+                    <em>All Genders</em>
+                  </MenuItem>
+                  {genderOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        {option.icon}
+                        {option.label}
+                      </Box>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} md={2}>
+              <FormControl fullWidth size="small">
+                <InputLabel>City</InputLabel>
+                <Select
+                  value={filters.city}
+                  onChange={(e) => handleCityFilter(e.target.value)}
+                  label="City"
+                >
+                  <MenuItem value="">
+                    <em>All Cities</em>
+                  </MenuItem>
+                  {uniqueCities.map((city) => (
+                    <MenuItem key={city} value={city}>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <LocationOn fontSize="small" />
+                        {city}
+                      </Box>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} md={2}>
+              <FormControl fullWidth size="small">
+                <InputLabel>Area</InputLabel>
+                <Select
+                  value={filters.area}
+                  onChange={(e) => handleAreaFilter(e.target.value)}
+                  label="Area"
+                >
+                  <MenuItem value="">
+                    <em>All Areas</em>
+                  </MenuItem>
+                  {uniqueAreas.map((area) => (
+                    <MenuItem key={area} value={area}>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <LocationOn fontSize="small" />
+                        {area}
+                      </Box>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid>
+              <Box sx={{ mt: 2, ml: 3 }}>
+                <Typography variant="subtitle2" gutterBottom>
+                  Date Filter:
+                </Typography>
+                <ToggleButtonGroup
+                  value={dateFilterType || "today"} // Default to 'today' if empty
+                  onChange={handleDateFilterChange}
+                  exclusive
+                  aria-label="date filter"
+                  sx={{ flexWrap: "wrap", gap: 1 }}
+                >
+                  {dateFilterOptions.map((option) => (
+                    <ToggleButton
+                      key={option.value}
+                      value={option.value}
+                      aria-label={option.label}
+                      sx={{
+                        borderRadius: "20px",
+                        textTransform: "none",
+                        fontSize: "0.8rem",
+                        py: 0.5,
+                        px: 1.5,
+                      }}
+                    >
+                      {option.label}
+                    </ToggleButton>
+                  ))}
+                </ToggleButtonGroup>
+              </Box>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </FilterCard>
+
+      {dateFilterType && (
+        <Box
+          sx={{ mt: 2, mb: 2, display: "flex", alignItems: "center", gap: 1 }}
+        >
+          <Typography variant="body2" color="textSecondary">
+            Active filter:
+          </Typography>
+          <Chip
+            label={
+              dateFilterType === "custom"
+                ? `${formatDate(customDateRange.startDate)} - ${formatDate(
+                    customDateRange.endDate
+                  )}`
+                : dateFilterType === "latest"
+                ? "Latest Leads"
+                : dateFilterOptions.find((opt) => opt.value === dateFilterType)
+                    ?.label || "Today"
+            }
+            onDelete={() => {
+              setDateFilterType("today"); // Reset to today instead of empty
+              setCustomDateRange({ startDate: null, endDate: null });
+            }}
+            size="small"
+          />
+        </Box>
+      )}
+
+      <BulkMessageModal
+        open={bulkMessageModalOpen}
+        onClose={() => setBulkMessageModalOpen(false)}
+        phoneNumbers={getBulkMessagePhoneNumbers()}
+        salonName={selectedSalon?.name}
+        salonCity={selectedSalon?.city}
+        salonArea={selectedSalon?.area}
+      />
+
+      <CustomerDetailsModal
+        open={customerDetailsModalOpen}
+        onClose={() => setCustomerDetailsModalOpen(false)}
+        customerData={selectedCustomerData}
+        phoneNumber={selectedPhoneNumber}
+        onEdit={handleEdit} // Pass edit handler
+        onDelete={handleDelete} // Pass delete handler
+      />
+
+      {/* Table Section */}
+      <Paper sx={{ borderRadius: "12px", overflow: "hidden" }}>
+        <StyledTableContainer>
+          <Table stickyHeader>
+            <StyledTableHead>
+              <TableRow>
+                <TableCell padding="checkbox" align="center" sx={{ width: 48 }}>
+                  All
+                  <Checkbox
+                    color="primary"
+                    indeterminate={
+                      selectedLeads.length > 0 &&
+                      selectedLeads.length < paginatedData.length
+                    }
+                    checked={
+                      paginatedData.length > 0 &&
+                      selectedLeads.length === paginatedData.length
+                    }
+                    onChange={handleSelectAllClick}
+                  />
+                </TableCell>
+                <TableCell>Salon Details</TableCell>
+                <TableCell>Customer Name</TableCell>
+                <TableCell>Customer Info</TableCell>
+                <TableCell>Dates</TableCell>
+                <TableCell>Appointment Booking Time</TableCell>
+                <TableCell>Services</TableCell>
+                <TableCell>Price</TableCell>
+                <TableCell>Source Of Lead</TableCell>
+                <TableCell>Campaign Name</TableCell>
+                <TableCell>Does Customer Visited The Salon</TableCell>
+                <TableCell>Reason For Not Visisted The Salon</TableCell>
+                <TableCell>Number OF Customers</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Remarks</TableCell>
+                {/* <TableCell align="center">Actions</TableCell> */}
+              </TableRow>
+            </StyledTableHead>
+            <TableBody>
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={8} align="center" sx={{ py: 8 }}>
+                    <Box>
+                      <LinearProgress sx={{ mb: 2 }} />
+                      <Typography color="textSecondary">
+                        Loading leads...
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              ) : (showSelectedOnly
+                  ? paginatedData.filter((lead) =>
+                      selectedLeads.includes(lead.id)
+                    )
+                  : paginatedData
+                ).length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8} align="center" sx={{ py: 8 }}>
+                    <Typography variant="h6" color="textSecondary">
+                      {showSelectedOnly
+                        ? "No selected leads found"
+                        : "No leads found matching your criteria"}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                (showSelectedOnly
+                  ? paginatedData.filter((lead) =>
+                      selectedLeads.includes(lead.id)
+                    )
+                  : paginatedData
+                ).map((lead, index) => {
+                  const isItemSelected = isSelected(lead.id);
+                  return (
+                    <TableRow
+                      key={lead.id}
+                      hover
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      selected={isItemSelected}
+                      sx={{
+                        "&:hover": { backgroundColor: alpha("#667eea", 0.05) },
+                        transition: "background-color 0.2s ease",
+                      }}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          color="primary"
+                          checked={isItemSelected}
+                          onClick={(event) =>
+                            handleCheckboxClick(event, lead.id)
+                          }
+                        />
+                      </TableCell>
+
+                      <TableCell>
+                        <Box>
+                          <Typography
+                            variant="subtitle2"
+                            fontWeight={600}
+                            sx={{ mb: 0.5 }}
+                          >
+                            {lead.salon_info?.name || "N/A"}
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            color="textSecondary"
+                            sx={{ display: "flex", alignItems: "center" }}
+                          >
+                            <LocationOn sx={{ fontSize: 14, mr: 0.5 }} />
+                            {lead.salon_info?.city || "N/A"},{" "}
+                            {lead.salon_info?.area || "N/A"}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+
+                      <TableCell>
+                        <Typography variant="body2">
+                          {lead.customer_name || "N/A"}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell>
+                        <Box>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              mb: 0.5,
+                            }}
+                          >
+                            <Person
+                              sx={{
+                                fontSize: 16,
+                                mr: 0.5,
+                                color: "text.secondary",
+                              }}
+                            />
+                            {lead.gender
+                              ? lead.gender.charAt(0).toUpperCase() +
+                                lead.gender.slice(1)
+                              : "N/A"}
+                          </Typography>
+                          <Box display="flex" alignItems="center">
+                            <Phone sx={{ fontSize: 14, mr: 0.5 }} />
+                            <Typography variant="caption" color="textSecondary">
+                              {lead.customer_mobile_number || "N/A"}
+                            </Typography>
+                            <IconButton
+                              size="small"
+                              onClick={() =>
+                                handleViewCustomerDetails(
+                                  lead.customer_mobile_number
+                                )
+                              }
+                              sx={{ ml: 0.5 }}
+                            >
+                              <ViewIcon fontSize="small" />
+                            </IconButton>
+                          </Box>
+                        </Box>
+                      </TableCell>
+
+                      <TableCell>
+                        <Box>
+                          <Typography
+                            variant="caption"
+                            color="textSecondary"
+                            display="block"
+                            sx={{ display: "flex", alignItems: "center" }}
+                          >
+                            <Event sx={{ fontSize: 14, mr: 0.5 }} />
+                            Converted Date:{" "}
+                            {lead.converted_date
+                              ? formatDate(new Date(lead.converted_date))
+                              : "N/A"}
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            color="textSecondary"
+                            display="block"
+                            sx={{ display: "flex", alignItems: "center" }}
+                          >
+                            <Event sx={{ fontSize: 14, mr: 0.5 }} />
+                            Appointment Date:{" "}
+                            {lead.appointment_date
+                              ? formatDate(new Date(lead.appointment_date))
+                              : "N/A"}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+
+                      <TableCell>
+                        <Typography variant="body2">
+                          {lead.booking_time ? (
+                            <>
+                              {new Date(
+                                `1970-01-01T${lead.booking_time}`
+                              ).toLocaleTimeString("en-IN", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true,
+                              })}
+                            </>
+                          ) : (
+                            "N/A"
+                          )}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell>
+                        <Box sx={{ maxHeight: "100px", overflowY: "auto" }}>
+                          {lead.masterservice_info?.length > 0 ? (
+                            lead.masterservice_info.map((service) => (
+                              <Chip
+                                key={service.id}
+                                label={`${service.service_name} (${service.category_name})`}
+                                size="small"
+                                sx={{ m: 0.5 }}
+                                icon={<Category fontSize="small" />}
+                              />
+                            ))
+                          ) : (
+                            <Typography variant="caption" color="textSecondary">
+                              No services
+                            </Typography>
+                          )}
+                        </Box>
+                      </TableCell>
+
+                      <TableCell>
+                        <Typography variant="body2">
+                          {lead.price || "N/A"}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell>
+                        <Typography
+                          variant="body2"
+                          sx={{ textTransform: "capitalize" }}
+                        >
+                          {lead.source_of_lead || "N/A"}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell>
+                        <Typography variant="body2">
+                          {lead.campaign_name || "N/A"}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell>
+                        <Chip
+                          label={
+                            lead.does_customer_visited_the_salon ? "Yes" : "No"
+                          }
+                          color={
+                            lead.does_customer_visited_the_salon
+                              ? "success"
+                              : "error"
+                          }
+                          size="small"
+                          variant="outlined"
+                        />
+                      </TableCell>
+
+                      <TableCell>
+                        <Typography variant="body2">
+                          {lead.reason_for_not_visited_the_salon || "-"}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell>
+                        <Typography variant="body2">
+                          {lead.number_of_customers || "-"}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell>
+                        <StatusChip
+                          label={
+                            lead.choice
+                              ? lead.choice.charAt(0).toUpperCase() +
+                                lead.choice.slice(1)
+                              : "N/A"
+                          }
+                          status={lead.choice}
+                          size="small"
+                        />
+                        {lead.choice === "cancelled" && lead.cancel_reason && (
+                          <Typography
+                            variant="caption"
+                            color="textSecondary"
+                            display="block"
+                          >
+                            Reason: {lead.cancel_reason}
+                          </Typography>
+                        )}
+                      </TableCell>
+
+                      <TableCell>
+                        <Typography
+                          variant="caption"
+                          color="textSecondary"
+                          sx={{ display: "flex", alignItems: "center" }}
+                        >
+                          <Note sx={{ fontSize: 14, mr: 0.5 }} />
+                          {lead.remarks || "No remarks"}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              )}
+            </TableBody>
+          </Table>
+        </StyledTableContainer>
+
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={filteredData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          sx={{
+            borderTop: "1px solid rgba(224, 224, 224, 1)",
+            "& .MuiTablePagination-toolbar": {
+              paddingLeft: 2,
+              paddingRight: 2,
+            },
+          }}
+        />
+      </Paper>
+
+      {/* Date Range Selection Modal */}
+      <Dialog
+        open={showDateSelectionModal}
+        onClose={() => setShowDateSelectionModal(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>Select Date Range</DialogTitle>
+        <DialogContent>
+          <DateRange
+            dateState={dateState}
+            setDateState={setDateState}
+            setIsDateFilterOn={setIsDateFilterOn}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowDateSelectionModal(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setShowDateSelectionModal(false);
+              setIsDateFilterOn(true);
+              handleSearch();
+            }}
+          >
+            Apply Filter
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={showCustomDateModal}
+        onClose={() => setShowCustomDateModal(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>Select Custom Date Range</DialogTitle>
+        <DialogContent>
+          <DateRange
+            dateState={[
+              {
+                startDate: customDateRange.startDate || new Date(),
+                endDate: customDateRange.endDate || new Date(),
+                key: "selection",
+              },
+            ]}
+            setDateState={(ranges) => {
+              setCustomDateRange({
+                startDate: ranges[0].startDate,
+                endDate: ranges[0].endDate,
+              });
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowCustomDateModal(false)}>Cancel</Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              if (customDateRange.startDate && customDateRange.endDate) {
+                handleCustomDateApply(
+                  customDateRange.startDate,
+                  customDateRange.endDate
+                );
+              }
+            }}
+          >
+            Apply Filter
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <GeneralModal
+        open={editModalVisible}
+        handleClose={handleModalClose}
+        backgroundColor="#fff"
+      >
+        {currentLead && (
+          <ConvertedLeadForm
+            leadData={currentLead}
+            onSuccess={handleUpdateSuccess}
+            onCancel={handleModalClose}
+          />
+        )}
+      </GeneralModal>
+    </StyledContainer>
+  );
+};
+
+export default ConvertedLead;

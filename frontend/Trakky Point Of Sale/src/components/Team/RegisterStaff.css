@@ -1,0 +1,172 @@
+
+.registerStaffContainer{
+    width: 60%;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 10px 11px 0px #615b5b45;
+    border-radius: 10px;
+    background-color: white;
+    margin: auto;
+}
+.registerStaffContainer form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+.registerStaffContainer input{
+    border-radius: 8px;
+}
+
+.registerStaffNameAndJoiningDate,
+.registerStaffAddressAndContact{
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+
+}
+.registerStaffAddressAndContact input{
+    border-radius: 18px;
+}
+
+.registerStaffSalaryAndEmail{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+   
+}
+.registerStaffJoiningDate{
+    min-width: 0px !important;
+}
+.registerStaffName{
+    width: 50%;
+}
+.outsideloacalization_provider .css-1s1f19s-MuiStack-root{
+    padding: 10px;
+}
+
+.outsideloacalization_provider .css-12e8gof{
+    padding: 10px;
+}
+
+@media (max-width:769px) {
+ 
+    .registerStaffContainer{
+       width: 100%; 
+       margin: 0;
+       margin-right: 10px;
+       padding: 10px;
+       padding-right: 20px;
+       padding-left: 20px;
+    }
+    .registerStaffJoiningDate{
+        width: 100%;
+    }
+    .registerStaffName{
+        width: 100%;
+    }
+}
+
+.registerStaffContainer{
+    width: 60%;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 10px 11px 0px #615b5b45;
+    border-radius: 10px;
+    background-color: white;
+    margin: auto;
+}
+.registerStaffContainer form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+.registerStaffContainer input{
+    border-radius: 8px;
+}
+
+.registerStaffNameAndJoiningDate,
+.registerStaffAddressAndContact{
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+}
+.registerStaffAddressAndContact input{
+    border-radius: 18px;
+}
+
+.registerStaffSalaryAndEmail{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+   
+}
+.registerStaffJoiningDate{
+    min-width: 0px !important;
+}
+.registerStaffName{
+    width: 50%;
+}
+.outsideloacalization_provider .css-1s1f19s-MuiStack-root{
+    padding: 10px;
+}
+
+.outsideloacalization_provider .css-12e8gof{
+    padding: 10px;
+}
+
+/* Commission slab styles */
+.commission-slabs-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.commission-slab-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.commission-slab-input {
+    flex: 1;
+}
+
+@media (max-width:769px) {
+ 
+    .registerStaffContainer{
+       width: 100%; 
+       margin: 0;
+       margin-right: 10px;
+       padding: 10px;
+       padding-right: 20px;
+       padding-left: 20px;
+    }
+    .registerStaffJoiningDate{
+        width: 100%;
+    }
+    .registerStaffName{
+        width: 100%;
+    }
+    
+    /* Responsive commission slabs */
+    .commission-slab-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .commission-slab-input {
+        width: 100%;
+    }
+}

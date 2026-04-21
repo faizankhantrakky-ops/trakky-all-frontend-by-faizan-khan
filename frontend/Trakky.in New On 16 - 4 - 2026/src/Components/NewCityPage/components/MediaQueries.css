@@ -1,0 +1,248 @@
+
+.premium_div-x {
+    display: inline-block;
+    position: absolute;
+    top: 7px;
+    left: -5px;
+    overflow: hidden;
+    background-color: #512DC8;
+    padding: auto;
+    z-index: 10;
+  
+    width: 64px;
+    text-align: center; /* Add padding to adjust the size of the box */
+    border-radius: 4px 7px 7px 4px; /* Add border radius for rounded corners */
+  
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      transform: translateX(-100%);
+      background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0,
+        rgba(255, 255, 255, 0.2) 20%,
+        rgba(255, 255, 255, 0.5) 60%,
+        rgba(255, 255, 255, 0)
+      );
+      animation: shimmer 2s infinite;
+    }
+  }
+  .premium-text {
+    color: white;
+    font-size: 13px;
+    font-weight: 400;
+    margin: 3px;
+  }
+  
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+
+@media (min-width: 769px) {
+    .overAllNew_Citypage {
+        gap: 50px !important;
+    }
+    .MainTopofferCity {
+        width: 80%;
+        height: 220px;
+    }
+    .cardsSalonCategoryNewCit {
+        font-size: 24px;
+        width: 158px;
+        height: 170px;
+        border-radius: 34px;
+    }
+    .offerServiceCardCitypageinner {
+        font-size: 18px;
+        width: 158px;
+        height: 170px;
+        border-radius: 34px;
+    }
+    .cardsCategoryOuterboxCity {
+        gap: 60px;
+    }
+    .BestSalonTitleNewCity h1 {
+        font-size: 28px;
+    }
+    .CategoriesNewcity {
+       height: 145px;
+       width: 145px;
+    }
+    .grp2newcitycircle {
+        gap: 15px;
+        font-size: 22px;
+    }
+    .groupcirclesnewcity {
+        gap: 50px;
+    }
+    .SalonServicesinNewCity {
+        gap: 30px;
+    }
+    .cardsSalonWRTarea {
+        border-radius: 25px;
+        height: 286px;
+        width: 245px;
+    }
+    .backshadowbottom {
+        height: 100px;
+        border-bottom-left-radius: 25px;
+        border-bottom-right-radius: 25px;
+        top: 90px;
+        width: 245px;
+    }
+    .backshadowtop {
+        border-top-left-radius: 25px;
+        border-top-right-radius: 25px;
+        width: 245px;
+    }
+    .DetailsCardoffersalon_list {
+        padding: 0 0 0 15px;
+        top: -139px;
+    }
+    .salondetails_newcity_salonlist {
+        width: 90%;
+    }
+    .salondetails_newcity_salonlistinside>span:first-child{
+        font-size: 21px !important;
+        font-weight: 550 !important;
+    }
+    .address_newcitySalonDetails{
+        font-size: 19px;
+    }
+    .cityscore_newCity{
+        font-size:20px !important ;
+    }
+    .BestSalonAreaouterbox {
+        gap: 30px;
+    }
+    .salonListCardsSwipable {
+        gap: 30px;
+    }
+    .seemoreSalon_NewCity {
+        font-size: 18px;
+        gap: 15px;
+    }
+    .logo-citypage {
+        width: 100px;
+    }
+    .newWidthCityPageNew {
+        border-top-right-radius: 20px;
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        width: 406px;
+        height: 221px;
+    }
+    .newWidthCityPageNew > .backshadowtop {
+        width: 406px;
+    }
+    .newWidthCityPageNew .backshadowbottom {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        top: 22px;
+        width: 406px;
+    }
+    .newWidthCityPageNew .css-i4bv87-MuiSvgIcon-root {
+        width: 1.2em;
+        height: 1.2em;
+    }
+    .newWidthCityPageNew + .salondetails_newcity_salonlist {
+        box-sizing: border-box;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        width: 406px;
+        padding: 10px 0 0 0;
+        border: 1px solid #DFDFDF;
+    }
+    .newWidthCityPageNew + .salondetails_newcity_salonlist > .salondetails_newcity_salonlistinside {
+        align-items: center;
+        padding: 0 10px;
+        justify-content: space-between;
+        display: flex;
+    }
+    .newWidthCityPageNew + .salondetails_newcity_salonlist > .salondetails_newcity_salonlistinside>.cityscore_newCity{
+        font-weight: 600 !important;
+        font-size: 14px !important;
+    }
+    .newWidthCityPageNew + .salondetails_newcity_salonlist > .address_newcitySalonDetails {
+        font-size: 15px;
+        padding: 0 10px;
+    }
+    .newWidthCityPageNew + .salondetails_newcity_salonlist::after {
+        font-weight: 600;
+        font-size: 16px;
+        border-bottom: 0;
+        width: 100%;
+        align-self: center;
+        border: 1px solid #DFDFDF;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        content: "Book Now";
+        background-color: #F8F8F8;
+        padding: 15px 0;
+    }
+    .newWidthCityPageNew > .DetailsCardoffersalon_list{
+        top: -158px;
+    }
+    .BestSalonTitleNewCity h1 {
+        font-size: 28px;
+    }
+    .line1Forcard {
+        font-size: 23px !important;
+    }
+    .line2Forcard {
+        font-size: 32px !important;
+    }
+    .line3Forcard {
+        font-size: 17px !important;
+    }
+    .itemsbestcategoryinnewcity {
+        padding: 0 40px 26px 8px;
+    }
+    .itemsbestcategoryinnewcity > span {
+        font-weight: 500;
+        font-size: 16px;
+    }
+    .MainInfiscrolling_newcity>.salonListitem_NewCity{
+        flex-flow: column;
+        gap: 0;
+    }
+    .MainInfiscrolling_newcity{
+        flex-flow: row;
+        flex-wrap: wrap;
+    }
+    .MainInfiscrolling_newcity>.salonListitem_NewCity>.salondetails_newcity_salonlist>.salondetails_newcity_salonlistinside>span:first-child{
+        width: fit-content;
+    }
+    .MainInfiscrolling_newcity>.salonListitem_NewCity>.salondetails_newcity_salonlist>.salondetails_newcity_salonlistinside>span{
+        width: unset;
+    }
+    .areassalonnewcity+.salonListCardsSwipable{
+        justify-content: center;
+    }
+    .areassalonnewcity+.salonListCardsSwipable+.salonListCardsSwipable{
+        justify-content: center;
+    }
+}
+
+.areanewcity p{
+    margin: 0;
+}
+.salonListitem_NewCity{
+    width: min-content;
+}
+.changeForDesktop_ViewnewCity{
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+}

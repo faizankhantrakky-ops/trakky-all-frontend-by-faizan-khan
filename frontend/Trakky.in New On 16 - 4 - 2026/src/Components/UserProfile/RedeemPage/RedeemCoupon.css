@@ -1,0 +1,136 @@
+/* CouponCard.css */
+.coupon-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.coupon-section h1 {
+  font-size: 36px;
+}
+
+.coupon-input-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  padding-right: 7rem;
+  padding-left: 7rem;
+}
+
+.coupon-input-cards h1 {
+  font-size: 24px;
+}
+
+.coupon-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.coupon-input {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  border-radius: 10px;
+  width: 40vw;
+  padding-right: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+}
+.coupon-input input{
+  width: 100%;
+}
+.coupon-title{
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+
+}
+.coupon-description{
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  margin-top: 1rem;
+}
+.coupon-description p{
+  font-size: 16px;
+  text-align: justify;
+  font-weight: 300;
+}
+.coupon-title h2{
+  color: white;
+}
+.coupon-input input:focus {
+  outline: none;
+}
+
+.coupon-section {
+  text-align: center;
+}
+
+/* RedeemCoupon.css */
+.coupon-card {
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.15);
+  position: relative;
+  margin-bottom: 20px;
+  width: 340px;
+  height: 198px;
+  cursor: pointer;
+}
+
+.coupon-card h3 {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 30px;
+  margin-bottom: 10px;
+}
+
+.coupon-card p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.coupon-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 15px auto;
+  width: fit-content;
+}
+
+.circle1,
+.circle2 {
+  background: #f0fff3;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  position: absolute;
+  top: 35%;
+  transform: translateY(-50%);
+}
+
+.circle1 {
+  left: -20px;
+}
+
+.circle2 {
+  right: -20px;
+}
+
+
+@media screen and (max-width: 640px){
+  .coupon-input{
+    width: 100%;
+  }
+  .coupon-input-cards {
+    padding-right: 8.5rem;
+  }
+}

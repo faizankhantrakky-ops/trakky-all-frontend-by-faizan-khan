@@ -1,0 +1,60 @@
+import React from "react";
+import { Fade, Modal, Backdrop } from "@mui/material";
+
+// const style = {
+//   position: "absolute",
+//   top: "50%",
+//   left: "50%",
+//   transform: "translate(-50%, -50%)",
+//   minWidth: "min(700px, 95%)",
+//   maxWidth: "95%",
+//   borderRadius: "10px",
+//   boxShadow: 24,
+//   p: 4,
+//   backgroundColor: "#f0ecff",
+//   maxHeight: "90vh",
+//   overflowY: "auto",
+// };
+
+const GeneralModal = ({ open, handleClose, children, backgroundColor }) => {
+  return (
+    <Modal
+      aria-labelledby="transition-modal-title"
+      aria-describedby="transition-modal-description"
+      open={open}
+      onClose={handleClose}
+      closeAfterTransition
+      slots={{ backdrop: Backdrop }}
+      slotProps={{
+        backdrop: {
+          timeout: 500,
+        },
+      }}
+      disableAutoFocus
+    >
+      <Fade in={open}>
+        <div
+          className="modal-container"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            minWidth: "min(700px, 95%)",
+            maxWidth: "95%",
+            borderRadius: "10px",
+            boxShadow: 24,
+            p: 4,
+            backgroundColor: `${backgroundColor ? backgroundColor : "#f0ecff"}`,
+            maxHeight: "90vh",
+            overflowY: "auto",
+          }}
+        >
+          {children}
+        </div>
+      </Fade>
+    </Modal>
+  );
+};
+
+export default GeneralModal;

@@ -1,0 +1,180 @@
+.heading{
+    margin: 0;
+    padding: 0;
+    font-size: 1.5rem;
+}
+
+input{
+    border-width: 1px;
+}
+
+.login-img{
+    background-image: linear-gradient(90deg, #955DF4 0.20%, #5E61EE 100%);
+
+}
+
+
+.form{
+    width: min(calc(100% - 30px) , 400px);
+}
+
+.remember-me{
+    color: #565656;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+}
+
+.forgot-password{
+    color: #565656;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+}
+
+.signin-btn{
+    background-color: #00AE6C;;
+}
+
+.register-btn{
+    background-color:  #512DC8;;
+}
+
+.or-line{
+    background-color: black;
+    height: 1px;
+    width: 50px;
+}
+
+.or-section{
+    font-size: 1.25rem;
+}
+@media (max-width: 768px) {
+    .login-form{
+        width: 100% !important;
+    }
+    .login-img{
+        display: none;
+    }
+    form{
+        min-width: 300px;
+    }
+}
+.anim
+{
+    
+   background-repeat: no-repeat;
+   background-position: center;
+    animation: image_transition 20s infinite  ease-in-out ;
+   
+}
+
+@keyframes image_transition
+{
+    0%
+    {
+        background-image: url("../../svgs/salon1.svg");
+
+        alpha: 1.0;
+    }
+    10%{
+        
+        alpha: 0.5;
+    }
+    15%{
+        alpha: 0.0;
+        background-image: url("../../svgs/spa1.svg");
+    }
+    18%{
+        alpha: 0.5;
+    }
+     20%{
+        alpha: 1.0;
+
+     }
+     25%
+        {
+            alpha: 0.5;
+        }
+        30%
+        {
+            alpha: 0;
+            background-image: url("../../svgs/salon2.svg");
+        }
+        35%
+        {
+            alpha: 0.5;
+        }
+     40%
+     {
+        alpha: 1.0;
+
+
+     }
+        45%
+        {
+            alpha: 0.5;
+        }
+        50%
+        {
+            alpha: 0;
+            background-image: url("../../svgs/spa2.svg");
+        }
+        55%
+        {
+            alpha: 0.5;
+        }
+     60%
+     {
+        alpha: 1.0;
+
+     }
+        65%
+        {
+            alpha: 0.5;
+        }
+        70%
+        {
+            alpha: 0;
+            background-image: url("../../svgs/salon3.svg");
+        }
+        75%
+        {
+            alpha: 0.5;
+
+     }
+     80%
+     {
+        alpha: 1.0;
+
+     }
+        85%
+        {
+            alpha: 0.7;
+    
+
+        }
+        90%
+        {
+            alpha: 0.5;
+    
+
+        }
+        95%
+        {
+            alpha: 0.7;
+        }
+        100%{
+         background-image: url("../../svgs/salon1.svg");
+
+        alpha:1;
+
+
+     }
+}
+/* 
+@media (max-width: 576px) {
+    form{
+        min-width: calc(100% - 30px);
+    }
+} */

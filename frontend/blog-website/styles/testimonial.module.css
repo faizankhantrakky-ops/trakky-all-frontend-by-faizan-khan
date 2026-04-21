@@ -1,0 +1,194 @@
+.testimonialDiv {
+    width: 100%;
+    padding-block: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.addCommentDIv {
+    padding-inline: 80px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.addCommentDIv h2 {
+    font-family: Montserrat;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 25px;
+    letter-spacing: 0px;
+    text-align: left;
+
+}
+
+.addComment {
+    width: 100%;
+    max-width: 800px;
+    height: 50px;
+    border-radius: 25px;
+    border: 1px solid #D9DBDF;
+    background: #FFF;
+    padding: 7px;
+    display: flex;
+    gap: 10px;
+}
+
+.addComment input {
+    width: 100%;
+    height: 100%;
+    outline: none;
+    border: none;
+    color: #7E7F81;
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    padding-left: 10px;
+}
+
+.commentBtn {
+    height: 100%;
+    width: max-content;
+    border-radius: 30px;
+    background: linear-gradient(83deg, #46177B 37.06%, #8703ED 76.56%);
+    color: #FFF;
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Montserrat;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: 0.839px;
+    padding: 5px 30px;
+    text-transform: uppercase;
+}
+
+.userReview {
+    height: 170px;
+    width: 100%;
+}
+
+.reviewCard {
+    width: 480px;
+    height: 165px;
+    flex-shrink: 0;
+    border-radius: 15px;
+    background: #FFF;
+    box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.10);
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    margin-right: 20px;
+}
+
+.reviewCard:first-child {
+    margin-left: 80px;
+}
+
+.cardUser {
+    height: 60px;
+    width: 55px;
+    flex-shrink: 0;
+    background-color: lightgray;
+    border-radius: 10px;
+}
+
+.cardUser img {
+    width: 100%;
+    height: 100%;
+}
+
+.cardReview {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 10px;
+}
+
+.cardName {
+    color: #292929;
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: Montserrat;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 26px;
+}
+
+.cardReviewText {
+    color: #292929;
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: "DM Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+    height: 54px;
+    overflow: hidden;
+    word-break: break-word;
+
+}
+
+.cardDate {
+    color: #7E7F81;
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: "Open Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+@media screen and (max-width : 1024px) {
+
+
+    .reviewCard:first-child {
+        margin-left: 40px;
+    }
+}
+@media screen and (max-width : 768px) {
+
+    .reviewCard{
+        width: 420px;
+    }
+
+    .reviewCard:first-child {
+        margin-left: 30px;
+    }
+}
+@media screen and (max-width : 540px) {
+
+    .reviewCard{
+        width: calc(100% - 40px);
+        margin-inline: 20px;
+    }
+
+    .reviewCard:first-child {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+    .addCommentDIv{
+        padding-inline: 20px;
+    }
+    .addCommentDIv h2{
+        font-size: 20px;
+    }
+    .addComment{
+        max-width: auto;
+        height: 45px;
+        padding: 5px;
+    }
+    .addComment input{
+        font-size: 14px;
+    }
+    .commentBtn{
+        font-size: 12px;
+        padding: 5px 20px;
+    }
+
+}

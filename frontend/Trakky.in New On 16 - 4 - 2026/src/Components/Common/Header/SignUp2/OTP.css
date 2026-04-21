@@ -1,0 +1,224 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.ssh-div-handler-main {
+  display: none;
+}
+
+.ssh-otp-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 488px;
+  height: 48px;
+  padding-top: 20px;
+}
+
+.ssh-otp-head-a {
+  color: black;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.ssh-otp-head-p1 {
+  font-size: 19.33px;
+  font-weight: 500;
+  padding-left: 10px;
+  box-sizing: border-box;
+}
+
+.ssh-otp-head-p2 {
+  font-size: 15.33px;
+  font-weight: 500;
+}
+
+.ssh-otp-code-div {
+  height: 48px;
+  width: 488px;
+}
+
+.ssh-otp-code-p {
+  font-size: 15.23px;
+  padding: 20px 0 0 10px;
+}
+
+.ssh-div-otp {
+  width: 488px;
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.ssh-otp-timer {
+  text-align: left;
+  width: 488px;
+  padding: 0 0 10px 21px;
+}
+
+.ssh-otp-line {
+  width: 95%;
+  height: 1px;
+  background-color: #ddd;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.ssh-otp-login-button {
+  width: 504px;
+  margin-bottom: 20px;
+  height: 48px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background-color: #EDEDED;
+  font-size: 15px;
+}
+
+.ssh-div-otp-input {
+  margin-left: 10px;
+  width: 400px;
+  height: 48px;
+  border-radius: 10px;
+  border: 0.5px solid #000000;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  letter-spacing: 20px;
+  padding-left: 28px;
+  font-size: 19px;
+}
+
+.ssh-resend-otp-button {
+  width: 100%;
+  border: none;
+  background: none;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  padding: 0 0 0 28px;
+  padding-top: 20px;
+  margin-bottom: 15px;
+}
+
+.ssh-resend-otp-p {
+  font-size: 12px;
+}
+
+.ssh-resend-otp-p:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  color: blue;
+}
+
+.ssh-purple {
+  background-color: #512DC8;
+  color: white;
+}
+
+.ssh-resend-otp-button {
+  font-size: 15px;
+}
+
+.ssh-resend-otp-button:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+@media only screen and (max-width: 500px) {
+  .ssh-div-handler-main {
+    display: flex;
+    width: 100%;
+    height: 20px;
+    padding-top: 10px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ssh-div-handler {
+    height: 8px;
+    width: 50px;
+    background-color: rgb(188, 182, 182);
+    border-radius: 10px;
+  }
+
+  .ssh-main {
+    height: 100% !important;
+  }
+
+  .ssh-main-div {
+    width: 100%;
+    height: auto;
+  }
+
+  .ssh-cancel {
+    display: none;
+  }
+
+  .ssh-login-content {
+    width: 100%;
+    height: auto;
+  }
+
+  .ssh-otp-head {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    height: auto;
+    box-sizing: border-box;
+    padding: 8px;
+    padding-top: 20px;
+  }
+
+  .ssh-otp-code-div {
+    width: 100%;
+    display: flex;
+    justify-content: left;
+    padding-left: 20px;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  .ssh-otp-code-p {
+    width: auto;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ssh-div-otp {
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ssh-div-top-1 {
+    width: 100%;
+    height: auto;
+    display: flex;
+    padding: 0 0 0 18px;
+    margin: 0;
+    justify-content: left;
+    box-sizing: border-box;
+    align-items: center;
+    text-align: center;
+  }
+
+  .ssh-div-otp-input {
+    width: 80%;
+    padding: 0 0 0 20px;
+    margin: 0;
+  }
+
+  .ssh-resend-otp-button {
+    font-size: 14px;
+    box-sizing: border-box;
+    padding-left: 20px;
+  }
+}

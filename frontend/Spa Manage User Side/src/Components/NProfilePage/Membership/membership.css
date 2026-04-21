@@ -1,0 +1,106 @@
+.GP-list-container{
+    display: flex;
+    flex-direction: column;
+}
+.GP-list-item {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    border-bottom: 1px solid #00000015;
+    padding-block: 5px 12px;
+}
+.GP-list-item:last-child {
+    border-bottom: none;
+}
+
+.GP-package-image {
+    display: flex;
+    gap: 5px;
+    color: rgb(18, 124, 18);
+    font-size: 12px;
+    align-items: center;
+    text-transform: uppercase;
+}
+.GP-package-name-book {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 24px;
+}
+.GP-package-name-book h2{
+    font-size: 17px;
+    color: #000000;
+    font-weight: 600;
+    line-height: 24px;
+    
+}
+.GP-package-name-book button{
+    background-color: white;
+    color: blue;
+    transform: translateY(-10px);
+    padding: 7px 10px;
+    border: 1px solid blue;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0px 2px 5px #00000040;
+}
+.GP-package-price-time {
+    display: flex;
+    gap: 5px;
+    align-items: baseline;
+}
+
+.GP-package-price-time {
+    del {
+        color: gray;
+        text-decoration: none;
+        position: relative;
+        &:before {
+          content: " ";
+          display: block;
+          width: 95%;
+          border-top: 2px solid gray;
+          height: 12px;
+          position: absolute;
+          bottom: 0;
+          left: 5%;
+          transform: rotate(-10deg);
+        }
+      }
+}
+
+.GP-package-price-time span:last-child {
+    color: gray;
+    font-size: 14px;
+}
+.GP-package-service-inc ul {
+    padding-inline: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.GP-package-service-inc ul li {
+    list-style: disc !important;
+    font-size: 14px;
+    font-weight: 500;
+}
+.GP-package-show-details {
+    color: rgb(2, 2, 200);
+    text-decoration: underline;
+    cursor: pointer;
+}
+.GP-show-all-p-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin:10px auto ;
+    cursor: pointer;
+    border: 1px solid black;
+    padding: 5px 12px;
+    font-size: 14px;
+    width: fit-content;
+    min-width: max-content;
+    border-radius: 25px;
+}

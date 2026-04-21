@@ -1,0 +1,74 @@
+.HomeCardPOS{
+    padding: 20px;
+    width: 680px;
+    height: 300px;
+    border-radius: 20px;
+    box-shadow: 3px 5px 12px 3px #b2acac;
+    background-color: white;
+}
+.datePOS{
+    gap: 5px;
+    display: flex;
+    flex-flow: column;
+}
+.DashCardPOS{
+    transition: 0.2s;
+    cursor: pointer;
+    font-size: 18px;
+    justify-content: space-evenly;
+    height: 150px;
+    border-radius: 8px;
+    box-shadow: 0px 8px 5px 0px #615b5b45;
+}
+.DashStaffPOS table th , .DashStaffPOS table td{
+    white-space: nowrap;
+    padding: 0 30px;
+}
+.DashCardPOS:hover{
+   box-shadow:  0px 2.5px 5px 5px #615b5b45;
+    transform: scale(1.05);
+}
+.DashCardPOS p{
+   
+    font-weight: 600;
+} 
+.HomeCardPOS li{
+    padding: 20px 0;
+    border-bottom: 0.7px solid #D5D7DA;
+    display: flex;
+    list-style: none;
+}
+.HomeCardPOS ul{
+    margin: 0;
+    padding: 0;
+}
+.accactivity{
+    padding-left: 20px;
+    display: flex;
+    flex-flow: column;
+}
+.today_app_pos{
+    display: flex;
+    align-items: center;
+    padding-left: 35%;
+}
+.tablebodyPOS td{
+    padding: 20px 0;
+    border-top: 1px solid #D5D7DA !important;
+}   
+table{
+    border-collapse: collapse;
+}
+.Headingtable_POS th{
+    padding-right: 20px;
+    text-align: center;
+}
+.Headingtable_POS th:first-child{
+    padding-right: 340px;
+}
+.Headingtable_POS th:last-child{
+    padding-right: 0px;
+}
+.TableDataPOS{
+    text-align: center;
+}

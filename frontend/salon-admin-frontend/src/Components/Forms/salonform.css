@@ -1,0 +1,48 @@
+.secondary-areas-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.secondary-area-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.remove-area-btn {
+  background: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-secondary-area {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.secondary-area-select, .priority-input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.add-area-btn {
+  padding: 8px 16px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

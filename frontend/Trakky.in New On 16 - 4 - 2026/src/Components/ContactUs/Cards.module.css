@@ -1,0 +1,134 @@
+.Contactus_main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  padding-bottom: 0;
+  max-width: 600px;
+  /* margin: 0 auto; */
+  padding-top: 0;
+}
+
+.Contactus_card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 30px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background: #ffffff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.Contactus_card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.Contactus_heading {
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 24px;
+  color: #333333;
+}
+
+.Contactus_number {
+  display: flex;
+  align-items: center;
+  font-size: 1rem; 
+  color: #555;
+  margin-bottom: 10px;
+  transition: color 0.3s ease;
+}
+
+.Contactus_number a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+.Contactus_number:hover {
+  color: #007bff;
+}
+
+.Contactus_number a:hover {
+  color: #007bff;
+}
+
+.Contactus_button {
+  padding: 12px 35px;
+  border-radius: 4px;
+  border: none;
+  font-size: 1.125rem; /* Responsive sizing with rem */
+  color: #fff;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+  margin-top: 20px;
+  display: inline-block;
+  text-align: center;
+}
+
+.Contactus_button:hover {
+  background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+  transform: translateY(-3px);
+}
+.SocialMediaLinks {
+  display: flex;
+  gap: 15px;
+  justify-content: center; /* Center align the icons */
+  margin-top: 20px;
+}
+
+.SocialMediaLinks a {
+  color: #333; /* Default color */
+  transition: color 0.3s ease;
+}
+
+.SocialMediaLinks a:hover {
+  color: #007bff; /* Change color on hover */
+}
+
+
+@media screen and (max-width: 768px) {
+  .Contactus_card {
+    padding: 15px 20px;
+  }
+  
+  .Contactus_heading {
+    font-size: 1.375rem; /* Responsive sizing with rem */
+  }
+  
+  .Contactus_number {
+    font-size: 0.875rem; /* Responsive sizing with rem */
+  }
+  
+  .Contactus_button {
+    padding: 10px 25px;
+    font-size: 1rem; /* Responsive sizing with rem */
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .Contactus_card {
+    padding: 12px 15px;
+    border: none;
+    /* box-shadow: none; */
+  }
+
+  .Contactus_main {
+    gap: 15px;
+    padding: 15px 0;
+  }
+
+  .Contactus_heading {
+    font-size: 1.25rem; /* Responsive sizing with rem */
+  }
+
+  .Contactus_button {
+    padding: 10px 20px;
+    font-size: 0.875rem; /* Responsive sizing with rem */
+  }
+}
