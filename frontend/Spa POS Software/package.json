@@ -13,7 +13,6 @@
     "axios": "^1.6.8",
     "chart.js": "^4.4.4",
     "dayjs": "^1.11.11",
-    "faker": "^6.6.6",
     "framer-motion": "^11.5.4",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.562.0",
@@ -34,7 +33,6 @@
     "styled-components": "^6.1.9",
     "swiper": "^11.1.14",
     "toast": "^0.5.4",
-    "trakky_pos": "file:",
     "validator": "^13.11.0",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
