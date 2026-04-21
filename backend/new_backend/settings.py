@@ -14,7 +14,7 @@ from pathlib import Path
 import dotenv
 import os
 
-dotenv_file = Path(__file__).resolve().parent.parent.parent / '.env'
+dotenv_file = Path(__file__).resolve().parent.parent / '.env'
 
 if dotenv_file.exists():
     dotenv.load_dotenv(dotenv_file)
@@ -61,6 +61,8 @@ INSTALLED_APPS = [
     "sslserver",
     'rest_framework_simplejwt',
     'drf_spectacular',
+    'django_filters',
+    'django.contrib.postgres',
 
 
 ]
