@@ -36,6 +36,7 @@ ALLOWED_HOSTS = [
     'trakky.in',
     'www.trakky.in',
     'backendapi.trakky.in',
+    'api.trakky.in',
     'localhost',
     '127.0.0.1',
 ]
@@ -91,6 +92,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://salonadmin.trakky.in",
     "https://spaadmin.trakky.in",
     "https://salonposapp.trakky.in",
+    "http://api.trakky.in" #Test url
 ]
 
 ROOT_URLCONF = 'new_backend.urls'
@@ -284,6 +286,8 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 CSRF_TRUSTED_ORIGINS = [
     "https://backendapi.trakky.in",
+    "http://api.trakky.in" #Test url
+
 ]
 
 
@@ -312,7 +316,7 @@ CACHE_MIDDLEWARE_KEY_PREFIX = "global_cache"
 
 REDIS_HOST = os.environ.get("REDIS_HOST", "127.0.0.1")
 REDIS_PORT = os.environ.get("REDIS_PORT", "6379")
-REDIS_DB = os.environ.get("REDIS_DB", "1")
+REDIS_DB = os.environ.get("REDIS_DB", "2")
 
 
 CACHES = {
