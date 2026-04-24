@@ -594,7 +594,7 @@ class Services(models.Model):
     updated_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='salon_service')
     updated_date = models.DateTimeField(null=True, blank=True)
     hsn_code = models.CharField(max_length=8, null=True, blank=True, help_text="HSN Code for GST purposes")
-
+    lengths = models.JSONField(null=True, blank=True)
 
     class Meta:
         unique_together = [('salon', 'master_service')]

@@ -1329,7 +1329,7 @@ class ServiceSerializer(serializers.ModelSerializer):
             'gender', 'salon', 'categories', 'salon_name', 'category_name', 'city', 'area',
             'created_at', 'service_image', 'master_service', 'master_service_data',
             # 'category_data',  # Commented out
-            'salon_type', 'salon_slug','active_status', 'service_details', 'updated_by', 'updated_date','hsn_code'
+            'salon_type', 'salon_slug','active_status', 'service_details', 'updated_by', 'updated_date','hsn_code', 'lengths' 
         ]
 
     def get_updated_by(self, obj):

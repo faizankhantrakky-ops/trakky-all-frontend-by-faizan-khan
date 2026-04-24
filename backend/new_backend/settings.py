@@ -92,7 +92,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://salonadmin.trakky.in",
     "https://spaadmin.trakky.in",
     "https://salonposapp.trakky.in",
-    "http://api.trakky.in" #Test url
+    "http://api.trakky.in", #Test url
+    "http://localhost:3000",
 ]
 
 ROOT_URLCONF = 'new_backend.urls'
