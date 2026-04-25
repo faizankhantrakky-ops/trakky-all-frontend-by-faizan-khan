@@ -93,3 +93,30 @@ uritemplate==4.1.1
 urllib3==1.26.20
 websocket-client==1.9.0
 wsproto==1.3.2
+
+
+
+ModuleNotFoundError: No module named 'cloudinary'
+ModuleNotFoundError: No module named 'dotenv'
+ModuleNotFoundError: No module named 'rest_framework' 
+ModuleNotFoundError: No module named 'corsheaders'
+ModuleNotFoundError: No module named 'sslserver'
+ModuleNotFoundError: No module named 'rest_framework_simplejwt'
+ModuleNotFoundError: No module named 'drf_spectacular'
+ModuleNotFoundError: No module named 'django_filters'
+ModuleNotFoundError: No module named 'psycopg2'
+ModuleNotFoundError: No module named 'PIL'
+ModuleNotFoundError: No module named 'requests'
+django.core.cache.backends.base.InvalidCacheBackendError: Could not find backend 'django_redis.cache.RedisCache': No module named 'django_redis'
+ModuleNotFoundError: No module named 'geopy'
+ModuleNotFoundError: No module named 'pytz'
+ModuleNotFoundError: No module named 'razorpay'
+ModuleNotFoundError: No module named 'boto3'
+ModuleNotFoundError: No module named 'orjson'
+ModuleNotFoundError: No module named 'reportlab'
+ModuleNotFoundError: No module named 'qrcode'
+ from azure.storage.blob import BlobServiceClient
+ModuleNotFoundError: No module named 'azure'
+ModuleNotFoundError: No module named 'pandas'
+ModuleNotFoundError: No module named 'selenium'
+ModuleNotFoundError: No module named 'webdriver_manager'

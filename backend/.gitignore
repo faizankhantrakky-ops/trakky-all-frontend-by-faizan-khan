@@ -1,4 +1,4 @@
-env
+venv
 temp.py
 .venv/
 __pycache__/
@@ -16,3 +16,4 @@ static/
 db*.json
 web.config
 migrations
+django_errors.log
