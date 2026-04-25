@@ -1,0 +1,158 @@
+salon apis:
+API Endpoints
+The following API endpoints are available for managing salons and related entities:
+
+Salons
+Blog Model
+The Blog model represents a blog post in the system. It has the following parameters:
+
+title: A character field with a maximum length of 255 representing the title of the blog post.
+content: A text field representing the content of the blog post.
+date: A date field with a default value set to the current date.
+City Model
+The City model represents a city in the system. It has the following parameters:
+
+name: A character field with a maximum length of 100 representing the name of the city.
+priority: An integer field representing the priority of the city, with uniqueness enforced.
+Area Model
+The Area model represents an area within a city. It has the following parameters:
+
+name: A character field with a maximum length of 100 representing the name of the area.
+priority: An integer field representing the priority of the area, with uniqueness enforced.
+city: A foreign key to the City model representing the city to which the area belongs.
+FAQ Model
+The FAQ model represents a frequently asked question in the system. It has the following parameters:
+
+question: A text field representing the question being asked.
+answer: A text field representing the corresponding answer to the question.
+date: A date field with a default value set to the current date.
+Salon Model
+The Salon model represents a salon entity in the system. It has the following parameters:
+
+name: A character field with a maximum length of 200 representing the name of the salon.
+main_image: An image field storing the main image of the salon, with an upload path specified.
+address: A character field with a maximum length of 255 representing the address of the salon.
+landmark: A character field with a maximum length of 255 representing a landmark associated with the salon, with a default value provided.
+mobile_number: A character field with a maximum length of 255 representing the contact mobile number of the salon.
+booking_number: A character field with a maximum length of 255 representing the booking contact number of the salon.
+gmap_link: A character field with a maximum length of 255 representing the Google Maps link of the salon.
+city: A character field with a maximum length of 255 representing the city where the salon is located.
+area: A character field with a maximum length of 255 representing the area where the salon is situated.
+salon_longitude: A float field representing the longitude of the salon's location, with a default value provided.
+salon_latitude: A float field representing the latitude of the salon's location, with a default value provided.
+open_time: A time field with a maximum length of 255 representing the opening time of the salon, with a default value provided.
+close_time: A time field with a maximum length of 255 representing the closing time of the salon, with a default value provided.
+slug: A character field with a maximum length of 255 representing a slug for the salon.
+about_us: A text field representing information about the salon.
+open: A boolean field indicating whether the salon is currently open, with a default value provided.
+verified: A boolean field indicating whether the salon is verified
+, with a default value provided.
+
+top_rated: A boolean field indicating whether the salon is top-rated, with a default value provided.
+premium: A boolean field indicating whether the salon is a premium salon, with a default value provided.
+salon_academy: A boolean field indicating whether the salon has an academy, with a default value provided.
+bridal: A boolean field indicating whether the salon offers bridal services, with a default value provided.
+makeup: A boolean field indicating whether the salon offers makeup services, with a default value provided.
+priority: An integer field representing the priority of the salon, with uniqueness enforced.
+Offer Model
+The Offer model represents an offer or promotion in the system. It has the following parameters:
+
+name: A character field with a maximum length of 100 representing the name of the offer.
+slug: A slug field with uniqueness enforced, representing a slug for the offer.
+priority: An integer field representing the priority of the offer.
+img_url: An image field storing the image associated with the offer, with an upload path specified.
+discount: A decimal field with a maximum of 5 digits and 2 decimal places representing the discount value.
+salon: A foreign key to the Salon model representing the salon to which the offer belongs.
+TherapyModel Model
+The TherapyModel model represents a therapy in the system. It has the following parameters:
+
+name: A character field with a maximum length of 100 and uniqueness enforced, representing the name of the therapy.
+slug: A slug field with uniqueness enforced, representing a slug for the therapy.
+priority: An integer field with uniqueness enforced representing the priority of the therapy.
+image_url: An image field storing the image associated with the therapy, with an upload path specified.
+salon: A foreign key to the Salon model representing the salon to which the therapy belongs.
+Services Model
+The Services model represents the services offered by a salon. It has the following parameters:
+
+salon: A foreign key to the Salon model representing the salon offering the service.
+service_name: A character field with a maximum length of 255 representing the name of the service.
+service_time: A character field with a maximum length of 255 representing the duration of the service.
+description: A text field representing the description of the service.
+price: A float field representing the price of the service.
+discount: A float field representing the discount value for the service.
+therapies: A foreign key to the TherapyModel model representing the therapy associated with the service.
+Log Model
+The Log model represents a log entry in the system. It has the following parameters:
+
+name: A character field with a maximum length of 255 representing the name of the
+log entry.
+
+category: A character field with a maximum length of 255 representing the category of the log entry.
+location: A JSON field representing the location information of the log entry.
+time: A date and time field with auto_now_add set to True, representing the timestamp of the log entry.
+actiontype: A character field with a maximum length of 255 representing the action type of the log entry, with predefined choices available ("call_now", "Call Now" and "book_now", "Book Now").
+End Points
+GET /salons/: Retrieve a list of all salons.
+POST /salons/: Create a new salon.
+GET /salons/<id>/: Retrieve details of a specific salon.
+PUT /salons/<id>/: Update details of a specific salon.
+PATCH /salons/<id>/: Partially update details of a specific salon.
+DELETE /salons/<id>/: Delete a specific salon.
+Salon Search
+GET /salons/search/: Search for salons based on specific criteria.
+Salon Filtering
+GET /salons/filter-salon/: Filter salons based on specific criteria.
+Nearby Salons
+GET /salons/nearby-salon/: Retrieve salons located nearby based on geographical coordinates.
+FAQs
+GET /salons/faqs/: Retrieve a list of all FAQs.
+POST /salons/faqs/: Create a new FAQ.
+GET /salons/faqs/<id>/: Retrieve details of a specific FAQ.
+PUT /salons/faqs/<id>/: Update details of a specific FAQ.
+DELETE /salons/faqs/<id>/: Delete a specific FAQ.
+Blogs
+GET /salons/blogs/: Retrieve a list of all blog posts.
+POST /salons/blogs/: Create a new blog post.
+GET /salons/blogs/<id>/: Retrieve details of a specific blog post.
+PUT /salons/blogs/<id>/: Update details of a specific blog post.
+DELETE /salons/blogs/<id>/: Delete a specific blog post.
+City
+GET /salons/city/: Retrieve a list of all cities.
+POST /salons/city/: Create a new city.
+GET /salons/city/<id>/: Retrieve details of a specific city.
+PUT /salons/city/<id>/: Update details of a specific city.
+DELETE /salons/city/<id>/: Delete a specific city.
+Area
+GET /salons/area/: Retrieve a list of all areas.
+
+POST /salons/area/: Create a new area.
+
+GET /salons/area/<id>/: Retrieve details of a specific area.
+
+PUT /salons/area/<id>/: Update details of a specific area.
+
+DELETE /salons/area/<id>/: Delete a specific area.
+
+Offers
+GET /salons/offer/: Retrieve a list of all offers.
+POST /salons/offer/: Create a new offer.
+GET /salons/offer/<id>/: Retrieve details of a specific offer.
+PUT /salons/offer/<id>/: Update details of a specific offer.
+DELETE /salons/offer/<id>/: Delete a specific offer.
+Services
+GET /salons/service/: Retrieve a list of all services.
+POST /salons/service/: Create a new service.
+GET /salons/service/<id>/: Retrieve details of a specific service.
+PUT /salons/service/<id>/: Update details of a specific service.
+DELETE /salons/service/<id>/: Delete a specific service.
+Therapy
+GET /salons/therapy/: Retrieve a list of all therapy models.
+POST /salons/therapy/: Create a new therapy model.
+GET /salons/therapy/<pk>/: Retrieve details of a specific therapy model.
+PUT /salons/therapy/<pk>/: Update details of a specific therapy model.
+DELETE /salons/therapy/<pk>/: Delete a specific therapy model.
+Log Entries
+GET /salons/log-entry/: Retrieve a list of all log entries.
+POST /salons/log-entry/: Create a new log entry.
+Please note that the actual URL for accessing these endpoints will depend on your server configuration. Make sure to replace <id> and <pk> with the corresponding IDs or primary keys when making requests to the specific endpoints.
+
