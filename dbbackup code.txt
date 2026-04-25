@@ -1,2 +1,0 @@
-set PYTHONIOENCODING=utf-8
-python manage.py dumpdata > 19-02-2024_testdbbackup.json
