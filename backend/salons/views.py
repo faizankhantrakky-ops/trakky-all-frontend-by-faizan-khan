@@ -1187,14 +1187,26 @@ class SalonsViewSet(viewsets.ModelViewSet):
     def partial_update(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
-            serializer = self.get_serializer(instance, data=request.data, partial=True)
-            
+            new_area = request.data.get('area')
+            is_area_change = bool(new_area and new_area != instance.area)
+
+            data = request.data
+            if is_area_change:
+                data = data.copy() if hasattr(data, 'copy') else dict(data)
+                global_max = (
+                    Salon.objects.aggregate(Max('area_priority'))['area_priority__max'] or 0
+                )
+                data['area_priority'] = global_max + 1
+
+            serializer = self.get_serializer(instance, data=data, partial=True)
+
             if not serializer.is_valid():
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-            new_area = request.data.get('area')
-            if new_area and new_area != instance.area:
+            if is_area_change:
+                serializer.validated_data.pop('area_priority', None)
                 self.update_salon_area(instance, new_area)
+                instance.refresh_from_db()
 
             new_priority = request.data.get('priority')
             new_area_priority = request.data.get('area_priority')
