@@ -291,8 +291,15 @@ class Salon(models.Model):
         return self.name
     
     def save(self, *args, **kwargs):
-        if self.main_image:
-            self.main_image = compress_and_convert_image(self.main_image, path_type='salon_main_images')
+        update_fields = kwargs.get('update_fields')
+        touching_main_image = update_fields is None or 'main_image' in update_fields
+        if self.main_image and touching_main_image:
+            try:
+                self.main_image = compress_and_convert_image(
+                    self.main_image, path_type='salon_main_images'
+                )
+            except FileNotFoundError:
+                pass
 
         if not self.pk:  # if the object is being created
             while True:

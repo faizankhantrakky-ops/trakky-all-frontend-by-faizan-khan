@@ -22,14 +22,23 @@ import csv
 
 # Serializer for the view that shows details
 
-def image_size_reducer(image ):
-    i = Image.open(image).convert('RGB')
-    thumb_io = BytesIO()
-    i.save(thumb_io, format='WEBP')
-    thumb_io.seek(0)
-    inmemory_uploaded_file = InMemoryUploadedFile(thumb_io, None, image.name,'image/webp', thumb_io.tell(), None)
-    
-    return inmemory_uploaded_file
+def image_size_reducer(image):
+    try:
+        i = Image.open(image).convert('RGB')
+        thumb_io = BytesIO()
+        i.save(thumb_io, format='WEBP')
+        thumb_io.seek(0)
+        inmemory_uploaded_file = InMemoryUploadedFile(
+            thumb_io, 
+            None, 
+            f"{image.name.split('.')[0]}.webp",
+            'image/webp', 
+            thumb_io.getbuffer().nbytes, 
+            None
+        )
+        return inmemory_uploaded_file
+    except Exception as e:
+        raise serializers.ValidationError(f"Error processing image: {str(e)}")
 
 # class UserSerializer(serializers.ModelSerializer):
 #     class Meta:
@@ -627,39 +636,78 @@ class SalonSerializer(serializers.ModelSerializer):
         return salon
 
     def update(self, instance, validated_data):
-        uploaded_images = validated_data.pop("uploaded_images", [])
-        client_images_data = validated_data.pop("client_images_data", [])
-        secondary_areas = validated_data.pop("secondary_areas", None)
+        try:
+            uploaded_images = validated_data.pop("uploaded_images", [])
+            client_images_data = validated_data.pop("client_images_data", [])
+            secondary_areas = validated_data.pop("secondary_areas", None)
 
-        if "main_image" in validated_data:
-            validated_data["main_image"] = image_size_reducer(validated_data["main_image"])
+            if "main_image" in validated_data:
+                try:
+                    validated_data["main_image"] = image_size_reducer(validated_data["main_image"])
+                except Exception as e:
+                    raise serializers.ValidationError({"main_image": f"Error processing main image: {str(e)}"})
 
-        for key, value in validated_data.items():
-            setattr(instance, key, value)
+            for key, value in validated_data.items():
+                setattr(instance, key, value)
 
-        if secondary_areas is not None:
-            instance.secondary_areas = secondary_areas
+            if secondary_areas is not None:
+                instance.secondary_areas = secondary_areas
 
-        instance.save()
+            try:
+                instance.save()
+            except Exception as e:
+                raise serializers.ValidationError(f"Error saving salon: {str(e)}")
 
-        SalonMulImage.objects.bulk_create([
-            SalonMulImage(salon=instance, image=image_size_reducer(img)) for img in uploaded_images
-        ])
+            # Process uploaded images with error handling
+            if uploaded_images:
+                try:
+                    processed_images = []
+                    for img in uploaded_images:
+                        try:
+                            processed_images.append(
+                                SalonMulImage(salon=instance, image=image_size_reducer(img))
+                            )
+                        except Exception as e:
+                            # Log the error but continue processing other images
+                            import logging
+                            logger = logging.getLogger(__name__)
+                            logger.error(f"Error processing image {img.name}: {str(e)}")
+                    
+                    if processed_images:
+                        SalonMulImage.objects.bulk_create(processed_images)
+                except Exception as e:
+                    raise serializers.ValidationError({"uploaded_images": f"Error saving images: {str(e)}"})
 
-        if 'service' in validated_data and 'categories_id' in validated_data:
-            SalonClientImage.objects.filter(salon=instance).delete()
-            client_images = [
-                SalonClientImage(
-                    salon=instance,
-                    client_image=image_size_reducer(ci),
-                    service=service,
-                    category_id=cid
-                )
-                for ci, service, cid in zip(client_images_data, validated_data['service'], validated_data['categories_id'])
-            ]
-            SalonClientImage.objects.bulk_create(client_images)
+            if 'service' in validated_data and 'categories_id' in validated_data:
+                try:
+                    SalonClientImage.objects.filter(salon=instance).delete()
+                    client_images = []
+                    for ci, service, cid in zip(client_images_data, validated_data['service'], validated_data['categories_id']):
+                        try:
+                            client_images.append(
+                                SalonClientImage(
+                                    salon=instance,
+                                    client_image=image_size_reducer(ci),
+                                    service=service,
+                                    category_id=cid
+                                )
+                            )
+                        except Exception as e:
+                            # Log the error but continue processing
+                            import logging
+                            logger = logging.getLogger(__name__)
+                            logger.error(f"Error processing client image: {str(e)}")
+                    
+                    if client_images:
+                        SalonClientImage.objects.bulk_create(client_images)
+                except Exception as e:
+                    raise serializers.ValidationError({"client_images_data": f"Error saving client images: {str(e)}"})
 
-        return instance
+            return instance
+        #  except serializers.ValidationError:
+        #     raise
+        except Exception as e:
+            raise serializers.ValidationError(f"Unexpected error during update: {str(e)}")
 
 
 class SalonPosSerializer(serializers.ModelSerializer):

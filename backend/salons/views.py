@@ -101,8 +101,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from django.db import transaction, IntegrityError
 from django.db.models import (
-    Q, Count, F, FloatField, Case, When, Value, BooleanField, IntegerField, 
-    OuterRef, Subquery
+    Q, Count, F, FloatField, Case, When, Value, BooleanField, IntegerField,
+    OuterRef, Subquery, Max,
 )
 from django.db.models.functions import Lower, ACos, Cos, Radians, Sin, Sqrt as sqrt
 
@@ -133,6 +133,7 @@ from django.core.cache import cache
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 import orjson
+from django.utils import timezone
 from django.utils.timezone import now
 import hashlib
 from rest_framework.exceptions import AuthenticationFailed
@@ -1187,7 +1188,9 @@ class SalonsViewSet(viewsets.ModelViewSet):
         try:
             instance = self.get_object()
             serializer = self.get_serializer(instance, data=request.data, partial=True)
-            serializer.is_valid(raise_exception=True)
+            
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             new_area = request.data.get('area')
             if new_area and new_area != instance.area:
@@ -1234,10 +1237,15 @@ class SalonsViewSet(viewsets.ModelViewSet):
             self.invalidate_cache()
             return Response(self.get_serializer(instance).data)
 
-        except self.queryset.model.DoesNotExist:
+        except Salon.DoesNotExist:
             return Response({'error': 'Salon not found'}, status=status.HTTP_404_NOT_FOUND)
+        except serializers.ValidationError as e:
+            return Response({'error': e.detail if hasattr(e, 'detail') else str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.exception(f"Unexpected error in PATCH /salons/{kwargs.get('id', 'unknown')}/")
+            return Response({'error': str(e), 'detail': 'An unexpected error occurred. Please try again later.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     def get_adjacent_salons(self, sorted_salons, current_salon):
         sorted_salons_list = list(sorted_salons)
@@ -1462,19 +1470,23 @@ class SalonsViewSet(viewsets.ModelViewSet):
 
     def update_salon_area(self, instance, new_area):
         with transaction.atomic():
-            salons_in_new_area = Salon.objects.select_for_update().filter(area__iexact=new_area)
-            temp_priority = Salon.objects.count() + 1
-
-            instance.area_priority = temp_priority
+            Salon.objects.select_for_update().filter(area__iexact=new_area).count()
+            global_max = (
+                Salon.objects.aggregate(Max('area_priority'))['area_priority__max'] or 0
+            )
+            instance.area_priority = global_max + 1
             instance.save(update_fields=['area_priority'])
 
-            instance.area = new_area
+            
             instance.save(update_fields=['area'])
 
-            salons_in_new_area = Salon.objects.filter(area__iexact=new_area)
-            new_priority = salons_in_new_area.count() + 1
-
-            instance.area_priority = new_priority
+            max_in_new_area = (
+                Salon.objects
+                .filter(area__iexact=new_area)
+                .exclude(pk=instance.pk)
+                .aggregate(Max('area_priority'))['area_priority__max']
+            ) or 0
+            instance.area_priority = max_in_new_area + 1
             instance.save(update_fields=['area_priority'])
 
             self.invalidate_cache()  # Clear cached salon list after updating area and priority
