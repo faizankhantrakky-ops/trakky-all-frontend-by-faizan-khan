@@ -27,6 +27,29 @@ import { Helmet} from "react-helmet";
 const AreaListPage = ({ title, subtitle, name }) => {
   const params = useParams();
 
+  useEffect(() => {
+    const pathname = window.location.pathname;
+    if (/%[0-9A-Fa-f]{2}/.test(pathname) || pathname.includes(" ")) {
+      const cleanPath = pathname
+        .split("/")
+        .map((segment) => {
+          try {
+            return decodeURIComponent(segment).replace(/\s+/g, "-");
+          } catch {
+            return segment.replace(/%20/gi, "-");
+          }
+        })
+        .join("/");
+      if (cleanPath !== pathname) {
+        window.history.replaceState(
+          null,
+          "",
+          cleanPath + window.location.search + window.location.hash
+        );
+      }
+    }
+  }, [params?.city, params?.area]);
+
   const [listData, setListData] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);

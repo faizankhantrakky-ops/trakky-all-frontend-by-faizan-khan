@@ -185,21 +185,9 @@ const loadServices = async (inputValue, callback) => {
       }
     }
   };
-  const handleSubmit = async (event) => {
-    // ready json data of type
-    event.preventDefault();
-    let isStepImageEmpty = false;
-    steps.forEach((step) => {
-      if (step.image_data) {
-        isStepImageEmpty = true;
-      }
-    });
-    if (isStepImageEmpty) {
-      toast.error("Please upload all step images");
-      return;
-    }
+  const buildFormData = (serviceId) => {
     const data = new FormData();
-    data.append("service", formData?.service?.value);
+    data.append("service", serviceId);
     data.append("faqs", JSON.stringify(formData.faqs));
     data.append(
       "do_and_dont",
@@ -255,8 +243,6 @@ const loadServices = async (inputValue, callback) => {
       formData.salon_type === "PRIME" ||
       formData.salon_type === "LUXURIOUS"
     ) {
-      // data.append("main_swipper_images", mainSwiperImg);
-      // console.log(mainSwiperImg);
       mainSwiperImg &&
         [...mainSwiperImg].forEach((file) => {
           data.append("main_swipper_images", file);
@@ -265,8 +251,30 @@ const loadServices = async (inputValue, callback) => {
     if (desImg) {
       data.append("description_image", desImg);
     }
+    return data;
+  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    let isStepImageEmpty = false;
+    steps.forEach((step) => {
+      if (step.image_data) {
+        isStepImageEmpty = true;
+      }
+    });
+    if (isStepImageEmpty) {
+      toast.error("Please upload all step images");
+      return;
+    }
     try {
       if (serviceDetailsData) {
+        const serviceId = Array.isArray(formData?.service)
+          ? formData.service[0]?.value
+          : formData?.service?.value;
+        if (!serviceId) {
+          toast.error("Please select a service");
+          return;
+        }
+        const data = buildFormData(serviceId);
         const response = await fetch(
           `https://backendapi.trakky.in/salons/service-details/${serviceDetailsData.id}/`,
           {
@@ -285,23 +293,54 @@ const loadServices = async (inputValue, callback) => {
           closeModal();
         }
       } else {
-        const response = await fetch(
-          `https://backendapi.trakky.in/salons/service-details/`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${authTokens.access}`,
-            },
-            body: data,
-          }
-        );
-        if (!(response.status === 201)) {
-          toast.error("Error adding service details");
-          throw new Error(`HTTP status ${response.status}`);
+        const selectedServices = Array.isArray(formData?.service)
+          ? formData.service
+          : formData?.service
+          ? [formData.service]
+          : [];
+        if (selectedServices.length === 0) {
+          toast.error("Please select at least one service");
+          return;
         }
-        if (response.status === 201) {
+        let successCount = 0;
+        let failCount = 0;
+        const failedNames = [];
+        for (const svc of selectedServices) {
+          const data = buildFormData(svc.value);
+          try {
+            const response = await fetch(
+              `https://backendapi.trakky.in/salons/service-details/`,
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${authTokens.access}`,
+                },
+                body: data,
+              }
+            );
+            if (response.status === 201) {
+              successCount++;
+            } else {
+              failCount++;
+              failedNames.push(svc.label);
+            }
+          } catch (err) {
+            failCount++;
+            failedNames.push(svc.label);
+          }
+        }
+        if (successCount > 0) {
+          toast.success(
+            `${successCount} service detail${successCount > 1 ? "s" : ""} added successfully`
+          );
+        }
+        if (failCount > 0) {
+          toast.error(
+            `Failed to add: ${failedNames.join(", ")}`
+          );
+        }
+        if (failCount === 0 && successCount > 0) {
           closeModal();
-          toast.success("Service details added successfully");
         }
       }
     } catch (error) {
@@ -543,10 +582,7 @@ const loadServices = async (inputValue, callback) => {
             <div className="input-box inp-id col-1 col-2">
               <label htmlFor="all-service">Salon type</label>
               <div className=" flex gap-5">
-                {/* input radio PRIME , classic & LUXURIOUS */}
-                {/* CLASSIC
-LUXURIOUS
-PRIME */}
+                
                 <div className=" flex gap-1">
                   <input
                     type="radio"
@@ -600,8 +636,17 @@ PRIME */}
           </div>
           <div className=" row">
             <div className="input-box inp-id col-1 col-2">
-              <label htmlFor="included-service">Select service</label>
+              <label htmlFor="included-service">
+                Select service
+                {!serviceDetailsData && (
+                  <span className="Note_Inp_Classs">
+                    You can select multiple services at a time
+                  </span>
+                )}
+              </label>
               <AsyncSelect
+                isMulti={!serviceDetailsData}
+                isDisabled={!formData?.salon}
                 defaultOptions
                 loadOptions={loadServices}
                 value={formData?.service}
@@ -618,7 +663,13 @@ PRIME */}
                   return option.value;
                 }}
                 noOptionsMessage={() => "No services found"}
-                placeholder="Search Service..."
+                placeholder={
+                  !formData?.salon
+                    ? "Select salon first..."
+                    : serviceDetailsData
+                    ? "Search Service..."
+                    : "Search & select multiple services..."
+                }
                 styles={{
                   control: (base) => ({
                     ...base,
@@ -628,8 +679,28 @@ PRIME */}
                       borderColor: "#ccc",
                     },
                   }),
+                  multiValue: (base) => ({
+                    ...base,
+                    backgroundColor: "#e0f2fe",
+                  }),
+                  multiValueLabel: (base) => ({
+                    ...base,
+                    color: "#0369a1",
+                    fontWeight: 500,
+                  }),
                 }}
               />
+              {!serviceDetailsData &&
+                Array.isArray(formData?.service) &&
+                formData.service.length > 0 && (
+                  <div className="mt-2 text-sm text-gray-700">
+                    <strong>{formData.service.length}</strong> service
+                    {formData.service.length > 1 ? "s" : ""} selected:{" "}
+                    {formData.service
+                      .map((s) => `${s.label} (${s.gender})`)
+                      .join(", ")}
+                  </div>
+                )}
             </div>
           </div>
           <div className="row">

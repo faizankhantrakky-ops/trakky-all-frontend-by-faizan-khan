@@ -1384,7 +1384,7 @@ const SalonProfile = () => {
                     <span>
                       {" "}
                       &#8377; {main_salon_data && main_salon_data?.price}{" "}
-                      Onwards
+                      Average
                     </span>
                   </div>
                 </div>
@@ -1591,7 +1591,7 @@ const SalonProfile = () => {
               </div>
               <div className="salon-p-hero-price-tag">
                 <div>
-                  <span>₹ {main_salon_data?.price} Onwards</span>
+                  <span>₹ {main_salon_data?.price} Average</span>
                 </div>
               </div>
               <div className="salon-p-hero-call-book-btn">
@@ -2111,7 +2111,7 @@ const SalonProfile = () => {
           onClick={handleSalonProfilePhotosClose} // ← Yeh important line: backdrop pe click → close
         >
           <div
-            className="relative h-dvh w-full max-w-none md:h-[90vh] md:max-w-7  xl md:rounded-xl overflow-hidden flex flex-col"
+            className="relative h-dvh w-full max-w-none md:h-[90vh] md:max-w-7xl md:rounded-xl overflow-hidden flex flex-col"
             onClick={(e) => e.stopPropagation()} // ← Yeh line: andar click hone pe close nahi hoga
           >
             <Gallery2

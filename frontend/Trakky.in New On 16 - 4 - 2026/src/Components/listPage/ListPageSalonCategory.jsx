@@ -242,7 +242,7 @@ const NearBySalonsListCard = ({ subtitle }) => {
       </Helmet>
       {!nearBySalons.loading && (
         <div className="N-listpage-heading">
-          <h1> Salons near you </h1>
+          <h1> Best Salons in Ahmedabad </h1>
         </div>
       )}
       <div className="N-lp-card-listing-container">

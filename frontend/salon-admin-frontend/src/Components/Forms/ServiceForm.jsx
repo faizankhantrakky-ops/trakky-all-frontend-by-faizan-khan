@@ -1199,7 +1199,7 @@ const AddService = ({ serviceData, setServiceData }) => {
   const [service, setService] = useState(serviceData?.service_name || "");
   const [selectSalonId, setSelectSalonId] = useState(() => {
     if (serviceData?.salon) {
-      return Array.isArray(serviceData.salon)
+      return Array.isArray(serviceData.salon) 
         ? serviceData.salon
         : [serviceData.salon];
     }
@@ -1265,8 +1265,12 @@ const AddService = ({ serviceData, setServiceData }) => {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   /* ------------------- NEW: Choose Length Feature ------------------- */
+  const [selectedProduct, setSelectedProduct] = useState("");
+  const [customProductName, setCustomProductName] = useState("");
   const [selectedLength, setSelectedLength] = useState(""); // Current dropdown selection
   const [customLengthName, setCustomLengthName] = useState("");
+  const [selectedStylist, setSelectedStylist] = useState(""); // Hair stylist level
+  const [customStylistName, setCustomStylistName] = useState("");
   const [lengthPrice, setLengthPrice] = useState("");
   const [lengthTiming, setLengthTiming] = useState({
     Total_days: "",
@@ -1277,17 +1281,48 @@ const AddService = ({ serviceData, setServiceData }) => {
 
   const [addedLengths, setAddedLengths] = useState([]); // Final list of added lengths
 
+  const productOptions = [
+    { value: "Loreal", label: "Loreal" },
+    { value: "Matrix", label: "Matrix" },
+    { value: "Schwarzkopf", label: "Schwarzkopf" },
+    { value: "Wella", label: "Wella" },
+    { value: "Streax", label: "Streax" },
+    { value: "Garnier", label: "Garnier" },
+    { value: "Other", label: "Other (Custom)" },
+  ];
+
   const lengthOptions = [
-    { value: "Short", label: "Short" },
-    { value: "Medium", label: "Medium" },
-    { value: "Long", label: "Long" },
-    { value: "Custom", label: "Custom" },
+    { value: "Above shoulder hair length", label: "Above shoulder hair length" },
+    { value: "Below shoulder hair length", label: "Below shoulder hair length" },
+    { value: "Mid back hair length", label: "Mid back hair length" },
+    { value: "Waist hair length", label: "Waist hair length" },
+    { value: "Below waist hair length", label: "Below waist hair length" },
+  ];
+
+  const stylistOptions = [
+    { value: "Senior", label: "Senior" },
+    { value: "Junior", label: "Junior" },
+    { value: "Expert", label: "Expert" },
+    { value: "Other", label: "Other (Custom)" },
   ];
 
   const handleAddLength = () => {
+    if (!selectedProduct) {
+      toast.error("Please select a product");
+      return;
+    }
     if (!selectedLength || !lengthPrice) {
       toast.error("Please select length and enter price");
       return;
+    }
+
+    let productKey = selectedProduct;
+    if (selectedProduct === "Other" && !customProductName.trim()) {
+      toast.error("Please enter custom product name");
+      return;
+    }
+    if (selectedProduct === "Other") {
+      productKey = customProductName.trim();
     }
 
     let lengthKey = selectedLength;
@@ -1299,29 +1334,54 @@ const AddService = ({ serviceData, setServiceData }) => {
       lengthKey = customLengthName.trim();
     }
 
-    // Check duplicate
-    if (addedLengths.some((item) => Object.keys(item)[0] === lengthKey)) {
-      toast.error(`${lengthKey} length already added`);
+    if (!selectedStylist) {
+      toast.error("Please select a hair stylist");
+      return;
+    }
+    let stylistKey = selectedStylist;
+    if (selectedStylist === "Other" && !customStylistName.trim()) {
+      toast.error("Please enter custom stylist name");
+      return;
+    }
+    if (selectedStylist === "Other") {
+      stylistKey = customStylistName.trim();
+    }
+
+    // Check duplicate (same product + length + stylist combo)
+    if (
+      addedLengths.some(
+        (item) =>
+          item.product === productKey &&
+          item.length === lengthKey &&
+          item.stylist === stylistKey
+      )
+    ) {
+      toast.error(`${productKey} - ${lengthKey} - ${stylistKey} already added`);
       return;
     }
 
     const newLengthEntry = {
-      [lengthKey]: {
-        price: lengthPrice,
-        timing: {
-          Total_days: lengthTiming.Total_days || "0",
-          Total_hours: lengthTiming.Total_hours || "0",
-          Total_minutes: lengthTiming.Total_minutes || "0",
-          Total_seating: lengthTiming.Total_seating || "0",
-        },
+      product: productKey,
+      length: lengthKey,
+      stylist: stylistKey,
+      price: lengthPrice,
+      timing: {
+        Total_days: lengthTiming.Total_days || "0",
+        Total_hours: lengthTiming.Total_hours || "0",
+        Total_minutes: lengthTiming.Total_minutes || "0",
+        Total_seating: lengthTiming.Total_seating || "0",
       },
     };
 
     setAddedLengths([...addedLengths, newLengthEntry]);
 
     // Reset fields
+    setSelectedProduct("");
+    setCustomProductName("");
     setSelectedLength("");
     setCustomLengthName("");
+    setSelectedStylist("");
+    setCustomStylistName("");
     setLengthPrice("");
     setLengthTiming({
       Total_days: "",
@@ -1329,12 +1389,12 @@ const AddService = ({ serviceData, setServiceData }) => {
       Total_minutes: "",
       Total_seating: "",
     });
-    toast.success(`${lengthKey} length added`);
+    toast.success(`${productKey} - ${lengthKey} - ${stylistKey} added`);
   };
 
-  const handleRemoveLength = (lengthKey) => {
-    setAddedLengths(addedLengths.filter((item) => Object.keys(item)[0] !== lengthKey));
-    toast.success(`${lengthKey} removed`);
+  const handleRemoveLength = (idx) => {
+    setAddedLengths(addedLengths.filter((_, i) => i !== idx));
+    toast.success(`Removed`);
   };
 
   /* ------------------- CITY, SALON, CATEGORY, MASTER-SERVICE ------------------- */
@@ -2046,11 +2106,30 @@ const AddService = ({ serviceData, setServiceData }) => {
               </div>
             </div>
 
-            {/* === NEW: Choose Length Section === */}
-            <h4 className="text-lg font-semibold mb-3 ml-2">Choose Length (Optional)</h4>
+            {/* === NEW: Choose Length Section (Product-wise pricing) === */}
+            <h4 className="text-lg font-semibold mb-3 ml-2">Choose Product & Length (Optional)</h4>
             <div className="row">
-              
+
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 border p-4 rounded-lg bg-gray-50">
+                <div>
+                  <label>Select Product</label>
+                  <Select
+                    options={productOptions}
+                    value={productOptions.find(opt => opt.value === selectedProduct) || null}
+                    onChange={(opt) => setSelectedProduct(opt?.value || "")}
+                    placeholder="Choose product (Loreal, Matrix, etc.)..."
+                  />
+                  {selectedProduct === "Other" && (
+                    <input
+                      type="text"
+                      placeholder="Enter custom product name"
+                      value={customProductName}
+                      onChange={(e) => setCustomProductName(e.target.value)}
+                      className="w-full mt-2 p-2 border rounded"
+                    />
+                  )}
+                </div>
+
                 <div>
                   <label>Select Length Type</label>
                   <Select
@@ -2071,7 +2150,26 @@ const AddService = ({ serviceData, setServiceData }) => {
                 </div>
 
                 <div>
-                  <label>Price for this length</label>
+                  <label>Select Hair Stylist</label>
+                  <Select
+                    options={stylistOptions}
+                    value={stylistOptions.find(opt => opt.value === selectedStylist) || null}
+                    onChange={(opt) => setSelectedStylist(opt?.value || "")}
+                    placeholder="Choose stylist (Senior, Junior, Expert)..."
+                  />
+                  {selectedStylist === "Other" && (
+                    <input
+                      type="text"
+                      placeholder="Enter custom stylist name"
+                      value={customStylistName}
+                      onChange={(e) => setCustomStylistName(e.target.value)}
+                      className="w-full mt-2 p-2 border rounded"
+                    />
+                  )}
+                </div>
+
+                <div>
+                  <label>Price for this product & length</label>
                   <input
                     type="number"
                     placeholder="Enter price"
@@ -2119,34 +2217,32 @@ const AddService = ({ serviceData, setServiceData }) => {
                     onClick={handleAddLength}
                     className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
                   >
-                    Add This Length
+                    Add This Product Length
                   </button>
                 </div>
               </div>
 
-            
+
             </div>
-              {/* Display Added Lengths */}
+              {/* Display Added Product-Lengths */}
               {addedLengths.length > 0 && (
                 <div className="mt-4 ml-2 mb-6">
-                  <h5 className="font-medium">Added Lengths:</h5>
+                  <h5 className="font-medium">Added Product Lengths:</h5>
                   <div className="space-y-2 mt-2">
-                    {addedLengths.map((len, idx) => {
-                      const key = Object.keys(len)[0];
-                      const data = len[key];
-                      return (
-                        <div key={idx} className="flex justify-between items-center bg-blue-50 p-3 rounded border">
-                          <span><strong>{key}</strong> - ₹{data.price}</span>
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveLength(key)}
-                            className="text-red-600 hover:text-red-800"
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      );
-                    })}
+                    {addedLengths.map((item, idx) => (
+                      <div key={idx} className="flex justify-between items-center bg-blue-50 p-3 rounded border">
+                        <span>
+                          <strong>{item.product}</strong> — {item.length} — {item.stylist} — ₹{item.price}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveLength(idx)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}

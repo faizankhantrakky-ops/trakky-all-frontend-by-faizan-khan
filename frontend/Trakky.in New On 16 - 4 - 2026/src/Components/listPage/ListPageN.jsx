@@ -1131,7 +1131,7 @@ const ListPage = ({ title, subtitle, name }) => {
         <OfferComponentN title={"Grab The Best Offers"} />
 
       <div className="N-listpage-heading">
-  <h1>List of best salons in {capitalizeAndFormat(params?.city)}</h1>
+  <h1>Best Salons Near You In {capitalizeAndFormat(params?.city)}</h1>
 </div>
         <div className="N-lp-card-listing-container">
           {loading ? (

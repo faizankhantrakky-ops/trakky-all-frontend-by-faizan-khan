@@ -1,0 +1,129 @@
+/* =========================================================
+   OfferSalon — Professional offer card design
+   Theme: White + Purple, refined and minimal
+   ========================================================= */
+
+.N-Profile-page-offer-card-img {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 14px;
+  border: 1px solid rgba(122, 31, 209, 0.18);
+  background: #ffffff;
+  box-shadow:
+    0 1px 2px rgba(17, 17, 26, 0.04),
+    0 6px 20px rgba(122, 31, 209, 0.10);
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+/* Subtle top accent line — premium feel without animation noise */
+.N-Profile-page-offer-card-img::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, #7a1fd1 0%, #b14dff 50%, #7a1fd1 100%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.N-Profile-page-offer-card-img img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: none;
+  border-radius: 0;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+  
+/* =========================================================
+   Top-left tag — "Special Offer"
+   ========================================================= */
+.N-Profile-offer-tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: #7a1fd1;
+  background: #ffffff;
+  border: 1px solid rgba(122, 31, 209, 0.25);
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(17, 17, 26, 0.08);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.N-Profile-offer-tag-icon {
+  flex: 0 0 auto;
+  color: #7a1fd1;
+}
+
+/* =========================================================
+   Bottom strip — "Available at this salon →"
+   ========================================================= */
+.N-Profile-offer-bottom-strip {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 18px 12px 8px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.65) 0%,
+    rgba(0, 0, 0, 0.35) 55%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.N-Profile-offer-bottom-text {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.N-Profile-offer-bottom-arrow {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+  transition: transform 0.3s ease;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.N-Profile-page-offer-card:hover .N-Profile-offer-bottom-arrow {
+  transform: translateX(3px);
+}
+
+/* =========================================================
+   Reduced motion
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .N-Profile-page-offer-card-img,
+  .N-Profile-page-offer-card-img img,
+  .N-Profile-offer-bottom-arrow {
+    transition: none;
+  }
+  .N-Profile-page-offer-card:hover .N-Profile-page-offer-card-img,
+  .N-Profile-page-offer-card:hover .N-Profile-page-offer-card-img img {
+    transform: none;
+  }
+}

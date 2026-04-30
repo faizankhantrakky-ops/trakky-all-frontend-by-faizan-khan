@@ -867,7 +867,7 @@ function App() {
                     <Route path="/personal-add-coupon"
                      element={<Personaladdcoupon />} />
 
-                    <Route path="*" element={<h1>404 Not Found</h1>} />
+                    <Route path="*" element={<h2>404 Not Found Page</h2>} />
                   </Routes>
                 </div>
               </div>

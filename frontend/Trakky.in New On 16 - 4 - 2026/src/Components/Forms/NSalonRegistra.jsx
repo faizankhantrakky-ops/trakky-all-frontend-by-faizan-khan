@@ -39,7 +39,7 @@ const NSalonRegistra = () => {
     form.append("address", formData.address);
     form.append(
       "city",
-      formData.city === "other" ? formData.otherCity : formData.city
+      formData.city === "other" ? formData.otherCity : formData.city,
     );
 
     try {
@@ -48,7 +48,7 @@ const NSalonRegistra = () => {
         {
           method: "POST",
           body: form,
-        }
+        },
       )
         .then((response) => {
           if (!response.ok) {
@@ -66,7 +66,7 @@ const NSalonRegistra = () => {
                 background: "#333",
                 color: "#fff",
               },
-            }
+            },
           );
           setFormData({
             businessName: "",
@@ -130,7 +130,7 @@ const NSalonRegistra = () => {
                   value={formData.businessName}
                   onChange={handleChange}
                   id="business-name"
-                  placeholder="Enter Business Name"
+                  placeholder="Enter Your Business Name"
                   required
                 />
               </div>
@@ -194,7 +194,7 @@ const NSalonRegistra = () => {
                   value={formData.ownerContact}
                   onChange={handleChange}
                   id="owner-contact"
-                  placeholder="Enter Owner's Contact Number"
+                  placeholder="Enter Owner Contact Number"
                   required
                 />
               </div>

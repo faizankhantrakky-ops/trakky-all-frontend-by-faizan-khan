@@ -11,7 +11,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { useConfirm } from "material-ui-confirm";
 import toast, { Toaster } from "react-hot-toast";
 
-const AdminUserList = () => {
+const  AdminUserList = () => {
   const { authTokens, logoutUser } = useContext(AuthContext);
   const confirm = useConfirm();
   const [usersData, setUsersData] = useState([]);
@@ -60,7 +60,7 @@ const AdminUserList = () => {
   const deleteUser = async (id) => {
     try {
       await confirm({
-        description: "Are you sure you want to delete this user?",
+        description: "Are You sure you want to delete the user?",
       });
 
       let response = await fetch(

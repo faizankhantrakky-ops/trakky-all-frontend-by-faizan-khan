@@ -2,6 +2,7 @@ import React from "react";
 import "../ModalComponent/salonprofilemodal.css";
 import "./offersalon.css";
 import OfferSalonModal from "../ModalComponent/OfferSalonModal";
+import OfferGuide from "./OfferGuide";
 import Modal from "@mui/material/Modal";
 
 const OfferSalon = ({
@@ -37,6 +38,13 @@ const OfferSalon = ({
           >
             <div className="N-Profile-page-offer-card-img">
               <img src={item?.image || item?.video_thumbnail_image} alt="" />
+
+
+
+              <div className="N-Profile-offer-bottom-strip">
+               
+                <span className="N-Profile-offer-bottom-arrow" aria-hidden="true">→</span>
+              </div>
             </div>
           </div>
         ))}
@@ -55,6 +63,8 @@ const OfferSalon = ({
           onBookNow={onBookOffer}
         />
       </Modal>
+
+      <OfferGuide enabled={allOffers.length > 0 && !offerrModalOpen} />
     </>
   );
 };

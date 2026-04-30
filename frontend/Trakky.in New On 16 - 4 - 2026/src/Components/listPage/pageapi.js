@@ -24,36 +24,23 @@ const getSalonsNearYou = async (latitude, longitude, page = 1, city, area) => {
   }
 };
 
-const getTopRatedSalons = async (city, area, page) => {
-  let url = "https://backendapi.trakky.in/salons/filter/";
-  if (city && area) {
-    url += `?city=${city}&area=${area}`;
-  } else if (city) {
-    url += `?city=${city}`;
-  } else {
-    url = "https://backendapi.trakky.in/salons/?verified=true";
+const getTopRatedSalons = async (city, area, page, latitude, longitude) => {
+  // Default Location → Sindhu Bhavan Pakwan
+  const defaultLat = 23.0386;
+  const defaultLng = 72.5118;
+
+  const lat = latitude ? Number(latitude) : defaultLat;
+  const lng = longitude ? Number(longitude) : defaultLng;
+
+  let otherUrl = `https://backendapi.trakky.in/salons/list/?page=${page}&distance=within_5&latitude=${lat}&longitude=${lng}`;
+
+  if (city) {
+    otherUrl += `&city=${encodeURIComponent(String(city).toLowerCase())}`;
   }
-
-  url += `&page=${page}&top_rated=true&verified=true`;
-
-  let otherUrl = "https://backendapi.trakky.in/salons/salon-top-rated/data/";
-
-  // Fix for "science-city" → "Science City"
-  if (area && area.toLowerCase() === "science-city") {
-    area = "Science City";
-  }
-
-  if (city && area) {
-    otherUrl += `?city=${city}&area=${area}`;
-  } else if (city) {
-    otherUrl += `?city=${city}`;
-  }
-
-  otherUrl += `&page=${page}`;
 
   const requestOption = {
     method: "GET",
-    header: {
+    headers: {
       "Content-Type": "application/json",
     },
   };

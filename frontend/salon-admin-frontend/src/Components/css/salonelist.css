@@ -12,15 +12,15 @@
 
 .tb-body-filter {
   /* width: 25%; */
-  min-width: 180px;
-  padding: 5px;
+  min-width: 181px;
+  padding: 6px;
 }
 .dragging{
   
 }
 .dragging td {
   color: #50545a;
-  padding: 20px 8px;
+  padding: 21px 8px;
   text-align: center;
   background: transparent;
   min-width: 100px;

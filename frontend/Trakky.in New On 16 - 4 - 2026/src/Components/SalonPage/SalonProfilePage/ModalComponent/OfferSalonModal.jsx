@@ -1,1150 +1,4 @@
-// // // import React, { useState, useRef, useEffect } from "react";
-// // // import "./salonprofilemodal.css";
-// // // import { IoMdClose } from "react-icons/io";
-// // // import {
-// // //   ShareOutlined,
-// // //   PlayArrow,
-// // //   Pause,
-// // //   VolumeUp,
-// // //   VolumeOff,
-// // // } from "@mui/icons-material";
-// // // import { FaCheck } from "react-icons/fa";
-
-// // // const OfferSalonModal = ({ data, handleClose, salon, type, onBookNow }) => {
-// // //   const [isPlaying, setIsPlaying] = useState(false);
-// // //   const [isMuted, setIsMuted] = useState(true);
-// // //   const [showControls, setShowControls] = useState(false);
-// // //   const [showTermsModal, setShowTermsModal] = useState(false);
-// // //   const [selectedPrice, setSelectedPrice] = useState(null);
-// // //   const [showPriceError, setShowPriceError] = useState(false);
-// // //   const videoRef = useRef(null);
-// // //   const termsModalRef = useRef(null);
-
-// // //   // Static price list for selection - you can replace this with dynamic data
-// // //   const priceList = [
-// // //     {
-// // //       id: 1,
-// // //       type: "Stylist",
-// // //       title: "Below 18 Years. With Hair Wash",
-// // //       price: "500",
-// // //       tag: "From",
-// // //       time: {
-// // //         Total_days: "",
-// // //         Total_hours: "",
-// // //         Total_minutes: "60",
-// // //         Total_seating: ""
-// // //       }
-// // //     },
-// // //     {
-// // //       id: 2,
-// // //       type: "Master Stylist",
-// // //       title: "With Hair Wash",
-// // //       price: "900",
-// // //       tag: "From",
-// // //       time: {
-// // //         Total_days: "",
-// // //         Total_hours: "",
-// // //         Total_minutes: "59",
-// // //         Total_seating: ""
-// // //       }
-// // //     },
-// // //     {
-// // //       id: 3,
-// // //       type: "Art Director",
-// // //       title: "With Hair Wash",
-// // //       price: "1,250",
-// // //       tag: "From",
-// // //       time: {
-// // //         Total_days: "",
-// // //         Total_hours: "",
-// // //         Total_minutes: "75",
-// // //         Total_seating: ""
-// // //       }
-// // //     }
-// // //   ];
-
-// // //   // Initialize selected price on component mount
-// // //   useEffect(() => {
-// // //     if (priceList.length > 0 && !selectedPrice) {
-// // //       setSelectedPrice(priceList[0]);
-// // //     }
-// // //   }, []); // Empty dependency array means run once on mount
-
-// // //   // Terms and Conditions Data for Popup Modal
-// // //   const termsAndConditions = [
-// // //     "Prices may vary based on hair length, volume, texture, and service customization. Final pricing will be confirmed only after an in-person consultation at the salon.",
-// // //     "Offers are valid only on appointments booked through TRAKKY. Walk-in pricing and salon-direct rates may differ.",
-// // //     "Additional charges may apply for premium products, add-ons, or extra time required depending on the client's hair/skin condition.",
-// // //     "Color, chemical, and technical services require a patch test and consultation before final pricing and service confirmation.",
-// // //     "Offer validity is limited and subject to change at the discretion of TRAKKY or the partnered salon.",
-// // //     "Appointments are subject to availability. The salon may adjust or reschedule in case of operational requirements.",
-// // //     "Taxes (if applicable) are not included in the displayed offer price unless explicitly mentioned.",
-// // //     "Cancellation and no-show policies will follow the respective salon's rules listed on TRAKKY.",
-// // //     "Service results may vary based on individual hair or skin conditions. Neither TRAKKY nor the salon is responsible for results affected by prior treatments, damage, or unrealistic expectations.",
-// // //     "The salon reserves the right to refuse service if the client's hair/skin is unsuitable for the requested treatment.",
-// // //     "Images used in offers are for representation only and may not depict actual results.",
-// // //     "TRAKKY offers cannot be combined with any other deals, packages, or ongoing promotions unless stated.",
-// // //   ];
-
-// // //   // Autoplay video when modal opens
-// // //   useEffect(() => {
-// // //     if (isVideo && videoRef.current) {
-// // //       const playVideo = async () => {
-// // //         try {
-// // //           videoRef.current.muted = true;
-// // //           await videoRef.current.play();
-// // //           setIsPlaying(true);
-// // //         } catch (error) {
-// // //           console.log("Autoplay failed:", error);
-// // //           setIsPlaying(false);
-// // //         }
-// // //       };
-// // //       playVideo();
-// // //     }
-// // //   }, [data]);
-
-// // //   // Handle terms modal open/close
-// // //   const handleTermsClick = () => {
-// // //     setShowTermsModal(true);
-// // //   };
-
-// // //   const handleCloseTermsModal = () => {
-// // //     setShowTermsModal(false);
-// // //   };
-
-// // //   // Close terms modal when clicking outside
-// // //   useEffect(() => {
-// // //     const handleClickOutside = (event) => {
-// // //       if (
-// // //         termsModalRef.current &&
-// // //         !termsModalRef.current.contains(event.target)
-// // //       ) {
-// // //         handleCloseTermsModal();
-// // //       }
-// // //     };
-
-// // //     if (showTermsModal) {
-// // //       document.addEventListener("mousedown", handleClickOutside);
-// // //       document.body.style.overflow = "hidden";
-// // //     } else {
-// // //       document.body.style.overflow = "unset";
-// // //     }
-
-// // //     return () => {
-// // //       document.removeEventListener("mousedown", handleClickOutside);
-// // //       document.body.style.overflow = "unset";
-// // //     };
-// // //   }, [showTermsModal]);
-
-// // //   const handleShareOffer = () => {
-// // //     const currentUrl = window.location.href;
-// // //     if (navigator.share) {
-// // //       navigator
-// // //         .share({
-// // //           title: `${data?.name || data?.display_name} Offer at ${salon?.name}`,
-// // //           text: `Check out this ${data?.name || data?.display_name} offer at ${
-// // //             salon?.name
-// // //           } for just ₹${selectedPrice?.price || data?.discount_price || data?.price}`,
-// // //           url: currentUrl,
-// // //         })
-// // //         .catch((err) => {
-// // //           console.log("Error sharing:", err);
-// // //           fallbackCopyToClipboard(currentUrl);
-// // //         });
-// // //     } else {
-// // //       fallbackCopyToClipboard(currentUrl);
-// // //     }
-// // //   };
-
-// // //   const fallbackCopyToClipboard = (text) => {
-// // //     navigator.clipboard
-// // //       .writeText(text)
-// // //       .then(() => {
-// // //         alert("Link copied to clipboard!");
-// // //       })
-// // //       .catch((err) => {
-// // //         console.error("Failed to copy:", err);
-// // //         const textarea = document.createElement("textarea");
-// // //         textarea.value = text;
-// // //         document.body.appendChild(textarea);
-// // //         textarea.select();
-// // //         document.execCommand("copy");
-// // //         document.body.removeChild(textarea);
-// // //         alert("Link copied to clipboard!");
-// // //       });
-// // //   };
-
-// // //   const handleBookNowBtn = () => {
-// // //     if (!selectedPrice) {
-// // //       setShowPriceError(true);
-// // //       return;
-// // //     }
-
-// // //     setShowPriceError(false);
-// // //     const name = data?.name || data?.display_name || data?.category;
-// // //     const price = selectedPrice.price.replace(",", "");
-    
-// // //     let message = `Can you provide more details about the special offer named '${name}' at ${salon?.name} in ${salon?.area}, ${salon?.city}? It comes with a discounted price of ${price} rupees.`;
-// // //     let link = `https://api.whatsapp.com/send?phone=916355167304&text=${encodeURIComponent(
-// // //       message
-// // //     )}`;
-// // //     window.open(link, "_blank");
-// // //     handleClose();
-// // //   };
-
-// // //   // Handle price selection
-// // //   const handlePriceSelect = (item) => {
-// // //     setSelectedPrice(item);
-// // //     setShowPriceError(false);
-// // //     console.log("Selected price:", item); // Debug log
-// // //   };
-
-// // //   // Check if content is video
-// // //   const isVideo =
-// // //     data?.video &&
-// // //     (data.video.includes(".mp4") ||
-// // //       data.video.includes(".webm") ||
-// // //       data.video.includes(".mov") ||
-// // //       data.video.includes("video/"));
-
-// // //   // Video control functions remain the same
-// // //   const toggleVideoPlay = () => {
-// // //     if (videoRef.current) {
-// // //       if (isPlaying) {
-// // //         videoRef.current.pause();
-// // //       } else {
-// // //         videoRef.current.play().catch((error) => {
-// // //           console.log("Play failed:", error);
-// // //         });
-// // //       }
-// // //       setIsPlaying(!isPlaying);
-// // //     }
-// // //   };
-
-// // //   const toggleMute = () => {
-// // //     if (videoRef.current) {
-// // //       videoRef.current.muted = !videoRef.current.muted;
-// // //       setIsMuted(!isMuted);
-// // //     }
-// // //   };
-
-// // //   const handleVideoEnd = () => setIsPlaying(false);
-// // //   const handleVideoPlay = () => setIsPlaying(true);
-// // //   const handleVideoPause = () => setIsPlaying(false);
-// // //   const handleVideoClick = (e) => {
-// // //     e.stopPropagation();
-// // //     toggleVideoPlay();
-// // //   };
-// // //   const handleMouseEnter = () => setShowControls(true);
-// // //   const handleMouseLeave = () => setShowControls(false);
-
-// // //   const renderMediaContent = () => {
-// // //     if (isVideo) {
-// // //       return (
-// // //         <div
-// // //           className="media-container relative"
-// // //           onMouseEnter={handleMouseEnter}
-// // //           onMouseLeave={handleMouseLeave}
-// // //         >
-// // //           <video
-// // //             ref={videoRef}
-// // //             className="w-full object-cover rounded-md cursor-pointer"
-// // //             poster={data?.video_thumbnail_image || data?.image}
-// // //             onEnded={handleVideoEnd}
-// // //             onPlay={handleVideoPlay}
-// // //             onPause={handleVideoPause}
-// // //             onClick={handleVideoClick}
-// // //             playsInline
-// // //             muted={isMuted}
-// // //             loop
-// // //           >
-// // //             <source src={data.video} type="video/mp4" />
-// // //             <source src={data.video} type="video/webm" />
-// // //             <source src={data.video} type="video/quicktime" />
-// // //             Your browser does not support the video tag.
-// // //           </video>
-
-// // //           <div
-// // //             className={`video-overlay absolute inset-0 flex items-center justify-center cursor-pointer transition-opacity duration-300 ${
-// // //               isPlaying ? "opacity-0 hover:opacity-100" : "opacity-100"
-// // //             }`}
-// // //             onClick={handleVideoClick}
-// // //           >
-// // //             {!isPlaying && (
-// // //               <div className="play-button bg-black bg-opacity-60 rounded-full p-4 transition-all duration-300 hover:bg-opacity-80 hover:scale-110">
-// // //                 <PlayArrow style={{ color: "white", fontSize: "40px" }} />
-// // //               </div>
-// // //             )}
-// // //           </div>
-
-// // //           <div
-// // //             className={`video-controls-bar absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3 transition-opacity duration-300 ${
-// // //               showControls || !isPlaying ? "opacity-100" : "opacity-0"
-// // //             }`}
-// // //             onClick={(e) => e.stopPropagation()}
-// // //           >
-// // //             <div className="flex justify-between items-center">
-// // //               <div className="flex items-center space-x-3">
-// // //                 <button
-// // //                   className="control-btn text-white hover:text-gray-300 transition-colors"
-// // //                   onClick={toggleVideoPlay}
-// // //                 >
-// // //                   {isPlaying ? <Pause /> : <PlayArrow />}
-// // //                 </button>
-// // //                 <button
-// // //                   className="control-btn text-white hover:text-gray-300 transition-colors"
-// // //                   onClick={toggleMute}
-// // //                 >
-// // //                   {isMuted ? <VolumeOff /> : <VolumeUp />}
-// // //                 </button>
-// // //                 <span className="text-white text-sm">
-// // //                   {isPlaying ? "Playing" : "Paused"}
-// // //                 </span>
-// // //               </div>
-// // //               <div className="text-white text-sm">
-// // //                 {videoRef.current &&
-// // //                   `${Math.floor(videoRef.current.currentTime || 0)}s`}
-// // //               </div>
-// // //             </div>
-// // //           </div>
-// // //         </div>
-// // //       );
-// // //     } else {
-// // //       return (
-// // //         <div className="flex justify-center items-center h-40 w-auto rounded-md">
-// // //           <img
-// // //             src={data?.image || data?.video_thumbnail_image}
-// // //             alt={data?.name || data?.display_name}
-// // //             className="h-40 w-auto rounded-md object-cover"
-// // //           />
-// // //         </div>
-// // //       );
-// // //     }
-// // //   };
-
-// // //   // Custom Price Option Component matching the image design
-// // //   const PriceOption = ({ item, isSelected, onClick }) => (
-// // //     <div 
-// // //       className={`price-option-item ${isSelected ? 'selected' : ''}`}
-// // //       onClick={() => onClick(item)}
-// // //     >
-// // //       <div className="price-option-content">
-// // //         <div className="price-type-row">
-// // //           <div className="price-type-info">
-// // //             <h3 className="price-type-title">{item.type}</h3>
-// // //             <p className="price-type-subtitle">{item.title}</p>
-// // //           </div>
-// // //           <div className="price-radio-container">
-// // //             <div className={`price-radio ${isSelected ? 'checked' : ''}`}>
-// // //               {isSelected && <FaCheck className="radio-check-icon" />}
-// // //             </div>
-// // //           </div>
-// // //         </div>
-// // //         <div className="price-display-row">
-// // //           <div className="price-tag">{item.tag}</div>
-// // //           <div className="price-amount">₹ {item.price}</div>
-// // //         </div>
-// // //         {/* Time Information Display */}
-// // //         {item.time.Total_minutes && (
-// // //           <div className="time-info-display">
-// // //             <span className="time-icon">⏱</span>
-// // //             <span className="time-text">{item.time.Total_minutes} minutes service</span>
-// // //           </div>
-// // //         )}
-// // //       </div>
-// // //     </div>
-// // //   );
-
-// // //   // Price Selection Required Message
-// // //   const PriceSelectionMessage = () => (
-// // //     <div className="price-selection-message">
-// // //       <div className="price-selection-icon">!</div>
-// // //       <span>Please select a price option to continue</span>
-// // //     </div>
-// // //   );
-
-// // //   // Updated Terms Modal Component
-// // //   const TermsModal = () => (
-// // //     <div className="terms-modal-overlay">
-// // //       <div ref={termsModalRef} className="terms-modal-container">
-// // //         <div className="terms-modal-header">
-// // //           <h2 className="terms-modal-title">Terms & Conditions</h2>
-// // //           <button
-// // //             className="terms-modal-close-btn"
-// // //             onClick={handleCloseTermsModal}
-// // //           >
-// // //             <IoMdClose />
-// // //           </button>
-// // //         </div>
-// // //         <div className="terms-modal-content">
-// // //           <ul className="terms-list">
-// // //             {termsAndConditions.map((term, index) => (
-// // //               <li key={index} className="terms-list-item">
-// // //                 <span className="terms-list-number">{index + 1}</span>
-// // //                 <span className="terms-list-text">{term}</span>
-// // //               </li>
-// // //             ))}
-// // //           </ul>
-// // //         </div>
-// // //       </div>
-// // //     </div>
-// // //   );
-
-// // //   return (
-// // //     <>
-// // //       {type === "offer" || type === "service" ? (
-// // //         <div className="Membership-Modal-main-container">
-// // //           <div className="membership-close-btn">
-// // //             <div className="button" onClick={handleClose}>
-// // //               <IoMdClose sx={{ height: "30px", width: "30px" }} />
-// // //             </div>
-// // //           </div>
-// // //           <div className="MSM-details">
-// // //             <div className="MSM-Title-header flex items-center justify-center text-center !font-semibold">
-// // //               {type === "offer" ? "Offer Details" : "Service Details"}
-// // //             </div>
-// // //             <div className="MSM-membership-meta-info">
-// // //               {renderMediaContent()}
-// // //               <div className="MSM-m-m-info-offer flex justify-center">
-// // //                 <h2 className="text-[20px] font-semibold ">
-// // //                   {data?.name || data?.category}
-// // //                 </h2>
-// // //               </div>
-              
-// // //               {/* Price Selection Required Notice */}
-// // //               <div className="price-selection-notice">
-// // //                 <span className="required-asterisk">*</span>
-// // //                 Select your preferred stylist type
-// // //               </div>
-              
-// // //               {/* Price Selection Section */}
-// // //               <div className="price-selection-section">
-// // //                 <div className="price-options-list">
-// // //                   {priceList.map((item) => (
-// // //                     <PriceOption
-// // //                       key={item.id}
-// // //                       item={item}
-// // //                       isSelected={selectedPrice?.id === item.id}
-// // //                       onClick={handlePriceSelect}
-// // //                     />
-// // //                   ))}
-// // //                 </div>
-// // //               </div>
-              
-// // //               {/* Error Message */}
-// // //               {showPriceError && <PriceSelectionMessage />}
-              
-// // //               {/* Selected Price Details */}
-// // //               {selectedPrice && (
-// // //                 <div className="selected-price-details">
-// // //                   <div className="selected-info-row">
-// // //                     <span className="selected-info-label">Selected:</span>
-// // //                     <span className="selected-info-value">{selectedPrice.type}</span>
-// // //                   </div>
-// // //                   <div className="selected-info-row">
-// // //                     <span className="selected-info-label">Time:</span>
-// // //                     <span className="selected-info-value">{selectedPrice.time.Total_minutes} minutes</span>
-// // //                   </div>
-// // //                 </div>
-// // //               )}
-              
-// // //               {/* Action Buttons Section */}
-// // //               <div className="price-action-section">
-// // //                 <div className="selected-price-info">
-// // //                   <div className="selected-price-label">Selected Price</div>
-// // //                   <div className="selected-price-value">₹ {selectedPrice?.price || "---"}</div>
-// // //                 </div>
-// // //                 <div className="action-buttons">
-// // //                   <button className="share-btn" onClick={handleShareOffer}>
-// // //                     <ShareOutlined />
-// // //                     Share
-// // //                   </button>
-// // //                   <button
-// // //                     onClick={handleBookNowBtn}
-// // //                     className={`book-now-btn ${!selectedPrice ? 'disabled' : ''}`}
-// // //                     disabled={!selectedPrice}
-// // //                   >
-// // //                     Book Now
-// // //                   </button>
-// // //                 </div>
-// // //               </div>
-// // //             </div>
-
-// // //             {/* Terms & Conditions Section */}
-// // //             <div className="MSM-membership-desc !pt-2 cursor-pointer">
-// // //               <div className="flex items-center mb-6 justify-center m-4">
-// // //                 <h2
-// // //                   className="font-semibold text-center text-[18px] mb-2 mt-0 terms-clickable-section"
-// // //                   onClick={handleTermsClick}
-// // //                 >
-// // //                   Terms & conditions  {" "}| 
-// // //                 </h2>
-// // //                 <h2
-// // //                   className="font-semibold text-center text-[18px] mt-0 ml-2"
-// // //                   onClick={() => setShowTermsModal(true)}
-// // //                 >
-// // //                    {" "}View All
-// // //                 </h2>
-// // //               </div>
-// // //               <div
-// // //                 className="terms-clickable-section"
-// // //                 onClick={() => setShowTermsModal(true)}
-// // //               >
-// // //                 <div
-// // //                   dangerouslySetInnerHTML={{
-// // //                     __html: data?.terms_and_conditions,
-// // //                   }}
-// // //                 />
-// // //               </div>
-// // //             </div>
-// // //           </div>
-// // //         </div>
-// // //       ) : type === "national-offer" ? (
-// // //         <div className="Membership-Modal-main-container">
-// // //           <div className="membership-close-btn">
-// // //             <div className="button" onClick={handleClose}>
-// // //               <IoMdClose sx={{ height: "30px", width: "30px" }} />
-// // //             </div>
-// // //           </div>
-// // //           <div className="MSM-details">
-// // //             <div className="MSM-Title-header text-center !font-semibold">
-// // //               Offers Details
-// // //             </div>
-// // //             <div className="MSM-membership-meta-info">
-// // //               {renderMediaContent()}
-// // //               <div className="MSM-m-m-info-offer">
-// // //                 <h2 className="text-[20px] font-semibold ">{data?.name}</h2>
-// // //               </div>
-              
-// // //               {/* Price Selection Required Notice */}
-// // //               <div className="price-selection-notice">
-// // //                 <span className="required-asterisk">*</span>
-// // //                 Select your preferred stylist type
-// // //               </div>
-              
-// // //               {/* Price Selection Section for National Offers */}
-// // //               <div className="price-selection-section">
-// // //                 <div className="price-options-list">
-// // //                   {priceList.map((item) => (
-// // //                     <PriceOption
-// // //                       key={item.id}
-// // //                       item={item}
-// // //                       isSelected={selectedPrice?.id === item.id}
-// // //                       onClick={handlePriceSelect}
-// // //                     />
-// // //                   ))}
-// // //                 </div>
-// // //               </div>
-              
-// // //               {/* Error Message */}
-// // //               {showPriceError && <PriceSelectionMessage />}
-              
-// // //               {/* Selected Price Details */}
-// // //               {selectedPrice && (
-// // //                 <div className="selected-price-details">
-// // //                   <div className="selected-info-row">
-// // //                     <span className="selected-info-label">Selected:</span>
-// // //                     <span className="selected-info-value">{selectedPrice.type}</span>
-// // //                   </div>
-// // //                   <div className="selected-info-row">
-// // //                     <span className="selected-info-label">Time:</span>
-// // //                     <span className="selected-info-value">{selectedPrice.time.Total_minutes} minutes</span>
-// // //                   </div>
-// // //                 </div>
-// // //               )}
-              
-// // //               <div className="price-action-section">
-// // //                 <div className="selected-price-info">
-// // //                   <div className="price-comparison">
-// // //                     <span className="original-price">
-// // //                       ₹ <del>{data?.actual_price}</del>
-// // //                     </span>
-// // //                     <div className="selected-price-value">₹ {selectedPrice?.price || data?.discount_price}</div>
-// // //                   </div>
-// // //                 </div>
-// // //                 <div className="action-buttons">
-// // //                   <button
-// // //                     onClick={handleBookNowBtn}
-// // //                     className={`book-now-btn ${!selectedPrice ? 'disabled' : ''}`}
-// // //                     disabled={!selectedPrice}
-// // //                   >
-// // //                     Book Now
-// // //                   </button>
-// // //                 </div>
-// // //               </div>
-// // //             </div>
-
-// // //             {/* Terms & Conditions Section */}
-// // //             <div className="MSM-membership-desc !pt-2 cursor-pointer">
-// // //               <div className="flex items-center mb-6 justify-center m-4">
-// // //                 <h2
-// // //                   className="font-semibold text-center text-[18px] mb-2 mt-0 terms-clickable-section"
-// // //                   onClick={handleTermsClick}
-// // //                 >
-// // //                   Terms & conditions  {" "}| 
-// // //                 </h2>
-// // //                 <h2
-// // //                   className="font-semibold text-center text-[18px] mt-0 ml-2"
-// // //                   onClick={() => setShowTermsModal(true)}
-// // //                 >
-// // //                    {" "}View All
-// // //                 </h2>
-// // //               </div>
-// // //               <div
-// // //                 className="terms-clickable-section"
-// // //                 onClick={() => setShowTermsModal(true)}
-// // //               >
-// // //                 <div
-// // //                   dangerouslySetInnerHTML={{
-// // //                     __html: data?.terms_and_conditions,
-// // //                   }}
-// // //                 />
-// // //               </div>
-// // //             </div>
-// // //           </div>
-// // //         </div>
-// // //       ) : null}
-
-// // //       {/* Terms & Conditions Popup Modal */}
-// // //       {showTermsModal && <TermsModal />}
-// // //     </>
-// // //   );
-// // // };
-
-// // // export default OfferSalonModal;
-
-// import React, { useState, useRef, useEffect } from "react";
-// import "./salonprofilemodal.css";
-// import { IoMdClose } from "react-icons/io";
-// import {
-//   ShareOutlined,
-//   PlayArrow,
-//   Pause,
-//   VolumeUp,
-//   VolumeOff,
-// } from "@mui/icons-material";
-
-// const OfferSalonModal = ({ data, handleClose, salon, type, onBookNow }) => {
-//   const [isPlaying, setIsPlaying] = useState(false);
-//   const [isMuted, setIsMuted] = useState(true);
-//   const [showControls, setShowControls] = useState(false);
-//   const [showTermsModal, setShowTermsModal] = useState(false);
-//   const videoRef = useRef(null);
-//   const termsModalRef = useRef(null);
-
-//   // Terms and Conditions Data for Popup Modal
-//   const termsAndConditions = [
-//     "Prices may vary based on hair length, volume, texture, and service customization. Final pricing will be confirmed only after an in-person consultation at the salon.",
-//     "Offers are valid only on appointments booked through TRAKKY. Walk-in pricing and salon-direct rates may differ.",
-//     "Additional charges may apply for premium products, add-ons, or extra time required depending on the client's hair/skin condition.",
-//     "Color, chemical, and technical services require a patch test and consultation before final pricing and service confirmation.",
-//     "Offer validity is limited and subject to change at the discretion of TRAKKY or the partnered salon.",
-//     "Appointments are subject to availability. The salon may adjust or reschedule in case of operational requirements.",
-//     "Taxes (if applicable) are not included in the displayed offer price unless explicitly mentioned.",
-//     "Cancellation and no-show policies will follow the respective salon's rules listed on TRAKKY.",
-//     "Service results may vary based on individual hair or skin conditions. Neither TRAKKY nor the salon is responsible for results affected by prior treatments, damage, or unrealistic expectations.",
-//     "The salon reserves the right to refuse service if the client's hair/skin is unsuitable for the requested treatment.",
-//     "Images used in offers are for representation only and may not depict actual results.",
-//     "TRAKKY offers cannot be combined with any other deals, packages, or ongoing promotions unless stated.",
-//   ];
-
-//   // Autoplay video when modal opens
-//   useEffect(() => {
-//     if (isVideo && videoRef.current) {
-//       const playVideo = async () => {
-//         try {
-//           videoRef.current.muted = true;
-//           await videoRef.current.play();
-//           setIsPlaying(true);
-//         } catch (error) {
-//           console.log("Autoplay failed:", error);
-//           setIsPlaying(false);
-//         }
-//       };
-//       playVideo();
-//     }
-//   }, [data]);
-
-//   // Handle terms modal open/close
-//   const handleTermsClick = () => {
-//     setShowTermsModal(true);
-//   };
-
-//   const handleCloseTermsModal = () => {
-//     setShowTermsModal(false);
-//   };
-
-//   // Close terms modal when clicking outside
-//   useEffect(() => {
-//     const handleClickOutside = (event) => {
-//       if (
-//         termsModalRef.current &&
-//         !termsModalRef.current.contains(event.target)
-//       ) {
-//         handleCloseTermsModal();
-//       }
-//     };
-
-//     if (showTermsModal) {
-//       document.addEventListener("mousedown", handleClickOutside);
-//       document.body.style.overflow = "hidden";
-//     } else {
-//       document.body.style.overflow = "unset";
-//     }
-
-//     return () => {
-//       document.removeEventListener("mousedown", handleClickOutside);
-//       document.body.style.overflow = "unset";
-//     };
-//   }, [showTermsModal]);
-
-//   // Rest of your existing functions remain the same
-//   const handleShareOffer = () => {
-//     const currentUrl = window.location.href;
-//     if (navigator.share) {
-//       navigator
-//         .share({
-//           title: `${data?.name || data?.display_name} Offer at ${salon?.name}`,
-//           text: `Check out this ${data?.name || data?.display_name} offer at ${
-//             salon?.name
-//           } for just ₹${data?.discount_price || data?.price}`,
-//           url: currentUrl,
-//         })
-//         .catch((err) => {
-//           console.log("Error sharing:", err);
-//           fallbackCopyToClipboard(currentUrl);
-//         });
-//     } else {
-//       fallbackCopyToClipboard(currentUrl);
-//     }
-//   };
-
-//   const fallbackCopyToClipboard = (text) => {
-//     navigator.clipboard
-//       .writeText(text)
-//       .then(() => {
-//         alert("Link copied to clipboard!");
-//       })
-//       .catch((err) => {
-//         console.error("Failed to copy:", err);
-//         const textarea = document.createElement("textarea");
-//         textarea.value = text;
-//         document.body.appendChild(textarea);
-//         textarea.select();
-//         document.execCommand("copy");
-//         document.body.removeChild(textarea);
-//         alert("Link copied to clipboard!");
-//       });
-//   };
-
-//   const handleBookNowBtn = (name, price) => {
-//     if (type === "service") {
-//       if (!salon?.name) return;
-
-//       const discount =
-//         data.actual_price &&
-//         data.discount_price &&
-//         data.actual_price > data.discount_price
-//           ? Math.round(
-//               ((data.actual_price - data.discount_price) / data.actual_price) *
-//                 100
-//             )
-//           : 0;
-
-//       let offerTime = { hours: 0, minutes: 30 };
-//       try {
-//         if (data.offer_time) {
-//           offerTime =
-//             typeof data.offer_time === "string"
-//               ? JSON.parse(data.offer_time)
-//               : data.offer_time;
-//         }
-//       } catch (e) {
-//         console.error("Error parsing offer time:", e);
-//       }
-
-//       const offerAsService = {
-//         id: data.id,
-//         name: type === "service" ? data?.name : data?.display_name,
-//         price: type === "service" ? data?.discount_price : data?.price,
-//         actual_price: type === "service" ? data?.actual_price : data?.price,
-//         discount: discount,
-//         description:
-//           type === "service"
-//             ? data?.terms_and_conditions
-//             : data?.display_sub_name,
-//         terms_and_conditions: data?.terms_and_conditions,
-//         image: data?.image,
-//         isOffer: type === "service",
-//         expire_date: data?.expire_date,
-//         service_time: offerTime,
-//       };
-
-//       if (onBookNow) {
-//         onBookNow(offerAsService);
-//       } else {
-//         console.log("Service Book Now clicked, but onBookNow is not defined.");
-//       }
-//     } else if (type === "offer") {
-//      if (!salon?.name) return;
-
-//       const discount =
-//         data.actual_price &&
-//         data.discount_price &&
-//         data.actual_price > data.discount_price
-//           ? Math.round(
-//               ((data.actual_price - data.discount_price) / data.actual_price) *
-//                 100
-//             )
-//           : 0;
-
-//       let offerTime = { hours: 0, minutes: 30 };
-//       try {
-//         if (data.offer_time) {
-//           offerTime =
-//             typeof data.offer_time === "string"
-//               ? JSON.parse(data.offer_time)
-//               : data.offer_time;
-//         }
-//       } catch (e) {
-//         console.error("Error parsing offer time:", e);
-//       }
-
-//       const offerAsService = {
-//         id: data.id,
-//         name: type === "service" ? data?.name : data?.display_name,
-//         price: type === "service" ? data?.discount_price : data?.price,
-//         actual_price: type === "service" ? data?.actual_price : data?.price,
-//         discount: discount,
-//         description:
-//           type === "service"
-//             ? data?.terms_and_conditions
-//             : data?.display_sub_name,
-//         terms_and_conditions: data?.terms_and_conditions,
-//         image: data?.image,
-//         isOffer: type === "service",
-//         expire_date: data?.expire_date,
-//         service_time: offerTime,
-//       };
-
-//       if (onBookNow) {
-//         onBookNow(offerAsService);
-//       } else {
-//         console.log("Service Book Now clicked, but onBookNow is not defined.");
-//       }
-//     }
-//     handleClose();
-
-//     //  let message = `Can you provide more details about the special offer named '${name}' at ${salon?.name} in ${salon?.area}, ${salon?.city}? It comes with a discounted price of ${price} rupees.`;
-//     //   let link = `https://api.whatsapp.com/send?phone=916355167304&text=${encodeURIComponent(
-//     //     message
-//     //   )}`;
-//     //   window.open(link, "_blank");
-//   };
-
-//   // Check if content is video
-//   const isVideo =
-//     data?.video &&
-//     (data.video.includes(".mp4") ||
-//       data.video.includes(".webm") ||
-//       data.video.includes(".mov") ||
-//       data.video.includes("video/"));
-
-//   // Video control functions remain the same
-//   const toggleVideoPlay = () => {
-//     if (videoRef.current) {
-//       if (isPlaying) {
-//         videoRef.current.pause();
-//       } else {
-//         videoRef.current.play().catch((error) => {
-//           console.log("Play failed:", error);
-//         });
-//       }
-//       setIsPlaying(!isPlaying);
-//     }
-//   };
-
-//   const toggleMute = () => {
-//     if (videoRef.current) {
-//       videoRef.current.muted = !videoRef.current.muted;
-//       setIsMuted(!isMuted);
-//     }
-//   };
-
-//   const handleVideoEnd = () => setIsPlaying(false);
-//   const handleVideoPlay = () => setIsPlaying(true);
-//   const handleVideoPause = () => setIsPlaying(false);
-//   const handleVideoClick = (e) => {
-//     e.stopPropagation();
-//     toggleVideoPlay();
-//   };
-//   const handleMouseEnter = () => setShowControls(true);
-//   const handleMouseLeave = () => setShowControls(false);
-
-//   const renderMediaContent = () => {
-//     if (isVideo) {
-//       return (
-//         <div
-//           className="media-container relative"
-//           onMouseEnter={handleMouseEnter}
-//           onMouseLeave={handleMouseLeave}
-//         >
-//           <video
-//             ref={videoRef}
-//             className="w-full object-cover rounded-md cursor-pointer"
-//             poster={data?.video_thumbnail_image || data?.image}
-//             onEnded={handleVideoEnd}
-//             onPlay={handleVideoPlay}
-//             onPause={handleVideoPause}
-//             onClick={handleVideoClick}
-//             playsInline
-//             muted={isMuted}
-//             loop
-//           >
-//             <source src={data.video} type="video/mp4" />
-//             <source src={data.video} type="video/webm" />
-//             <source src={data.video} type="video/quicktime" />
-//             Your browser does not support the video tag.
-//           </video>
-
-//           <div
-//             className={`video-overlay absolute inset-0 flex items-center justify-center cursor-pointer transition-opacity duration-300 ${
-//               isPlaying ? "opacity-0 hover:opacity-100" : "opacity-100"
-//             }`}
-//             onClick={handleVideoClick}
-//           >
-//             {!isPlaying && (
-//               <div className="play-button bg-black bg-opacity-60 rounded-full p-4 transition-all duration-300 hover:bg-opacity-80 hover:scale-110">
-//                 <PlayArrow style={{ color: "white", fontSize: "40px" }} />
-//               </div>
-//             )}
-//           </div>
-
-//           <div
-//             className={`video-controls-bar absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3 transition-opacity duration-300 ${
-//               showControls || !isPlaying ? "opacity-100" : "opacity-0"
-//             }`}
-//             onClick={(e) => e.stopPropagation()}
-//           >
-//             <div className="flex justify-between items-center">
-//               <div className="flex items-center space-x-3">
-//                 <button
-//                   className="control-btn text-white hover:text-gray-300 transition-colors"
-//                   onClick={toggleVideoPlay}
-//                 >
-//                   {isPlaying ? <Pause /> : <PlayArrow />}
-//                 </button>
-//                 <button
-//                   className="control-btn text-white hover:text-gray-300 transition-colors"
-//                   onClick={toggleMute}
-//                 >
-//                   {isMuted ? <VolumeOff /> : <VolumeUp />}
-//                 </button>
-//                 <span className="text-white text-sm">
-//                   {isPlaying ? "Playing" : "Paused"}
-//                 </span>
-//               </div>
-//               <div className="text-white text-sm">
-//                 {videoRef.current &&
-//                   `${Math.floor(videoRef.current.currentTime || 0)}s`}
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       );
-//     } else {
-//       return (
-//         <div className="flex justify-center items-center h-40 w-auto rounded-md">
-//           <img
-//             src={data?.image || data?.video_thumbnail_image}
-//             alt={data?.name || data?.display_name}
-//             className="h-40 w-auto rounded-md object-cover"
-//           />
-//         </div>
-//       );
-//     }
-//   };
-
-//   // Updated Terms Modal Component with your conditions
-//   const TermsModal = () => (
-//     <div className="terms-modal-overlay">
-//       <div ref={termsModalRef} className="terms-modal-container">
-//         <div className="terms-modal-header">
-//           <h2 className="terms-modal-title">Terms & Conditions</h2>
-//           <button
-//             className="terms-modal-close-btn"
-//             onClick={handleCloseTermsModal}
-//           >
-//             <IoMdClose />
-//           </button>
-//         </div>
-//         <div className="terms-modal-content">
-//           <ul className="terms-list">
-//             {termsAndConditions.map((term, index) => (
-//               <li key={index} className="terms-list-item">
-//                 <span className="terms-list-number">{index + 1}</span>
-//                 <span className="terms-list-text">{term}</span>
-//               </li>
-//             ))}
-//           </ul>
-//         </div>
-//       </div>
-//     </div>
-//   );
-
-//   return (
-//     <>
-//       {type === "offer" || type === "service" ? (
-//         <div className="Membership-Modal-main-container">
-//           <div className="membership-close-btn">
-//             <div className="button" onClick={handleClose}>
-//               <IoMdClose sx={{ height: "30px", width: "30px" }} />
-//             </div>
-//           </div>
-//           <div className="MSM-details">
-//             <div className="MSM-Title-header flex items-center justify-center text-center !font-semibold">
-//               {type === "offer" ? "Offer Details" : "Service Details"}
-//             </div>
-//             <div className="MSM-membership-meta-info">
-//               {renderMediaContent()}
-//               <div className="MSM-m-m-info-offer flex justify-center">
-//                 <h2 className="text-[20px] font-semibold ">
-//                   {data?.name || data?.category}
-//                 </h2>
-//               </div>
-//               <div className="flex justify-between OSM-price-cart">
-//                 <div>
-//                   <span className=" flex text-gray-500 text-sm pl-1">
-//                     ₹ <del className=" !mx-0">{data?.actual_price}</del>
-//                   </span>
-//                   <div className="text-[18px] font-medium pl-1">
-//                     ₹{data?.discount_price} only
-//                   </div>
-//                 </div>
-//                 <div className="flex gap-2">
-//                   <button className="share-btn" onClick={handleShareOffer}>
-//                     <ShareOutlined />
-//                     Share
-//                   </button>
-//                   <button
-//                     onClick={() =>
-//                       handleBookNowBtn(data?.name, data?.discount_price)
-//                     }
-//                   >
-//                     Book Now
-//                   </button>
-//                 </div>
-//               </div>
-//             </div>
-
-//             {/* YEH WAALA SECTION MAIN MODAL MEIN DISPLAY HOGA - Database se aaya hua content */}
-//             <div className="MSM-membership-desc !pt-2 cursor-pointer">
-//               <div className="flex items-center mb-6 justify-center m-4">
-//                 {" "}
-//                 <h2
-//                   className="font-semibold text-center text-[18px] mb-2 mt-0 terms-clickable-section"
-//                   onClick={handleTermsClick}
-//                 >
-//                   Terms & conditions  {" "}| 
-//                 </h2>
-//                 <h2
-//                   className="font-semibold text-center text-[18px] mt-0 ml-2"
-//                   onClick={() => setShowTermsModal(true)}
-//                 >
-//                    {" "}View All
-//                 </h2>
-//               </div>
-//               <div
-//                 className="terms-clickable-section"
-//                 onClick={() => setShowTermsModal(true)}
-//               >
-//                 <div
-//                   dangerouslySetInnerHTML={{
-//                     __html: data?.terms_and_conditions,
-//                   }}
-//                 />
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       ) : type === "national-offer" ? (
-//         <div className="Membership-Modal-main-container">
-//           <div className="membership-close-btn">
-//             <div className="button" onClick={handleClose}>
-//               <IoMdClose sx={{ height: "30px", width: "30px" }} />
-//             </div>
-//           </div>
-//           <div className="MSM-details">
-//             <div className="MSM-Title-header text-center !font-semibold">
-//               Offers Details
-//             </div>
-//             <div className="MSM-membership-meta-info">
-//               {renderMediaContent()}
-//               <div className="MSM-m-m-info-offer">
-//                 <h2 className="text-[20px] font-semibold ">{data?.name}</h2>
-//               </div>
-//               <div className="flex justify-between OSM-price-cart">
-//                 <div>
-//                   <span className=" flex text-gray-500 text-sm pl-1">
-//                     ₹ <del className=" !mx-0">{data?.actual_price}</del>
-//                   </span>
-//                   <div className="text-[18px] font-medium pl-1">
-//                     ₹{data?.discount_price} only
-//                   </div>
-//                 </div>
-//                 <div className="flex gap-2">
-//                   <button
-//                     onClick={() =>
-//                       handleBookNowBtn(data?.name, data?.discount_price)
-//                     }
-//                   >
-//                     Book Now
-//                   </button>
-//                 </div>
-//               </div>
-//             </div>
-
-//             {/* YEH WAALA SECTION MAIN MODAL MEIN DISPLAY HOGA - Database se aaya hua content */}
-//             <div className="MSM-membership-desc !pt-2 cursor-pointer">
-//               <div className="flex items-center mb-6 justify-center m-4">
-//                 {" "}
-//                 <h2
-//                   className="font-semibold text-center text-[18px] mb-2 mt-0 terms-clickable-section"
-//                   onClick={handleTermsClick}
-//                 >
-//                   Terms & conditions  {" "}| 
-//                 </h2>
-//                 <h2
-//                   className="font-semibold text-center text-[18px] mt-0 ml-2"
-//                   onClick={() => setShowTermsModal(true)}
-//                 >
-//                    {" "}View All
-//                 </h2>
-//               </div>
-//               <div
-//                 className="terms-clickable-section"
-//                 onClick={() => setShowTermsModal(true)}
-//               >
-//                 <div
-//                   dangerouslySetInnerHTML={{
-//                     __html: data?.terms_and_conditions,
-//                   }}
-//                 />
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       ) : null}
-
-//       {/* Terms & Conditions Popup Modal - Isme 12 conditions display honge */}
-//       {showTermsModal && <TermsModal />}
-//     </>
-//   );
-// };
-
-// export default OfferSalonModal; 
-
-import React, { useState, useRef, useEffect } from "react";
+  import React, { useState, useRef, useEffect } from "react";
 import "./salonprofilemodal.css";
 import { IoMdClose } from "react-icons/io";
 import {
@@ -1154,7 +8,7 @@ import {
   VolumeUp,
   VolumeOff,
 } from "@mui/icons-material";
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaRegClock } from "react-icons/fa";
 
 const OfferSalonModal = ({ data, handleClose, salon, type, onBookNow }) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -1163,8 +17,15 @@ const OfferSalonModal = ({ data, handleClose, salon, type, onBookNow }) => {
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [selectedLength, setSelectedLength] = useState(null);
   const [showLengthError, setShowLengthError] = useState(false);
+  const [selectedStylist, setSelectedStylist] = useState(null);
   const videoRef = useRef(null);
   const termsModalRef = useRef(null);
+
+  const STYLIST_OPTIONS = [
+    { name: "Junior Stylist", extra: 0 },
+    { name: "Senior Stylist", extra: 100 },
+    { name: "Master Stylist", extra: 250 },
+  ];
 
 
   useEffect(()=>{
@@ -1195,6 +56,23 @@ const OfferSalonModal = ({ data, handleClose, salon, type, onBookNow }) => {
     }
   }, [hasLengths, lengthOptions]);
 
+  // Auto select Junior Stylist by default
+  useEffect(() => {
+    if (!selectedStylist) {
+      setSelectedStylist(STYLIST_OPTIONS[0]);
+    }
+  }, []);
+
+  const handleStylistSelect = (stylist) => {
+    setSelectedStylist(stylist);
+  };
+
+  const stylistExtra = selectedStylist?.extra || 0;
+  const basePrice = hasLengths
+    ? Number(selectedLength?.price || 0)
+    : Number(data?.price || data?.discount_price || 0);
+  const finalPrice = basePrice + stylistExtra;
+
   // Terms and Conditions
   const termsAndConditions = [
     "Prices may vary based on hair length, volume, texture, and service customization. Final pricing will be confirmed only after an in-person consultation at the salon.",
@@ -1222,16 +100,21 @@ const OfferSalonModal = ({ data, handleClose, salon, type, onBookNow }) => {
       return;
     }
 
-    const finalPrice = hasLengths ? selectedLength.price : (data?.price || data?.discount_price || 0);
     const name = data?.service_name || data?.name || "Service";
 
     let message = `Can you provide more details about '${name}' at ${salon?.name} in ${salon?.area}, ${salon?.city}?`;
 
     if (hasLengths) {
-      message += ` I want the ${selectedLength.name} length (₹${finalPrice}).`;
+      message += ` I want the ${selectedLength.name} length (₹${basePrice}).`;
     } else {
-      message += ` Price: ₹${finalPrice}.`;
+      message += ` Price: ₹${basePrice}.`;
     }
+
+    if (selectedStylist) {
+      message += ` Preferred stylist: ${selectedStylist.name}${stylistExtra > 0 ? ` (+₹${stylistExtra})` : ""}.`;
+    }
+
+    message += ` Final price: ₹${finalPrice}.`;
 
     const link = `https://api.whatsapp.com/send?phone=916355167304&text=${encodeURIComponent(message)}`;
     window.open(link, "_blank");
@@ -1302,52 +185,92 @@ const OfferSalonModal = ({ data, handleClose, salon, type, onBookNow }) => {
     );
   };
 
- const LengthOption = ({ item, isSelected, onClick }) => {
+const LengthOption = ({ item, isSelected, onClick }) => {
   const timing = item.timing || {};
 
-  // Extract values and convert to numbers
   const days = parseInt(timing.Total_days) || 0;
   const hours = parseInt(timing.Total_hours) || 0;
   const minutes = parseInt(timing.Total_minutes) || 0;
   const seating = parseInt(timing.Total_seating) || 0;
 
-  // Build time string smartly
   let timeParts = [];
-
   if (days > 0) timeParts.push(`${days} Day${days > 1 ? 's' : ''}`);
   if (hours > 0) timeParts.push(`${hours} Hour${hours > 1 ? 's' : ''}`);
   if (minutes > 0) timeParts.push(`${minutes} min`);
   if (seating > 0) timeParts.push(`${seating} Seating`);
 
-  const displayTime = timeParts.length > 0 ? timeParts.join(", ") : null;
+  const displayTime = timeParts.length > 0 ? timeParts.join(" · ") : null;
 
   return (
-    <div className={`price-option-item ${isSelected ? 'selected' : ''}`} onClick={() => onClick(item)}>
-      <div className="price-option-content">
-        <div className="price-type-row">
-          <div className="price-type-info">
-            <h3 className="price-type-title">{item.name}</h3>
-          </div>
-          <div className="price-radio-container">
-            <div className={`price-radio ${isSelected ? 'checked' : ''}`}>
-              {isSelected && <FaCheck className="radio-check-icon" />}
+    <div
+      className={`length-card ${isSelected ? 'selected' : ''}`}
+      onClick={() => onClick(item)}
+      role="button"
+      tabIndex={0}
+      aria-pressed={isSelected}
+    >
+      <div className="length-card-accent" aria-hidden="true" />
+
+      <div className="length-card-body">
+        <div className="length-info">
+          <h3 className="length-name">{item.name}</h3>
+          <div className="length-meta-row">
+            {displayTime && (
+              <div className="length-time-badge">
+                <FaRegClock className="length-time-icon" />
+                <span>{displayTime}</span>
+              </div>
+            )}
+            <div className="length-price-inline">
+              <span className="length-price-currency">₹</span>
+              <span className="length-price-value">
+                {Number(item.price).toLocaleString("en-IN")}
+              </span>
             </div>
           </div>
         </div>
-        <div className="price-display-row">
-          <div className="price-tag">Price</div>
-          <div className="price-amount">₹{item.price}</div>
+
+        <div className={`length-radio ${isSelected ? 'checked' : ''}`} aria-hidden="true">
+          <FaCheck className="length-radio-icon" />
         </div>
-        {displayTime && (
-          <div className="time-info-display">
-            <span className="time-icon">⏱</span>
-            <span className="time-text">{displayTime}</span>
-          </div>
-        )}
       </div>
     </div>
   );
 };
+
+  const StylistOption = ({ item, isSelected, onClick }) => {
+    return (
+      <div
+        className={`length-card ${isSelected ? 'selected' : ''}`}
+        onClick={() => onClick(item)}
+        role="button"
+        tabIndex={0}
+        aria-pressed={isSelected}
+      >
+        <div className="length-card-accent" aria-hidden="true" />
+
+        <div className="length-card-body">
+          <div className="length-info">
+            <h3 className="length-name">{item.name}</h3>
+            <div className="length-meta-row">
+              <div className="length-price-inline">
+                <span className="length-price-currency">
+                  {item.extra > 0 ? "+₹" : "₹"}
+                </span>
+                <span className="length-price-value">
+                  {item.extra > 0 ? item.extra.toLocaleString("en-IN") : "0"}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className={`length-radio ${isSelected ? 'checked' : ''}`} aria-hidden="true">
+            <FaCheck className="length-radio-icon" />
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const TermsModal = () => (
     <div className="terms-modal-overlay">
@@ -1374,12 +297,15 @@ const OfferSalonModal = ({ data, handleClose, salon, type, onBookNow }) => {
 
   return (
     <>
-      <div className="Membership-Modal-main-container">
-        <div className="membership-close-btn">
-          <div className="button" onClick={handleClose}>
-            <IoMdClose sx={{ height: "30px", width: "30px" }} />
-          </div>
-        </div>
+      <div className="Membership-Modal-main-container osm-modal">
+        <button
+          type="button"
+          className="osm-close-btn"
+          onClick={handleClose}
+          aria-label="Close"
+        >
+          <IoMdClose />
+        </button>
 
         <div className="MSM-details">
           <div className="MSM-Title-header flex items-center justify-center text-center !font-semibold">
@@ -1387,23 +313,31 @@ const OfferSalonModal = ({ data, handleClose, salon, type, onBookNow }) => {
           </div>
 
           <div className="MSM-membership-meta-info">
-            {renderMediaContent()}
-
-            <div className="MSM-m-m-info-offer flex justify-center">
-              <h2 className="text-[20px] font-semibold mt-4">
-                {data?.service_name || data?.name || "Service"}
-              </h2>
+            <div className="osm-service-row">
+              <div className="osm-service-media">
+                {renderMediaContent()}
+              </div>
+              <div className="osm-service-name">
+                <h2>{data?.service_name || data?.name || "Service"}</h2>
+              </div>
             </div>
 
             {/* Lengths wala case */}
             {hasLengths ? (
               <>
-                <div className="price-selection-notice mt-4">
-                  <span className="required-asterisk">*</span> Choose your length
-                </div>
+                <div className="length-section">
+                  <div className="length-section-header">
+                    <div className="length-section-title-group">
+                      <div className="length-section-title-row">
+                        <h3 className="length-section-title">Choose your length</h3>
+                      </div>
+                      <p className="length-section-subtitle">
+                        Pricing varies based on the length you select
+                      </p>
+                    </div>
+                  </div>
 
-                <div className="price-selection-section">
-                  <div className="price-options-list">
+                  <div className="length-options-list">
                     {lengthOptions.map((length, index) => (
                       <LengthOption
                         key={index}
@@ -1422,18 +356,6 @@ const OfferSalonModal = ({ data, handleClose, salon, type, onBookNow }) => {
                   </div>
                 )}
 
-                {selectedLength && (
-                  <div className="selected-price-details mt-4">
-                    <div className="selected-info-row">
-                      <span className="selected-info-label">Selected Length:</span>
-                      <span className="selected-info-value">{selectedLength.name}</span>
-                    </div>
-                    <div className="selected-info-row">
-                      <span className="selected-info-label">Price:</span>
-                      <span className="selected-info-value">₹{selectedLength.price}</span>
-                    </div>
-                  </div>
-                )}
               </>
             ) : (
               /* No lengths wala case – simple price */
@@ -1451,12 +373,37 @@ const OfferSalonModal = ({ data, handleClose, salon, type, onBookNow }) => {
               </div>
             )}
 
+            {/* Hair Stylist selection */}
+            {/* <div className="length-section">
+              <div className="length-section-header">
+                <div className="length-section-title-group">
+                  <div className="length-section-title-row">
+                    <h3 className="length-section-title">Choose your stylist</h3>
+                  </div>
+                  <p className="length-section-subtitle">
+                    Higher tiers have more experience and add a small extra charge
+                  </p>
+                </div>
+              </div>
+
+              <div className="length-options-list">
+                {STYLIST_OPTIONS.map((stylist, index) => (
+                  <StylistOption
+                    key={index}
+                    item={stylist}
+                    isSelected={selectedStylist?.name === stylist.name}
+                    onClick={handleStylistSelect}
+                  />
+                ))}
+              </div>
+            </div> */}
+
             {/* Action Buttons */}
-            <div className="price-action-section mt-6">
+            <div className="price-action-section ">
               <div className="selected-price-info">
                 <div className="selected-price-label">Final Price</div>
                 <div className="selected-price-value">
-                  ₹{hasLengths ? selectedLength?.price : (data?.price || data?.discount_price || "0")}
+                  ₹{Number(finalPrice).toLocaleString("en-IN")}
                 </div>
               </div>
 
@@ -1476,25 +423,23 @@ const OfferSalonModal = ({ data, handleClose, salon, type, onBookNow }) => {
           </div>
 
           {/* Terms & Conditions */}
-          <div className="MSM-membership-desc !pt-2 cursor-pointer">
-            <div className="flex items-center mb-6 justify-center m-4">
-              <h2
-                className="font-semibold text-center text-[18px] mb-2 mt-0 terms-clickable-section"
-                onClick={() => setShowTermsModal(true)}
-              >
-                Terms & conditions | View All
-              </h2>
-            </div>
+          <div className="osm-terms-block">
             <div
-              className="terms-clickable-section"
+              className="osm-terms-header"
               onClick={() => setShowTermsModal(true)}
             >
+              <h3 className="osm-terms-title">Terms &amp; Conditions</h3>
+              <span className="osm-terms-view-all">View All</span>
+            </div>
+            {(data?.description || data?.terms_and_conditions) && (
               <div
+                className="osm-terms-body"
+                onClick={() => setShowTermsModal(true)}
                 dangerouslySetInnerHTML={{
                   __html: data?.description || data?.terms_and_conditions,
                 }}
               />
-            </div>
+            )}
           </div>
         </div>
       </div>
@@ -1504,8 +449,10 @@ const OfferSalonModal = ({ data, handleClose, salon, type, onBookNow }) => {
   );
 };
 
-
 export default OfferSalonModal;
+
+
+
 
 
 // import React, { useState, useRef, useEffect } from "react";
@@ -1804,7 +751,7 @@ export default OfferSalonModal;
 //                 <PlayArrow style={{ color: "white", fontSize: "40px" }} />
 //               </div>
 //             )}
-//           </div>
+//           </div>  
 
 //           <div
 //             className={`video-controls-bar absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3 transition-opacity duration-300 ${

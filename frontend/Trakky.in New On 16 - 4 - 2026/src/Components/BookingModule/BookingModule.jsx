@@ -68,10 +68,17 @@ const BookingModule = ({
   const [useWalletBalance, setUseWalletBalance] = useState(false);
   const [loadingWallet, setLoadingWallet] = useState(false);
 
+  // WhatsApp consultation fee — pay ₹49 to chat, credited to final booking
+  const WHATSAPP_FEE_AMOUNT = 49;
+  const [whatsappFeePaid, setWhatsappFeePaid] = useState(false);
+  const [whatsappPaymentId, setWhatsappPaymentId] = useState(null);
+  const [whatsappFeeProcessing, setWhatsappFeeProcessing] = useState(false);
+
   // Video states
   const [playingVideos, setPlayingVideos] = useState({});
   const [mutedVideos, setMutedVideos] = useState({});
   const videoRefs = useRef({});
+  const scrollContainerRef = useRef(null);
 
   const navigate = useNavigate();
   const params = useParams();
@@ -108,34 +115,113 @@ const BookingModule = ({
     };
   }, [showPaymentSummary, isOpen]);
 
-  // Handle WhatsApp message with booking details
+  // Scroll the panel back to top when switching into the Payment Summary view
+  useEffect(() => {
+    if (showPaymentSummary && scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [showPaymentSummary]);
+
+  // Build the WhatsApp deep link with the booking details and open it
+  const openWhatsAppChat = () => {
+    const serviceNames = selectedServices
+      .map((service) => service.service_name || service.name)
+      .join(", ");
+
+    const firstService = selectedServices[0];
+    const salonName = salon?.name || firstService?.salon_name || "Salon";
+    const location =
+      params?.city && params?.area
+        ? `${params.area}, ${params.city}`
+        : "Ahmedabad";
+
+    const total = calculateTotal();
+
+    const message = `Can you provide more details about '${serviceNames}' at ${salonName} in ${location}?\n\nBooking Details:\n• Date: ${new Date(bookingDate).toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" })}\n• Time: ${selectedTime}\n• Services: ${serviceNames}\n• Order Value: ₹${total.finalAmountAfterCredit.toFixed(2)}\n• Consultation Fee Paid: ₹${WHATSAPP_FEE_AMOUNT} (credited to final booking)\n\nPlease provide more information about this booking.`;
+
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=916355167304&text=${encodedMessage}`;
+    window.open(whatsappUrl, "_blank");
+  };
+
+  // Pay ₹49 consultation fee, then open WhatsApp. Fee is credited to the final booking.
   const handleWhatsAppInfo = async () => {
     if (!bookingDate || !selectedTime) {
       toast.error("Please select date and time first");
       return;
     }
 
-    // Get service details
-    const serviceNames = selectedServices.map(service => 
-      service.service_name || service.name
-    ).join(", ");
-    
-    const firstService = selectedServices[0];
-    const salonName = salon?.name || firstService?.salon_name || "Salon";
-    const location = params?.city && params?.area ? `${params.area}, ${params.city}` : "Ahmedabad";
-    
-    // Calculate total
-    const total = calculateTotal();
-    
-    // Create message text
-    const message = `Can you provide more details about '${serviceNames}' at ${salonName} in ${location}?\n\nBooking Details:\n• Date: ${new Date(bookingDate).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}\n• Time: ${selectedTime}\n• Services: ${serviceNames}\n• Total Amount: ₹${total.finalAmountAfterWallet.toFixed(2)} \n\nPlease provide more information about this booking.`;
-    
-    // Encode message for URL
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://api.whatsapp.com/send?phone=916355167304&text=${encodedMessage}`;
-    
-    // Open WhatsApp
-    window.open(whatsappUrl, '_blank');
+    // Already paid in this session — just reopen the WhatsApp chat
+    if (whatsappFeePaid) {
+      openWhatsAppChat();
+      return;
+    }
+
+    setWhatsappFeeProcessing(true);
+    try {
+      // 1. Create Razorpay order for the consultation fee
+      const orderResponse = await fetch(
+        "https://backendapi.trakky.in/salons/create-order/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authTokens?.access_token}`,
+          },
+          body: JSON.stringify({
+            amount: WHATSAPP_FEE_AMOUNT,
+            currency: "INR",
+          }),
+        },
+      );
+      if (!orderResponse.ok) {
+        throw new Error("Failed to create payment order");
+      }
+      const orderData = await orderResponse.json();
+
+      // 2. Load Razorpay script
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        throw new Error("Razorpay SDK failed to load");
+      }
+
+      // 3. Open Razorpay checkout
+      const options = {
+        key: "rzp_test_bY7cqrXxuvknwU",
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: salon?.name || "Salon Booking",
+        description: "WhatsApp Consultation Fee (credited to booking)",
+        image: salon?.image || "https://your-logo-url.png",
+        order_id: orderData.id,
+        handler: function (response) {
+          setWhatsappFeePaid(true);
+          setWhatsappPaymentId(response.razorpay_payment_id);
+          toast.success(
+            `₹${WHATSAPP_FEE_AMOUNT} paid! It'll be credited to your booking total.`,
+          );
+          openWhatsAppChat();
+          setWhatsappFeeProcessing(false);
+        },
+        prefill: {
+          name: user?.name || "",
+          email: user?.email || "",
+          contact: user?.phone || "",
+        },
+        theme: { color: "#25D366" },
+        modal: {
+          ondismiss: () => {
+            setWhatsappFeeProcessing(false);
+          },
+        },
+      };
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error("WhatsApp consultation fee error:", error);
+      toast.error(error.message || "Payment failed. Please try again.");
+      setWhatsappFeeProcessing(false);
+    }
   };
 
   // Fetch user wallet balance
@@ -325,8 +411,18 @@ const BookingModule = ({
   }, [isOpen]);
 
   const calculatePayableAmount = (total) => {
-    // Only take 11 rupees for advance payment regardless of total amount
-    return 11;
+    if (total <= 99) {
+      return total;
+    }
+
+    if (total > 0 && total <= 500) {
+      return 99;
+    } else if (total > 500 && total <= 1000) {
+      return 199;
+    } else if (total > 1000) {
+      return 349;
+    }
+    return total;
   };
 
   const generateInstantBookingTime = () => {
@@ -416,6 +512,8 @@ const BookingModule = ({
     if (isOpen) {
       setShowPaymentSummary(false);
       setShowCouponPage(false);
+      setWhatsappFeePaid(false);
+      setWhatsappPaymentId(null);
       const today = new Date();
       const formattedDate = today.toISOString().split("T")[0];
       setBookingDate(formattedDate);
@@ -535,26 +633,35 @@ const BookingModule = ({
       );
     }
 
-    // Calculate payable amount (always 11 rupees as per requirement)
-    const payableAmount =49;
+    // Apply WhatsApp consultation fee credit (already paid → deducted from order)
+    const whatsappCredit = whatsappFeePaid ? WHATSAPP_FEE_AMOUNT : 0;
+    const finalAmountAfterCredit = Math.max(
+      0,
+      finalAmountAfterWallet - whatsappCredit,
+    );
+
+    // Calculate payable amount based on slab logic on the credited amount
+    const payableAmount = calculatePayableAmount(finalAmountAfterCredit);
     const convenienceFee = 0;
 
     // Calculate GST if applicable
     let gstAmount = 0;
     if (isGstApplied) {
-      gstAmount = finalAmountAfterWallet * 0.18;
+      gstAmount = finalAmountAfterCredit * 0.18;
     }
 
-    const totalWithGst = finalAmountAfterWallet + gstAmount;
+    const totalWithGst = finalAmountAfterCredit + gstAmount;
 
     return {
       subtotal, // Original total without discount
       discount: discountAmount, // Coupon discount amount
       finalAmountAfterDiscount, // Amount after coupon discount
       walletAmountUsed, // Amount used from wallet
-      finalAmountAfterWallet, // Final amount after all discounts
+      finalAmountAfterWallet, // Amount after coupon + wallet (before WhatsApp credit)
+      whatsappCredit, // ₹49 paid for WhatsApp chat, credited here
+      finalAmountAfterCredit, // Final amount after coupon + wallet + WhatsApp credit
       total: totalWithGst, // Final total with GST
-      payableAmount: payableAmount, // Advance payment amount (always 11)
+      payableAmount: payableAmount, // Advance payment amount based on slab logic
       convenienceFee,
       gstAmount,
     };
@@ -746,9 +853,14 @@ const BookingModule = ({
         wallet_balance_used: useWalletBalance ? total.walletAmountUsed : 0,
         use_wallet_balance: useWalletBalance,
 
-        // Payment fields - USE FINAL AMOUNT AFTER ALL DISCOUNTS
+        // WhatsApp consultation fee already paid → credited to booking
+        whatsapp_consultation_fee: total.whatsappCredit,
+        whatsapp_payment_id: whatsappPaymentId,
+        whatsapp_fee_paid: whatsappFeePaid,
+
+        // Payment fields - USE FINAL AMOUNT AFTER ALL DISCOUNTS (incl. WhatsApp credit)
         payment_status: "pending",
-        total_booking_amount: total.finalAmountAfterWallet,
+        total_booking_amount: total.finalAmountAfterCredit,
         total_amount_paid: 0,
         is_payment_done: false,
         status: "pending",
@@ -784,7 +896,7 @@ const BookingModule = ({
       const total = calculateTotal();
       const updatePayload = {
         payment_status: "completed",
-        total_booking_amount: total.finalAmountAfterWallet,
+        total_booking_amount: total.finalAmountAfterCredit,
         total_amount_paid: amountPaid,
         is_payment_done: true,
         status: "completed",
@@ -816,8 +928,8 @@ const BookingModule = ({
   const initiatePayment = async () => {
     setPaymentProcessing(true);
     try {
-      // Calculate payable amount - always 11 rupees as per requirement
-      const payableAmount = 11;
+      // Calculate payable amount based on slab logic on the final amount after wallet/coupon
+      const payableAmount = calculateTotal().payableAmount;
 
       // 1. Create Razorpay order
       const orderResponse = await fetch(
@@ -1503,15 +1615,15 @@ const BookingModule = ({
                         )}
                       </div>
                     ) : (
-                      <div className="flex-1 overflow-y-auto">
+                      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto">
                         {/* Applied Coupon and Wallet Display */}
                         {(selectedCoupon || useWalletBalance) && (
                           <div className="m-3 space-y-2">
                             {selectedCoupon && (
-                              <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                              <div className="p-3 bg-green-50 border border-green-300 rounded-lg">
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center">
-                                    <TicketPercent className="w-5 h-5 text-green-600 mr-2" />
+                                    <TicketPercent className="w-5 h-5 text-green-700 mr-2" />
                                     <div>
                                       <p className="font-medium text-green-800">
                                         {selectedCoupon.description} Applied
@@ -1977,6 +2089,41 @@ const BookingModule = ({
                             {/* Payment Summary Section */}
                          <div className="p-1 bg-gray-50">
   <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+    {/* Salon Details */}
+    <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-[#F5F0FF] to-white">
+      <div className="flex items-center space-x-3">
+        {(salon?.main_image || salon?.image) && (
+          <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200 bg-gray-100">
+            <img
+              src={salon?.main_image || salon?.image}
+              alt={salon?.name || "Salon"}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] uppercase tracking-wide text-[#5A35CF] font-semibold mb-0.5">
+            Booking At
+          </p>
+          <h3 className="font-semibold text-gray-800 text-base truncate">
+            {salon?.name || selectedServices[0]?.salon_name || "Salon"}
+          </h3>
+          {(salon?.area || salon?.city || params?.area || params?.city) && (
+            <p className="text-xs text-gray-500 truncate mt-0.5">
+              {[salon?.area || params?.area, salon?.city || params?.city]
+                .filter(Boolean)
+                .join(", ")}
+            </p>
+          )}
+          {salon?.address && (
+            <p className="text-[11px] text-gray-400 truncate mt-0.5">
+              {salon.address}
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+
     {/* Booking Details Header */}
     <div className="p-4 border-b border-gray-100">
       <div className="flex items-center space-x-2 mb-4">
@@ -2122,23 +2269,35 @@ const BookingModule = ({
             </span>
           </div>
         )}
-        
+
+        {whatsappFeePaid && (
+          <div className="flex justify-between items-center">
+            <div className="flex items-center text-[#25D366]">
+              <MessageCircle className="w-3.5 h-3.5 mr-1.5" />
+              <span className="text-sm">WhatsApp Consultation Credit</span>
+            </div>
+            <span className="font-medium text-[#25D366] text-sm">
+              -₹{calculateTotal().whatsappCredit.toFixed(2)}
+            </span>
+          </div>
+        )}
+
         <div className="flex justify-between items-center pt-2 border-t border-gray-100">
           <span className="text-sm text-gray-500">Convenience Fee</span>
           <span className="text-sm text-gray-400">₹0</span>
         </div>
       </div>
-      
+
       {/* Total Amount */}
       <div className="bg-gray-50 rounded-lg p-4 mb-5">
         <div className="flex justify-between items-center">
           <span className="font-semibold text-gray-800">Total Amount</span>
           <span className="font-bold text-xl text-[#5A35CF]">
-            ₹{calculateTotal().finalAmountAfterWallet.toFixed(2)}
+            ₹{calculateTotal().finalAmountAfterCredit.toFixed(2)}
           </span>
         </div>
       </div>
-      
+
       {/* Payment Info Card */}
       <div className="border border-[#E8E0FF] rounded-lg overflow-hidden mb-5">
         <div className="bg-[#F8F5FF] p-4">
@@ -2151,12 +2310,7 @@ const BookingModule = ({
                 Payment Information
               </p>
               <div className="space-y-2">
-                <div className="flex items-start">
-                  <span className="text-red-500 font-bold mr-2">•</span>
-                  <p className="text-sm text-gray-700">
-                    <span className="font-semibold text-red-600">₹11 is non-refundable</span> under any condition
-                  </p>
-                </div>
+               
                 <div className="flex items-start">
                   <span className="text-[#5A35CF] font-bold mr-2">•</span>
                   <p className="text-sm text-gray-700">
@@ -2166,7 +2320,7 @@ const BookingModule = ({
                 <div className="flex items-start">
                   <span className="text-[#5A35CF] font-bold mr-2">•</span>
                   <p className="text-sm text-gray-700">
-                    Balance <span className="font-semibold">₹{(calculateTotal().finalAmountAfterWallet - calculateTotal().payableAmount).toFixed(2)}</span> payable at salon
+                    Balance <span className="font-semibold">₹{(calculateTotal().finalAmountAfterCredit - calculateTotal().payableAmount).toFixed(2)}</span> payable at salon
                   </p>
                 </div>
                 {selectedCoupon && (
@@ -2241,22 +2395,38 @@ const BookingModule = ({
         <div className="flex-grow border-t border-gray-200"></div>
       </div>
       
-      {/* WhatsApp Info Button */}
+      {/* WhatsApp Info Button — pay ₹49 to chating, credited to final booking */}
       <button
         onClick={handleWhatsAppInfo}
-        disabled={!bookingDate || !selectedTime}
+        disabled={!bookingDate || !selectedTime || whatsappFeeProcessing}
         className={`
           w-full py-3 rounded-lg flex items-center justify-center font-semibold text-sm transition-all duration-200 border
           ${
-            !bookingDate || !selectedTime
+            !bookingDate || !selectedTime || whatsappFeeProcessing
               ? "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
-              : "bg-white text-[#25D366] border-[#25D366] hover:bg-[#25D366] hover:text-white"
+              : whatsappFeePaid
+                ? "bg-[#25D366] text-white border-[#25D366] hover:bg-[#1ebe5d]"
+                : "bg-white text-[#25D366] border-[#25D366] hover:bg-[#25D366] hover:text-white"
           }
         `}
       >
         <MessageCircle className="w-4 h-4 mr-2" />
-        Get More Info on WhatsApp
+        {whatsappFeeProcessing
+          ? "Processing Payment..."
+          : whatsappFeePaid
+            ? "Continue Chat on WhatsApp"
+            : `Pay ₹${WHATSAPP_FEE_AMOUNT} & Chat on the WhatsApp`}
       </button>
+      {!whatsappFeePaid && (
+        <p className="text-xs text-gray-500 text-center mt-2">
+          ₹{WHATSAPP_FEE_AMOUNT} consultation fee — credited to your final booking amount.
+        </p>
+      )}
+      {whatsappFeePaid && (
+        <p className="text-xs text-[#25D366] text-center mt-2 font-medium">
+          ✓ ₹{WHATSAPP_FEE_AMOUNT} credited to your booking total.
+        </p>
+      )}
     </div>
   </div>
 </div>
