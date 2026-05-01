@@ -1481,16 +1481,22 @@ class SalonsViewSet(viewsets.ModelViewSet):
             return Response(self.get_serializer(instance).data, status=status.HTTP_200_OK)
 
     def update_salon_area(self, instance, new_area):
+        # Move a salon to a new area and assign it a fresh, non-colliding
+        # area_priority. The unique constraint is on (area, area_priority),
+        # so we change BOTH fields in a single save() — this way the row
+        # transitions directly from (old_area, old_priority) to
+        # (new_area, new_priority) with no intermediate combination that
+        # could collide. The new_priority is computed as one above the
+        # current max in the destination area, excluding this salon (in
+        # case it's already been touched in the same transaction).
         with transaction.atomic():
-            Salon.objects.select_for_update().filter(area__iexact=new_area).count()
-            global_max = (
-                Salon.objects.aggregate(Max('area_priority'))['area_priority__max'] or 0
+            # select_for_update locks the destination area's rows so a
+            # concurrent move into the same area can't pick the same max.
+            list(
+                Salon.objects.select_for_update()
+                .filter(area__iexact=new_area)
+                .values_list('pk', flat=True)
             )
-            instance.area_priority = global_max + 1
-            instance.save(update_fields=['area_priority'])
-
-            
-            instance.save(update_fields=['area'])
 
             max_in_new_area = (
                 Salon.objects
@@ -1498,10 +1504,12 @@ class SalonsViewSet(viewsets.ModelViewSet):
                 .exclude(pk=instance.pk)
                 .aggregate(Max('area_priority'))['area_priority__max']
             ) or 0
-            instance.area_priority = max_in_new_area + 1
-            instance.save(update_fields=['area_priority'])
 
-            self.invalidate_cache()  # Clear cached salon list after updating area and priority
+            instance.area = new_area
+            instance.area_priority = max_in_new_area + 1
+            instance.save(update_fields=['area', 'area_priority'])
+
+            self.invalidate_cache()
 
         return Response({'message': 'Priority changed successfully'}, status=status.HTTP_200_OK)
     
