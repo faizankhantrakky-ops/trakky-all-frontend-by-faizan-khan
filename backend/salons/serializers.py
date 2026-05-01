@@ -3080,28 +3080,42 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
         overview_data = validated_data.pop('overview', '')
         master_service_multiple_ids = validated_data.pop('master_service_multiple_ids', [])
 
-        # Parse step_ids if string
-        if isinstance(step_ids, str):
-            try:
-                step_ids = json.loads(step_ids)
-            except Exception:
-                step_ids = [int(pk.strip()) for pk in step_ids.split(',') if pk.strip().isdigit()]
+        def _to_id_list(value):
+            """
+            Coerce a write-side M2M payload to a flat list[int].
 
-        # Parse overview if string
-        if overview_data:
-            if isinstance(overview_data, str):
+            Forms can send these IDs in several shapes:
+              - a JSON list string:   "[1, 2, 3]"  → [1, 2, 3]
+              - a single ID string:   "1"          → [1]   (json.loads -> int)
+              - a CSV string:         "1, 2, 3"    → [1, 2, 3]
+              - a bare int:           1            → [1]
+              - an actual list:       [1, 2]       → [1, 2]
+              - empty / None:                       → []
+            Anything else falls through to []. Without this normalization a
+            single-ID submission ended up as `int` and crashed `.set(1)` with
+            "TypeError: 'int' object is not iterable".
+            """
+            if value in (None, '', []):
+                return []
+            if isinstance(value, int):
+                return [value]
+            if isinstance(value, (list, tuple)):
+                return [int(v) for v in value if str(v).strip()]
+            if isinstance(value, str):
                 try:
-                    overview_data = json.loads(overview_data)
+                    parsed = json.loads(value)
                 except Exception:
-                    overview_data = [int(pk.strip()) for pk in overview_data.split(',') if pk.strip().isdigit()]
+                    return [int(pk.strip()) for pk in value.split(',') if pk.strip().isdigit()]
+                if isinstance(parsed, int):
+                    return [parsed]
+                if isinstance(parsed, (list, tuple)):
+                    return [int(v) for v in parsed if str(v).strip()]
+                return []
+            return []
 
-        # Parse master_service_multiple_ids if string
-        if master_service_multiple_ids:
-            if isinstance(master_service_multiple_ids, str):
-                try:
-                    master_service_multiple_ids = json.loads(master_service_multiple_ids)
-                except Exception:
-                    master_service_multiple_ids = [int(pk.strip()) for pk in master_service_multiple_ids.split(',') if pk.strip().isdigit()]
+        step_ids = _to_id_list(step_ids)
+        overview_data = _to_id_list(overview_data)
+        master_service_multiple_ids = _to_id_list(master_service_multiple_ids)
 
         # Create or update instance
         if instance:
