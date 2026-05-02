@@ -8228,14 +8228,29 @@ class ServiceDetailListCreateView(generics.ListCreateAPIView):
 
         master_service_id = self.request.query_params.get('master_service_id')
         category_id = self.request.query_params.get('category_id')
+        salon_type = self.request.query_params.get('salon_type')
+        salon_id = self.request.query_params.get('salon_id')
 
         if master_service_id:
             queryset = queryset.filter(
-                Q(master_service_id=master_service_id) | 
+                Q(master_service_id=master_service_id) |
                 Q(master_service_multiple__id=master_service_id)
             )
         if category_id:
             queryset = queryset.filter(master_service__categories_id=category_id)
+        if salon_type:
+            queryset = queryset.filter(salon_type=salon_type)
+        # salon_id filter: return service details whose salon_type matches the
+        # given salon's salon_type (that's how a salon "owns" service details).
+        if salon_id:
+            try:
+                salon_obj = Salon.objects.only('salon_type').get(pk=salon_id)
+                if salon_obj.salon_type:
+                    queryset = queryset.filter(salon_type=salon_obj.salon_type)
+                else:
+                    queryset = queryset.none()
+            except Salon.DoesNotExist:
+                queryset = queryset.none()
 
         return queryset.distinct()
 
@@ -8243,14 +8258,38 @@ class ServiceDetailListCreateView(generics.ListCreateAPIView):
         master_service_id = request.data.get('master_service')
         master_service_multiple_ids = request.data.get('master_service_multiple_ids', [])
 
+        # Collect requested service ids: prefer multi (`service_ids`), fall back
+        # to single (`service`). When multiple are sent, we create one
+        # ServiceDetail per service, sharing the same content.
+        service_ids = self._extract_service_ids(request.data)
+
         # ✅ If both are missing, still allow creation (remove condition)
         if not master_service_id and not master_service_multiple_ids:
-            # If you still want to enforce at least one, uncomment below:
-            # return Response(
-            #     {'error': 'Either Master Service ID or Master Service Multiple IDs is required.'},
-            #     status=status.HTTP_400_BAD_REQUEST
-            # )
             pass
+
+        # Prevent duplicate ServiceDetail for any of the submitted services.
+        if service_ids:
+            already_ids = list(
+                ServiceDetail.objects.filter(service_id__in=service_ids)
+                .values_list('service_id', flat=True)
+            )
+            if already_ids:
+                # Look up names for a friendlier error message.
+                name_map = dict(
+                    Services.objects.filter(id__in=already_ids)
+                    .values_list('id', 'service_name')
+                )
+                names = [
+                    (name_map.get(sid) or '').strip() or f'#{sid}'
+                    for sid in already_ids
+                ]
+                return Response(
+                    {
+                        'error': 'ServiceDetail already exists for service: '
+                                 + ', '.join(names)
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
         # Prevent duplicate only if single master_service is provided
         if master_service_id and ServiceDetail.objects.filter(master_service_id=master_service_id).exists():
@@ -8259,17 +8298,139 @@ class ServiceDetailListCreateView(generics.ListCreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+        # If a multi-service request was sent, force the serializer to use the
+        # first id as the primary `service`. The rest are cloned afterwards so
+        # they share images, FAQs, steps, etc.
+        primary_service_id = service_ids[0] if service_ids else None
+        if primary_service_id:
+            self._set_request_field(request, 'service', primary_service_id)
+
         response = super().create(request, *args, **kwargs)
 
-        # Attach swiper images in response
-        service_detail_id = response.data.get("id")
-        if service_detail_id:
-            service_detail = ServiceDetail.objects.filter(id=service_detail_id).last()
+        primary_id = response.data.get("id")
+        cloned_ids = []
+        if primary_id and len(service_ids) > 1:
+            primary = ServiceDetail.objects.get(pk=primary_id)
+            for sid in service_ids[1:]:
+                clone = self._clone_service_detail(primary, sid)
+                cloned_ids.append(clone.id)
+        if cloned_ids:
+            response.data['cloned_ids'] = cloned_ids
+
+        # Attach swiper images in response (for the primary detail)
+        if primary_id:
+            service_detail = ServiceDetail.objects.filter(id=primary_id).last()
             if service_detail:
                 uploaded_images = ServiceDetailSwipperImageSerializer(service_detail.images.all(), many=True).data
                 response.data['swiper_images'] = uploaded_images
 
         return response
+
+    @staticmethod
+    def _extract_service_ids(data):
+        """Coerce 'service_ids' / 'service' payload shapes to a deduped list[int]."""
+        import json as _json
+
+        raw = None
+        if hasattr(data, 'getlist'):
+            multi = data.getlist('service_ids')
+            if multi:
+                raw = multi
+        if raw is None:
+            raw = data.get('service_ids')
+
+        ids = []
+
+        def _push(v):
+            try:
+                ids.append(int(v))
+            except (TypeError, ValueError):
+                pass
+
+        if isinstance(raw, (list, tuple)):
+            for v in raw:
+                if isinstance(v, str):
+                    try:
+                        parsed = _json.loads(v)
+                        if isinstance(parsed, list):
+                            for x in parsed:
+                                _push(x)
+                            continue
+                        if isinstance(parsed, int):
+                            _push(parsed)
+                            continue
+                    except Exception:
+                        pass
+                _push(v)
+        elif isinstance(raw, str):
+            stripped = raw.strip()
+            try:
+                parsed = _json.loads(stripped)
+                if isinstance(parsed, list):
+                    for x in parsed:
+                        _push(x)
+                elif isinstance(parsed, int):
+                    _push(parsed)
+            except Exception:
+                for piece in stripped.split(','):
+                    if piece.strip().isdigit():
+                        _push(piece.strip())
+        elif isinstance(raw, int):
+            _push(raw)
+
+        if not ids:
+            single = data.get('service')
+            if single not in (None, '', 'null'):
+                _push(single)
+
+        seen, deduped = set(), []
+        for i in ids:
+            if i not in seen:
+                seen.add(i)
+                deduped.append(i)
+        return deduped
+
+    @staticmethod
+    def _set_request_field(request, key, value):
+        """Best-effort write a field onto request.data, handling QueryDict immutability."""
+        data = request.data
+        was_mutable = getattr(data, '_mutable', None)
+        try:
+            if was_mutable is False:
+                data._mutable = True
+            data[key] = value
+        finally:
+            if was_mutable is False:
+                data._mutable = False
+
+    @staticmethod
+    def _clone_service_detail(primary, service_id):
+        """Create a new ServiceDetail mirroring `primary` but pointing at `service_id`."""
+        clone = ServiceDetail(
+            service_id=service_id,
+            master_service=primary.master_service,
+            salon_type=primary.salon_type,
+            faqs=primary.faqs,
+            steps=primary.steps,
+            do_and_dont=primary.do_and_dont,
+            description_image=primary.description_image.name if primary.description_image else None,
+            key_ingredients=primary.key_ingredients.name if primary.key_ingredients else None,
+            things_salon_use=primary.things_salon_use.name if primary.things_salon_use else None,
+            lux_exprience_image=primary.lux_exprience_image.name if primary.lux_exprience_image else None,
+            benefit_meta_info_image=primary.benefit_meta_info_image.name if primary.benefit_meta_info_image else None,
+            aftercare_tips=primary.aftercare_tips.name if primary.aftercare_tips else None,
+            updated_by=primary.updated_by,
+        )
+        clone.save()
+        clone.overview.set(primary.overview.all())
+        clone.master_service_multiple.set(primary.master_service_multiple.all())
+        clone.steps_details.set(primary.steps_details.all())
+        for img in primary.images.all():
+            ServiceDetailSwipperlImage.objects.create(
+                service_detail=clone,
+                image=img.image.name if img.image else None,
+            )
+        return clone
 
 
 class ServiceDetailDetailView(generics.RetrieveUpdateDestroyAPIView):

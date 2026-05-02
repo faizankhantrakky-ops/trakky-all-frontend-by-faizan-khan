@@ -1892,11 +1892,13 @@ class ServiceDetail(models.Model):
     def __str__(self):
         return f'ServiceDetail for {self.service.name if self.service else "No Service"} (ID: {self.id})'
     
-    def save(self, *args, **kwargs):  
-        for field_name in ['description_image', 'key_ingredients', 'things_salon_use', 'lux_exprience_image', 'benefit_meta_info_image', 'aftercare_tips']:  
-            image_field = getattr(self, field_name)  
-            if image_field:  
-                setattr(self, field_name, compress_and_convert_image(image_field, path_type='service_details_image_upload_path'))  
+    def save(self, *args, **kwargs):
+        for field_name in ['description_image', 'key_ingredients', 'things_salon_use', 'lux_exprience_image', 'benefit_meta_info_image', 'aftercare_tips']:
+            image_field = getattr(self, field_name)
+            # Only compress newly uploaded files. Already-stored images have
+            # _committed=True and shouldn't be re-opened from storage.
+            if image_field and not getattr(image_field, '_committed', True):
+                setattr(self, field_name, compress_and_convert_image(image_field, path_type='service_details_image_upload_path'))
         super().save(*args, **kwargs)
 
 class ServiceDetailSwipperlImage(models.Model):
