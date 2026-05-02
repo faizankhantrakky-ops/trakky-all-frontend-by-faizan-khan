@@ -3048,8 +3048,22 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
     )
     master_service_multiple_details = serializers.SerializerMethodField()
 
+    # Service (per-salon Services FK)
+    service = serializers.PrimaryKeyRelatedField(
+        queryset=Services.objects.all(),
+        required=False,
+        allow_null=True,
+    )
+
     # Other fields
-    salon_type = serializers.SerializerMethodField()
+    # salon_type is a writable model field. Allow blank/null so the form can
+    # omit it for legacy records while still letting admins assign one.
+    salon_type = serializers.ChoiceField(
+        choices=ServiceDetail.SALON_TYPE_CHOICES,
+        required=False,
+        allow_null=True,
+        allow_blank=True,
+    )
     salons_with_service = serializers.SerializerMethodField()
     updated_by = serializers.SerializerMethodField(read_only=True)
 
@@ -3062,8 +3076,9 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
             'benefit_meta_info_image', 'aftercare_tips',
             'salon_type', 'salons_with_service',
             'created_at', 'master_service_info', 'master_service',
-            # 'master_service_multiple', 
+            # 'master_service_multiple',
             'master_service_multiple_ids', 'master_service_multiple_details',
+            'service',
             'overview', 'overview_details', 'step_ids', 'step_details',
             'updated_by', 'updated_date'
         ]
@@ -3183,13 +3198,14 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
             for ov in obj.overview.all()
         ]
 
-    def get_salon_type(self, obj):
-        return obj.service.salon.salon_type if obj.service and obj.service.salon else None
-
     def get_salons_with_service(self, obj):
         if not obj.master_service:
             return []
         services = Services.objects.filter(master_service=obj.master_service).select_related('salon')
+        # When this ServiceDetail has a salon_type set, only surface salons
+        # whose salon_type matches — that's how a salon "claims" the detail.
+        if obj.salon_type:
+            services = services.filter(salon__salon_type=obj.salon_type)
         unique_salons = {}
         for service in services:
             salon = service.salon
