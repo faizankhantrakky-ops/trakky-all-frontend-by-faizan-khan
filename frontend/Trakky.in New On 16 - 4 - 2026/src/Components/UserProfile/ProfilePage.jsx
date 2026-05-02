@@ -153,7 +153,7 @@ const ProfilePage = () => {
       description: "Share your experience with us",
       component: <Feedback />
     },
-    "rate-us": {
+    "rate-us-now": {
       title: "Rate Our Service",
       breadcrumb: "Ratings",
       description: "Rate and review our services",
@@ -265,7 +265,7 @@ const ProfilePage = () => {
     { id: "feedback", label: "Feedback", icon: CommentRoundedIcon },
     { id: "report-salon", label: "Report", icon: ErrorOutlineIcon },
     { id: "refer", label: "Referral", icon: CurrencyRupeeIcon },
-    { id: "rate-us", label: "Ratings", icon: StarOutlineRoundedIcon },
+    { id: "rate-us-now", label: "Ratings", icon: StarOutlineRoundedIcon },
     
     
      { id: "privacy", label: "Privacy", icon: LockIcon },

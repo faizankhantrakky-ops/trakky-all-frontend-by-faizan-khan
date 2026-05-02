@@ -6,8 +6,8 @@ export const fetchNearBySalons = createAsyncThunk(
   async ({ latitude, longitude, page }, { dispatch, rejectWithValue }) => {
     try {
       // Default → Sindhu Bhavan Pakwan Char Rasta
-      const defaultLat = 23.0386;
-      const defaultLng = 72.5118;
+      const defaultLat = 23.0389;
+      const defaultLng = 72.5117;
 
       const lat = latitude || defaultLat;
       const lng = longitude || defaultLng;
@@ -34,8 +34,8 @@ const nearbysalons = createSlice({
     page: 1,
     isNextPage: false,
 
-    latitude: 23.0386,
-    longitude: 72.5118,
+    latitude: 23.0384,
+    longitude: 72.5116,
 
     preferableCity: "Ahmedabad",
   },

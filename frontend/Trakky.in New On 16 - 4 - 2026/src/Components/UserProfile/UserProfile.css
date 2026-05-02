@@ -376,7 +376,7 @@
 
 .navigation-tabs {
   display: flex;
-  gap: 8px;
+  gap: 7px;
   overflow-x: auto;
   scroll-behavior: smooth;
   padding-bottom: 8px;
@@ -390,17 +390,17 @@
 
 /* Custom scrollbar styling */
 .navigation-tabs::-webkit-scrollbar {
-  height: 6px;
+  height: 5px;
 }
 
 .navigation-tabs::-webkit-scrollbar-track {
   background: var(--bg-light);
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 .navigation-tabs::-webkit-scrollbar-thumb {
   background: var(--primary-color);
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 .navigation-tabs::-webkit-scrollbar-thumb:hover {

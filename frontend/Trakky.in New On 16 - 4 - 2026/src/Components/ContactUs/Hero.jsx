@@ -41,7 +41,7 @@ const Cards = () => {
             Join our growing network of partners
           </p>
           <div style={{ textAlign: "center" }}>
-            <Link to="/merchant-page">
+            <Link to="/vendor-register">
               <button className="contactus-button">Visit Now</button>
             </Link>
           </div>

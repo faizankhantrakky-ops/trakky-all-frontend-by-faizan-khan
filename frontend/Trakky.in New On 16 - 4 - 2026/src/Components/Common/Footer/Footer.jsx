@@ -132,7 +132,7 @@ const Footer = ({city}) => {
               <Link to={"/contactus"}>Contact Us</Link>
             </li>
             <li>
-              <Link to={"/merchant-page"}>Partner With Us</Link>
+              <Link to={"/vendor-register"}>Partner With Us</Link>
             </li>
             <li>
               <Link to={"/privacypolicy"}>Privacy Policy</Link>

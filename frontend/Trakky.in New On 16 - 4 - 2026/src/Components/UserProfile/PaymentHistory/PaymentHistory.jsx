@@ -9,8 +9,8 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 // Dummy data - replace with your real API data later
 const mockPayments = [
   {
-    id: "PAY-20250123001",
-    date: "2025-01-23",
+    id: "PAY-20250123002",
+    date: "2025-01-24",
     time: "14:30",
     amount: 899,
     service: "Haircut + Beard Trim + Hair Color",
@@ -72,7 +72,7 @@ const PaymentHistory = () => {
   };
 
   return (
-    <div className="bg-gray-50 py-8 px-4 md:px-6 min-h-screen">
+    <div className="bg-gray-100 py-9 px-5 md:px-8 min-h-screen">
       <div className="mx-auto">
         {/* Header */}
         <div className="mb-6">

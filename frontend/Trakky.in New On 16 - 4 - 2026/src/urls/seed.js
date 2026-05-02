@@ -36,7 +36,7 @@ let offerData = [];
 // Kids Special Salons by Area: https://trakky.in/:city/kidsspecialsalons/:area
 // Terms of Use: https://trakky.in/terms-of-use
 // Contact Us: https://trakky.in/contactus
-// Vendor Page: https://trakky.in/merchant-page
+// Vendor Page: https://trakky.in/vendor-register
 // Privacy Policy: https://trakky.in/privacypolicy
 // Error Page: https://trakky.in/* (for any other routes)
 
@@ -183,7 +183,7 @@ const fixedLinks = () => {
     "https://trakky.in/salonRegistration",
     "https://trakky.in/terms-of-use",
     "https://trakky.in/contactus",
-    "https://trakky.in/merchant-page",
+    "https://trakky.in/vendor-register",
     "https://trakky.in/privacypolicy",
   ];
 

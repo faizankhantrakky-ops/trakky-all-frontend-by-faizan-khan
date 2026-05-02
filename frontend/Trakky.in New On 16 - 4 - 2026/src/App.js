@@ -385,7 +385,7 @@ function App() {
           }
         />
         <Route
-          path="/merchant-page"
+          path="/vendor-register"
           element={
             <Vendor />
           }
@@ -465,7 +465,7 @@ function App() {
           <Route path="feedback"
 
             element={<Feedback />} />
-          <Route path="rate-us"
+          <Route path="rate-us-now"
 
             element={<RateUs />} />
 

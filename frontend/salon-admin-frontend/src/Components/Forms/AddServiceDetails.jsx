@@ -22,6 +22,7 @@ const AddServiceDetails = ({ serviceDetailsData, closeModal, refreshData }) => {
   const [files, setFiles] = useState(null);
   const [formData, setFormData] = useState({
     salon: null,
+    service: [],
     faqs: [],
     dos: [],
     donts: [],
@@ -187,7 +188,11 @@ const loadServices = async (inputValue, callback) => {
   };
   const buildFormData = (serviceId) => {
     const data = new FormData();
-    data.append("service", serviceId);
+    if (Array.isArray(serviceId)) {
+      data.append("service", JSON.stringify(serviceId));
+    } else {
+      data.append("service", serviceId);
+    }
     data.append("faqs", JSON.stringify(formData.faqs));
     data.append(
       "do_and_dont",
@@ -302,45 +307,34 @@ const loadServices = async (inputValue, callback) => {
           toast.error("Please select at least one service");
           return;
         }
-        let successCount = 0;
-        let failCount = 0;
-        const failedNames = [];
-        for (const svc of selectedServices) {
-          const data = buildFormData(svc.value);
-          try {
-            const response = await fetch(
-              `https://backendapi.trakky.in/salons/service-details/`,
-              {
-                method: "POST",
-                headers: {
-                  Authorization: `Bearer ${authTokens.access}`,
-                },
-                body: data,
-              }
-            );
-            if (response.status === 201) {
-              successCount++;
-            } else {
-              failCount++;
-              failedNames.push(svc.label);
-            }
-          } catch (err) {
-            failCount++;
-            failedNames.push(svc.label);
+        const serviceIds = selectedServices.map((s) => s.value);
+        const data = buildFormData(serviceIds);
+        const loadingToast = toast.loading(
+          `Adding ${serviceIds.length} service detail${
+            serviceIds.length > 1 ? "s" : ""
+          }...`
+        );
+        const response = await fetch(
+          `https://backendapi.trakky.in/salons/service-details/`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${authTokens.access}`,
+            },
+            body: data,
           }
-        }
-        if (successCount > 0) {
+        );
+        toast.dismiss(loadingToast);
+        if (response.status === 201) {
           toast.success(
-            `${successCount} service detail${successCount > 1 ? "s" : ""} added successfully`
+            `${serviceIds.length} service detail${
+              serviceIds.length > 1 ? "s" : ""
+            } added successfully`
           );
-        }
-        if (failCount > 0) {
-          toast.error(
-            `Failed to add: ${failedNames.join(", ")}`
-          );
-        }
-        if (failCount === 0 && successCount > 0) {
           closeModal();
+        } else {
+          const errText = await response.text().catch(() => "");
+          toast.error(`Failed to add service details${errText ? `: ${errText}` : ""}`);
         }
       }
     } catch (error) {
@@ -647,15 +641,19 @@ const loadServices = async (inputValue, callback) => {
               <AsyncSelect
                 isMulti={!serviceDetailsData}
                 isDisabled={!formData?.salon}
-                defaultOptions
+                cacheOptions
                 loadOptions={loadServices}
                 value={formData?.service}
                 onChange={(selectedServices) => {
                   setFormData({
                     ...formData,
-                    service: selectedServices,
+                    service: serviceDetailsData
+                      ? selectedServices
+                      : selectedServices || [],
                   });
                 }}
+                closeMenuOnSelect={!!serviceDetailsData}
+                hideSelectedOptions={false}
                 getOptionLabel={(option) => {
                   return `${option.label} - ${option.gender}`;
                 }}

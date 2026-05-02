@@ -23,11 +23,11 @@ const Bookings = () => {
   return (
     <div className="bg-gray-50 py-8 md:px-4 px-2">
       <div className="">
-        
         {/* Header */}
         <div className=" mb-6">
-        
-          <h1 className="text-xl font-bold text-gray-900 mb-3 ">My Bookings</h1>
+          <h1 className="text-2xl font-bold text-gray-400 mb-4 ">
+            My Bookings
+          </h1>
           <div className="w-20 h-1 bg-[#502DA6]  mb-4"></div>
           <p className="text-gray-600 max-w-md ">
             Manage your salon appointments and booking history
@@ -36,7 +36,7 @@ const Bookings = () => {
 
         {/* Classic Tabs */}
         <div className="flex  border-b border-gray-300 mb-4 bg-white rounded-t-lg">
-            <button
+          <button
             onClick={() => handleToggleBookings(true)}
             className={`flex items-center gap-2 px-8 py-4 text-sm font-medium transition-all duration-300 relative ${
               isCurrentBookings
@@ -50,7 +50,6 @@ const Bookings = () => {
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#502DA6]"></span>
             )}
           </button>
-
 
           <button
             onClick={() => handleToggleBookings(false)}
@@ -66,20 +65,18 @@ const Bookings = () => {
               <span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#502DA6]"></span>
             )}
           </button>
-        
         </div>
 
         {/* Content Area */}
-<div className={isCurrentBookings 
-  ? "grid grid-cols-1 md:grid-cols-2 gap-6" 
-  : "grid grid-cols-1 gap-6"
-}>
-  {isCurrentBookings ? (
-    <CurrentBooking />
-  ) : (
-    <HistoryBooking />
-  )}
-</div>
+        <div
+          className={
+            isCurrentBookings
+              ? "grid grid-cols-1 md:grid-cols-2 gap-6"
+              : "grid grid-cols-1 gap-6"
+          }
+        >
+          {isCurrentBookings ? <CurrentBooking /> : <HistoryBooking />}
+        </div>
 
         {/* Additional Info */}
         <div className="mt-8 bg-white rounded-lg border border-gray-200 p-6">
@@ -88,11 +85,14 @@ const Bookings = () => {
               <EventAvailableIcon className="text-[#502DA6] w-5 h-5" />
             </div>
             <div>
-              <h4 className="font-semibold text-gray-900 mb-2">Booking Information</h4>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                Booking Information
+              </h4>
               <p className="text-sm text-gray-600 leading-relaxed">
-                Manage all your salon appointments in one place. View upcoming bookings, 
-                check your booking history, and keep track of your salon visits. For any 
-                changes to your bookings, please contact the salon directly.
+                Manage all your salon appointments in one place. View upcoming
+                bookings, check your booking history, and keep track of your
+                salon visits. For any changes to your bookings, please contact
+                the salon directly.
               </p>
             </div>
           </div>

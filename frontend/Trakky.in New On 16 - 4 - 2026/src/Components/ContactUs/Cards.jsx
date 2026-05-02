@@ -33,7 +33,7 @@ function Cards() {
           For Partner Registration
         </p>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Link to='/merchant-page'>
+          <Link to='/vendor-register'>
             <button className={styles.Contactus_button}>Visit Now</button>
           </Link>
         </div>
